@@ -1,5 +1,5 @@
-# 3Dsolve - snakepuzzle 
-##Contributors : Korlan - achazot - dibi -KansassCityShuffle - agourd
+# 3Dsolve - snakepuzzle
+*Korlan - achazot - dibi -KansassCityShuffle - agourd*
 
 ### TODO List
 
