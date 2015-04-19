@@ -137,9 +137,9 @@ void context_init ( Context* context )
 	context->cube_mesh = object_load ( "stc/cube.stc" );
 	
 	Camera * camera = camera_create();
-	camera->eye[0] = 2.f;
-	camera->eye[1] = 2.f;
-	camera->eye[2] = 2.f;
+	camera->eye[0] = 5.f;
+	camera->eye[1] = 5.f;
+	camera->eye[2] = 5.f;
 	camera->target[0] = 0.f;
 	camera->target[1] = 0.f;
 	camera->target[2] = 0.f;
