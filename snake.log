@@ -1,4 +1,4 @@
-[ ][START] Starting log at local time Sun Apr 19 21:34:04 2015
+[ ][START] Starting log at local time Sun Apr 19 22:43:23 2015
 [-][CNTXT] GLFW started
 [-][CNTXT] Using resolution 800x600
 [-][CNTXT] Window created
@@ -28,14 +28,22 @@
 [-][SHADR] Shader 1 compiled (1)
 [-][SHADR] Shader 2 compiled (1)
 [-][SHADR] Shader program id 3 linked with vs:1 fs:2 (1)
-[-][OBJCT] Loading object from stc/cube.stc
+[-][OBJCT] Loading object from stc/dcube.stc
 [-][OBJCT] Read 8 vertices
 [-][OBJCT] Read 8 vertex colors
 [-][OBJCT] Read 6 indices
-[-][OBJCT] Object loaded from stc/cube.stc
+[-][OBJCT] Object loaded from stc/dcube.stc
 [-][OBJCT] VBO 1 created for vertices
 [-][OBJCT] VBO 2 created for colors
 [-][OBJCT] VAO 1 created bound to VBO 1 and VBO 2
+[-][OBJCT] Loading object from stc/lcube.stc
+[-][OBJCT] Read 8 vertices
+[-][OBJCT] Read 8 vertex colors
+[-][OBJCT] Read 6 indices
+[-][OBJCT] Object loaded from stc/lcube.stc
+[-][OBJCT] VBO 3 created for vertices
+[-][OBJCT] VBO 4 created for colors
+[-][OBJCT] VAO 2 created bound to VBO 3 and VBO 4
 [-][RENDR] Renderer started
 [-][RENDR] Renderer stopped
 [-][CNTXT] GLFW terminated

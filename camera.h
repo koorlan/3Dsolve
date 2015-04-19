@@ -10,6 +10,7 @@ typedef struct camera_t {
 	vec3 target;
 	vec3 up;
 	vec2 angle;
+	float distance;
 	float fov;
 } Camera;
 
