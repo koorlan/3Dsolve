@@ -9,8 +9,8 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		acc_x = xpos - last_xpos;
-		acc_y = ypos - last_ypos;
+		//acc_x = xpos - last_xpos;
+		//acc_y = ypos - last_ypos;
 	}
 	
 }
@@ -101,7 +101,7 @@ Context* context_create ()
 	glfwSetKeyCallback(context->window, keyCallback);	
 	glfwSetWindowSizeCallback(context->window, resizeCallback);	
 	glfwSetCursorPosCallback(context->window, cursorCallback);
-	glfwSetMouseButtonCallback (context->window, buttonCallback)
+	glfwSetMouseButtonCallback (context->window, buttonCallback);
 
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
