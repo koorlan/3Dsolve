@@ -7,7 +7,7 @@ CFLAGS = -g -Wall
 LDLIBS = -lGLEW -lGLU -lGL -lglfw3 -lX11 -lXxf86vm -lXrandr -lXi -lXinerama -lXcursor -lm -lpthread
 PROG  = snake
 
-OBJS  = listSolution.o snake.o log.o camera.o shader.o object.o context.o renderer.o main.o
+OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o object.o context.o renderer.o main.o
 
 all: $(PROG)
 
@@ -18,4 +18,4 @@ $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) -c $*.c
 
 clean:
-	rm *.o
+	rm *.o && rm snake

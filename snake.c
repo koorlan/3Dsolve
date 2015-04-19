@@ -2,6 +2,7 @@
 
 Snake* snakeInit ()
 {
+	//int i,j,k;
 	Snake* snake = malloc ( sizeof(Snake) );
 	snake->length = 27; //ne to be read from the template file
 	snake->tmpSteps = malloc ( snake->length * sizeof(Step) );
@@ -11,7 +12,14 @@ Snake* snakeInit ()
 	snake->volume.max.x = 3;
 	snake->volume.max.y = 3;
 	snake->volume.max.z = 3;
-//	snake->volume.state = malloc( snake.volumesizeof ())
+
+  /*snake->volume.state = malloc( snake->volume.max.x * sizeof (VolumeState) );
+	for ( i = 0; i < snake.volume.max.y; i++) {
+
+
+
+		snake->volume.state[i] = malloc( snake->volume.max.x * sizeof (*VolumeState) );
+	}*/
 	return snake;
 }
 

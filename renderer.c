@@ -6,13 +6,12 @@ void* renderer ( void *arg )
 	log_write ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
-	
-	glfwMakeContextCurrent ( context->window );
 
+	glfwMakeContextCurrent ( context->window );
 	glEnable (GL_DEPTH_TEST);
 	glDepthFunc (GL_LEQUAL);
 	glPointSize (4.0f);
-	
+
 	glUseProgram (context->shader_program);
 
 	glViewport (0, 0, context->screen_width, context->screen_height);
@@ -25,7 +24,7 @@ void* renderer ( void *arg )
 	while (context->running)
 	{
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
-		
+
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
@@ -37,7 +36,7 @@ void* renderer ( void *arg )
 		}
 		else last_time = cur_time;
 		//printf ("%f\n", fps);
-				
+
 		mat4x4 WMat;
 		mat4x4 PVMat;
 		mat4x4 viewMat;

@@ -17,7 +17,7 @@ int main ( int arg, char ** argv )
 		return EXIT_FAILURE;
 	}
 
-	
+
 	Snake* snake = snakeInit ();
 
 
@@ -31,19 +31,13 @@ int main ( int arg, char ** argv )
 
 	context_init ( context );
 
-	context->snake->tmpSteps[0].coord.x = 0;
-	context->snake->tmpSteps[0].coord.y = 0;
-	context->snake->tmpSteps[0].coord.z = 0;
-	context->snake->tmpSteps[1].coord.x = 1;
-	context->snake->tmpSteps[1].coord.y = 0;
-	context->snake->tmpSteps[1].coord.z = 0;
-	context->snake->tmpSteps[2].coord.x = 2;
-	context->snake->tmpSteps[2].coord.y = 0;
-	context->snake->tmpSteps[2].coord.z = 0;
-	context->snake->tmpSteps[3].coord.x = 2;
-	context->snake->tmpSteps[3].coord.y = 0;
-	context->snake->tmpSteps[3].coord.z = -1;
-	context->snake->currentUnit = 4;
+	int i;
+	for ( i = 0; i < snake->length; i++) {
+		context->snake->tmpSteps[i].coord.x = i;
+		context->snake->tmpSteps[i].coord.y = 0;
+		context->snake->tmpSteps[i].coord.z = 0;
+	}
+
 
 	while ( context->running )
 	{
@@ -52,16 +46,16 @@ int main ( int arg, char ** argv )
 		//printf("%d, %d\n", keys, key);
 		if (key == 1 && snake->currentUnit < snake->length)
 		{
-			snake->tmpSteps[snake->currentUnit].coord.x = 2;
-			snake->tmpSteps[snake->currentUnit].coord.y = snake->currentUnit-3;
-			snake->tmpSteps[snake->currentUnit].coord.z = -1;
+			//snake->tmpSteps[snake->currentUnit].coord.x = 2;
+			//snake->tmpSteps[snake->currentUnit].coord.y = snake->currentUnit-3;
+			//snake->tmpSteps[snake->currentUnit].coord.z = -1;
 			snake->currentUnit++;
 			sleep(1);
 		}
 	}
 
 	context_destroy ( context );
-	
+
 	snakeDestroy ( snake );
 
 	log_write ("[MAIN.] Terminated\n");
