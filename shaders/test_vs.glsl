@@ -1,4 +1,4 @@
-#version 110
+#version 130
 #extension GL_ARB_explicit_attrib_location : enable
 
 layout(location = 0) in vec3 vertex_position;
@@ -13,4 +13,3 @@ void main () {
   color = vertex_color;
   gl_Position = VP * W * vec4 (vertex_position, 1.0);
 }
-

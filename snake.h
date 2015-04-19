@@ -39,11 +39,12 @@ typedef enum
 	FORBIDDEN,
 	FREE,
 	BUSY
-}
+} VolumeState;
 
 typedef struct volume
 {
-
+	Coord max;
+	VolumeState ***state;
 
 } Volume;
 
@@ -54,7 +55,7 @@ typedef struct snake
 	Unit* units;
 	int currentUnit;
 	ListSolution* solutions;
-	//TODO: Volume
+	Volume volume;
 } Snake;
 
 Snake* snakeInit ();

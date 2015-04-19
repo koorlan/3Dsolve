@@ -13,11 +13,11 @@ typedef struct solution
 
 typedef struct listSolution
 {
-	Solution* head
+	Solution* head;
 	int size;
 } ListSolution;
 
-*ListSolution listSolutionCreate();
+ListSolution* listSolutionCreate();
 void listSolutionDestroy();
 void listSolutionInsert();
 

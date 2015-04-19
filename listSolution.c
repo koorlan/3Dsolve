@@ -1,8 +1,8 @@
 #include "listSolution.h"
 
-*ListSolution listSolutionCreate()
+ListSolution* listSolutionCreate()
 {
-  ListSolution listSolution = malloc ( sizeof (ListSolution) );
+  ListSolution *listSolution = malloc ( sizeof (ListSolution) );
   listSolution->head = NULL;
   listSolution->size = 0;
   return listSolution;
@@ -10,8 +10,8 @@
 
 void listSolutionDestroy(ListSolution* listSolution)
 {
-  Solution* curr,
-            tmp ;
+  Solution *curr,
+           *tmp ;
 
   while ( listSolution->head != NULL)
   {
@@ -26,7 +26,7 @@ void listSolutionDestroy(ListSolution* listSolution)
 void listSolutionInsert(ListSolution* listSolution, Step* steps)
 {
     Solution* solution = malloc ( sizeof (Solution) );
-    solution->steps = steps;
+    solution->step = steps;
     solution->next = NULL;
     if( listSolution->head == NULL)
     {
