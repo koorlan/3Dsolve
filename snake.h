@@ -1,7 +1,7 @@
 #ifndef SNAKE_H
 #define SNAKE_H
-
-#include "stdlib.h"
+#include <string.h>
+#include <stdlib.h>
 #include "listSolution.h"
 
 typedef enum

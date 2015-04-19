@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+# Log files
+*.log
+
+# Our Binary
+snake
