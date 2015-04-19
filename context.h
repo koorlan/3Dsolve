@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <GL/glu.h>
 #include <pthread.h>
+#include <math.h>
 
 #include "renderer.h"
 #include "log.h"
@@ -21,13 +22,15 @@
 #define FULLSCREEN 0
 #define DRESX 800
 #define DRESY 600
-
+#define M_RIGHT	0b00000001
+#define M_LEFT	0b00000010
 
 int keys;
-int last_xpos;
-int last_ypos;
-int acc_x;
-int acc_y;
+unsigned char mouse_flags;
+float last_xpos;
+float last_ypos;
+double xpos;
+double ypos;
 
 
 typedef struct context_t
@@ -38,7 +41,8 @@ typedef struct context_t
 	int running;
 	pthread_t render_thread;
 	GLuint shader_program;
-	Object* cube_mesh;
+	Object* dcube_mesh;
+	Object* lcube_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;
@@ -48,7 +52,7 @@ typedef struct context_t
 void resizeCallback (GLFWwindow* window, int width, int height);
 void cursorCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-int getInput ();
+int getInput ( Context* context );
 
 Context* context_create ();
 void context_init ( Context* context );

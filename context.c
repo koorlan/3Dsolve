@@ -7,20 +7,22 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 
 void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
+
+	last_xpos = xpos;
+	last_ypos = ypos;
+	glfwGetCursorPos (window, &xpos, &ypos);
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		//acc_x = xpos - last_xpos;
-		//acc_y = ypos - last_ypos;
+		mouse_flags |= M_RIGHT;
 	}
-	
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	{
+		mouse_flags ^= M_RIGHT;
+	}
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	acc_x = xpos - last_xpos;
-	acc_y = ypos - last_ypos;
-	
-
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -54,8 +56,14 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	}
 }
 
-int getInput ()
+int getInput ( Context* context )
 {
+
+	if ((mouse_flags&M_RIGHT)==M_RIGHT)
+	{
+		//context->camera->eye[0] += (xpos-last_xpos)*0.000000001f;
+	}
+
 	return keys;
 }
 
@@ -134,7 +142,8 @@ void context_init ( Context* context )
 	shader_compile(vs);
 	shader_compile(fs);
 	context->shader_program = shader_create_program(vs, fs);
-	context->cube_mesh = object_load ( "stc/cube.stc" );
+	context->dcube_mesh = object_load ( "stc/dcube.stc" );
+	context->lcube_mesh = object_load ( "stc/lcube.stc" );
 	
 	Camera * camera = camera_create();
 	camera->eye[0] = 5.f;
@@ -149,7 +158,9 @@ void context_init ( Context* context )
 	camera->angle[0] = 0.f;
 	camera->angle[1] = 0.f;
 	camera->fov = 1.3f;
+	camera->distance = 10.f;
 	context->camera = camera;
+
 	context->running = 1;
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }

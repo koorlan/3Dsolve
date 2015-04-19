@@ -1,10 +1,5 @@
 #include "snake.h"
 
-	int length;
-	Step* tmpSteps;
-	Unit* units;
-	int currentUnit;
-
 Snake* snakeInit ()
 {
 	Snake* snake = malloc ( sizeof(Snake) );

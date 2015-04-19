@@ -51,16 +51,19 @@ void* renderer ( void *arg )
 		vpID = glGetUniformLocation(context->shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-		glClearColor( 0.25f, 0.25f, 0.25f, 1.f );
+		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		int i;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
-			//mat4x4_identity(WMat);
+			if (i%2!=0)
+				glBindVertexArray (context->dcube_mesh->vao_id);
+			else glBindVertexArray (context->lcube_mesh->vao_id);
+
 			mat4x4_translate( WMat, context->snake->tmpSteps[i].coord.x, context->snake->tmpSteps[i].coord.y, context->snake->tmpSteps[i].coord.z );
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			glDrawElements(GL_QUADS, 4 * context->cube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->cube_mesh->indices);
+			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
 		}
 
 
