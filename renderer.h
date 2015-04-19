@@ -17,6 +17,7 @@
 #include "context.h"
 #include "log.h"
 #include "object.h"
+#include "snake.h"
 
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f

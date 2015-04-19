@@ -7,8 +7,6 @@ void* renderer ( void *arg )
 
 	Context* context = (Context*) arg;
 	
-	context->running = 1;
-
 	glfwMakeContextCurrent ( context->window );
 
 	glEnable (GL_DEPTH_TEST);
@@ -50,23 +48,21 @@ void* renderer ( void *arg )
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
-
-		mat4x4_identity(WMat);
-		mat4x4_rotate_X(WMat, WMat, M_PI * sin(glfwGetTime()));
-		mat4x4_rotate_Y(WMat, WMat, glfwGetTime());		
-		mat4x4_rotate_Z(WMat, WMat, M_PI * cos(glfwGetTime()));
-		mat4x4_scale3d(WMat, WMat, (abs(cos(glfwGetTime()))+0.5f) );
-		wID = glGetUniformLocation(context->shader_program, "W");
-		glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-
 		vpID = glGetUniformLocation(context->shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-		//draw
 		glClearColor( 0.25f, 0.25f, 0.25f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		int i;
+		for ( i=0; i <= context->snake->currentUnit; i++ )
+		{
+			//mat4x4_identity(WMat);
+			mat4x4_translate( WMat, context->snake->tmpSteps[i].coord.x, context->snake->tmpSteps[i].coord.y, context->snake->tmpSteps[i].coord.z );
+			wID = glGetUniformLocation(context->shader_program, "W");
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			glDrawElements(GL_QUADS, 4 * context->cube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->cube_mesh->indices);
+		}
 
-		glDrawElements(GL_QUADS, 4 * context->cube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->cube_mesh->indices);
 
 		glfwSwapBuffers (context->window);
 		glfwPollEvents ();

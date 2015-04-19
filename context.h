@@ -16,10 +16,19 @@
 #include "shader.h"
 #include "object.h"
 #include "camera.h"
+#include "snake.h"
 
 #define FULLSCREEN 0
 #define DRESX 800
 #define DRESY 600
+
+
+int keys;
+int last_xpos;
+int last_ypos;
+int acc_x;
+int acc_y;
+
 
 typedef struct context_t
 {
@@ -32,13 +41,14 @@ typedef struct context_t
 	Object* cube_mesh;
 	Camera* camera;
 	float ratio;
+	Snake* snake;
 } Context;
 
 
 void resizeCallback (GLFWwindow* window, int width, int height);
 void cursorCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
+int getInput ();
 
 Context* context_create ();
 void context_init ( Context* context );

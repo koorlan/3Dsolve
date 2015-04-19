@@ -5,8 +5,22 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 {
 }
 
+void buttonCallback(GLFWwindow* window, int button, int action, int modes)
+{
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		acc_x = xpos - last_xpos;
+		acc_y = ypos - last_ypos;
+	}
+	
+}
+
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
+	acc_x = xpos - last_xpos;
+	acc_y = ypos - last_ypos;
+	
+
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -20,11 +34,17 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_ESCAPE:
 					glfwSetWindowShouldClose(window, GL_TRUE);
 					break;
+				case GLFW_KEY_UP:
+					keys = 1;
+					break;
 			}
 		break;
 		case GLFW_RELEASE:
 			switch(key)
 			{
+				case GLFW_KEY_UP:
+					keys = 0;
+					break;
 				default:
 					break;
 			}
@@ -32,6 +52,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		default:
 			break;
 	}
+}
+
+int getInput ()
+{
+	return keys;
 }
 
 Context* context_create ()
@@ -76,6 +101,7 @@ Context* context_create ()
 	glfwSetKeyCallback(context->window, keyCallback);	
 	glfwSetWindowSizeCallback(context->window, resizeCallback);	
 	glfwSetCursorPosCallback(context->window, cursorCallback);
+	glfwSetMouseButtonCallback (context->window, buttonCallback)
 
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -124,7 +150,7 @@ void context_init ( Context* context )
 	camera->angle[1] = 0.f;
 	camera->fov = 1.3f;
 	context->camera = camera;
-
+	context->running = 1;
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
