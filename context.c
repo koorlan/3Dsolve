@@ -106,8 +106,8 @@ Context* context_create ()
 	glfwMakeContextCurrent ( context->window );
 	log_write ("[CNTXT] Window created\n");
 
-	glfwSetKeyCallback(context->window, keyCallback);	
-	glfwSetWindowSizeCallback(context->window, resizeCallback);	
+	glfwSetKeyCallback(context->window, keyCallback);
+	glfwSetWindowSizeCallback(context->window, resizeCallback);
 	glfwSetCursorPosCallback(context->window, cursorCallback);
 	glfwSetMouseButtonCallback (context->window, buttonCallback);
 
@@ -116,7 +116,7 @@ Context* context_create ()
 	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint (GLFW_SAMPLES, 4);
-	
+
 	glewExperimental = GL_TRUE;
 	glewInit ();
 	log_write ("[CNTXT] GLEW started\n");
@@ -144,7 +144,7 @@ void context_init ( Context* context )
 	context->shader_program = shader_create_program(vs, fs);
 	context->dcube_mesh = object_load ( "stc/dcube.stc" );
 	context->lcube_mesh = object_load ( "stc/lcube.stc" );
-	
+
 	Camera * camera = camera_create();
 	camera->eye[0] = 5.f;
 	camera->eye[1] = 5.f;
@@ -162,6 +162,7 @@ void context_init ( Context* context )
 	context->camera = camera;
 
 	context->running = 1;
+	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
