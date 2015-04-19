@@ -1,0 +1,43 @@
+[ ][START] Starting log at local time Sun Apr 19 20:11:39 2015
+[-][CNTXT] GLFW started
+[-][CNTXT] Using resolution 800x600
+[-][CNTXT] Window created
+[-][CNTXT] GLEW started
+[-][CNTXT] Renderer: Gallium 0.4 on SVGA3D; build: RELEASE;  
+[-][CNTXT] OpenGL version supported 2.1 Mesa 10.1.3
+[-][GLNFO] GL context parameters:
+[-][GLNFO] GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS 16
+[-][GLNFO] GL_MAX_CUBE_MAP_TEXTURE_SIZE 2048
+[-][GLNFO] GL_MAX_DRAW_BUFFERS 4
+[-][GLNFO] GL_MAX_FRAGMENT_UNIFORM_COMPONENTS 896
+[-][GLNFO] GL_MAX_TEXTURE_IMAGE_UNITS 16
+[-][GLNFO] GL_MAX_TEXTURE_SIZE 16384
+[-][GLNFO] GL_MAX_VARYING_FLOATS 40
+[-][GLNFO] GL_MAX_VERTEX_ATTRIBS 16
+[-][GLNFO] GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS 0
+[-][GLNFO] GL_MAX_VERTEX_UNIFORM_COMPONENTS 1024
+[-][GLNFO] GL_MAX_VIEWPORT_DIMS 16384 16384
+[-][GLNFO] GL_STEREO 0
+[-][GLNFO] End of GL context parameters
+[-][CNTXT] Context succesfully created
+[-][CNTXT] Starting Renderer thread
+[-][SHADR] Loading shader from shaders/test_vs.glsl
+[-][SHADR] Shader id:1 type:35633 loaded from shaders/test_vs.glsl
+[-][SHADR] Loading shader from shaders/test_fs.glsl
+[-][SHADR] Shader id:2 type:35632 loaded from shaders/test_fs.glsl
+[-][SHADR] Shader 1 compiled (1)
+[-][SHADR] Shader 2 compiled (1)
+[-][SHADR] Shader program id 3 linked with vs:1 fs:2 (1)
+[-][OBJCT] Loading object from stc/cube.stc
+[-][OBJCT] Read 8 vertices
+[-][OBJCT] Read 8 vertex colors
+[-][OBJCT] Read 6 indices
+[-][OBJCT] Object loaded from stc/cube.stc
+[-][OBJCT] VBO 1 created for vertices
+[-][OBJCT] VBO 2 created for colors
+[-][OBJCT] VAO 1 created bound to VBO 1 and VBO 2
+[-][RENDR] Renderer started
+[-][RENDR] Renderer stopped
+[-][CNTXT] GLFW terminated
+[-][CNTXT] Context destroyed
+[-][MAIN.] Terminated
