@@ -8,6 +8,10 @@ Snake* snakeInit ()
 	snake->units = malloc ( snake->lenght * sizeof(Unit) );
 	snake->currentUnit = 0;
 	snake->solutions = listSolutionCreate();
+	snake->volume->max->x = 3;
+	snake->volume->max->y = 3;
+	snake->volume->max->z = 3;
+	snake->volume.state = malloc( snake.volumesizeof ())
 	return snake;
 }
 

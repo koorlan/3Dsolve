@@ -34,6 +34,18 @@ typedef struct step
 	Dir dir;
 } Step;
 
+typedef enum
+{
+	FORBIDDEN,
+	FREE,
+	BUSY
+}
+
+typedef struct volume
+{
+
+
+} Volume;
 
 typedef struct snake
 {
