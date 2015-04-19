@@ -2,6 +2,7 @@
 #define SNAKE_H
 
 #include "stdlib.h"
+#include "listSolution.h"
 
 typedef enum
 {
@@ -33,17 +34,22 @@ typedef struct step
 	Dir dir;
 } Step;
 
+
 typedef struct snake
 {
 	int length;
 	Step* tmpSteps;
 	Unit* units;
 	int currentUnit;
+	ListSolution* solutions;
 	//TODO: Volume
 } Snake;
 
 Snake* snakeInit ();
 void snakeDestroy ( Snake* snake );
-
+void snakeAddSolution ( Snake* snake );
+Unit snakeGetNextUnit ( Snake* snake );
+int snakeRewind ( Snake* snake);
+void snakeAddStep ( Snake* snake, Step* step);
 
 #endif //SNAKE_H

@@ -1,18 +1,13 @@
 #include "snake.h"
 
-	int length;
-	Step* tmpSteps;
-	Unit* units;
-	int currentUnit;
-
 Snake* snakeInit ()
 {
 	Snake* snake = malloc ( sizeof(Snake) );
-	snake->length = 27;
-	snake->tmpSteps = malloc ( 27 * sizeof(Step) );
-	snake->units = malloc ( 27 * sizeof(Unit) );
+	snake->length = 27; //ne to be read from the template file
+	snake->tmpSteps = malloc ( snake->lenght * sizeof(Step) );
+	snake->units = malloc ( snake->lenght * sizeof(Unit) );
 	snake->currentUnit = 0;
-
+	snake->solutions = listSolutionCreate();
 	return snake;
 }
 
@@ -20,5 +15,27 @@ void snakeDestroy ( Snake* snake )
 {
 	free(snake->tmpSteps);
 	free(snake->units);
+	listSolutionDestroy(snake->solutions);
 	free(snake);
 }
+
+void snakeAddSolution ( Snake* snake ){
+	listInsert(snake->solutions,snake->tmpSteps);
+	snake->tmpSteps = malloc ( snake->lenght * sizeof(Step) ); //Need to allocate space again to write next solution
+}
+
+Unit snakeGetNextUnit ( Snake* snake )
+{
+	snake->currentUnit ++;
+	//Todo , error handling (index overflow)
+	return snake->units[snake->currentUnit];
+
+}
+int snakeRewind ( Snake* snake){
+	snake->currentUnit --;
+	//Todo , error handling (index overflow)
+	return snake->currentUnit;
+}
+void snakeAddStep ( Snake* snake, Step* step){
+	//Todo, error handling (index overflow)
+	memcpy( &(snake->tmpSteps[snake->currentUnit]), step);
