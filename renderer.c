@@ -60,20 +60,16 @@ void* renderer ( void *arg )
 		Step* step = context->snake->solutions->head->step;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
-			if (i==context->snake->currentUnit)
-			{
-				if (i%2==0)
-					glBindVertexArray (context->dcube_mesh->vao_id);
-				else glBindVertexArray (context->lcube_mesh->vao_id);
-			}
-			else
-			{
-				if (i%2==0)
-					glBindVertexArray (context->rdcube_mesh->vao_id);
-				else glBindVertexArray (context->rlcube_mesh->vao_id);
-			}
+			if (i%2==0)
+				glBindVertexArray (context->dcube_mesh->vao_id);
+			else glBindVertexArray (context->lcube_mesh->vao_id);
 
 			mat4x4_translate( WMat, step[i].coord.x-1, step[i].coord.y-1, step[i].coord.z-1 );
+			if (i==context->snake->currentUnit)
+			{
+				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
+			}
+
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);

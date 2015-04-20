@@ -33,8 +33,10 @@ int main ( int arg, char ** argv )
 	}
 	context->snake = snake;
 
+	resolverFindSymmetry(snake->volume);
+
 	resolverSolveSnake(snake);
-	printf("Snakeresolved with %d  solutions \n",snake->solutions->size);
+
 	char *buffer = malloc(5*sizeof(char));
 	int i;
 	for (i = 0;  i< snake->length; i++)
