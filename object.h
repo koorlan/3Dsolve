@@ -17,7 +17,7 @@
 #define M_RGBA 1
 
 
-typedef struct object_t
+typedef struct object
 {
 	int method;
 	int nb_faces;
@@ -26,7 +26,7 @@ typedef struct object_t
 } Object;
 
 
-Object * object_load(const char * file);
-int object_destroy(Object * object);
+Object * objectLoad(const char * file);
+int objectDestroy(Object * object);
 
 #endif //OBJECT_H

@@ -1,23 +1,23 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "listSolution.h"
 
 typedef enum
 {
-	D_UP,
-	D_DOWN,
-	D_LEFT,
-	D_RIGHT,
-	D_FRONT,
-	D_BACK,
-	D_NONE
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	FRONT,
+	BACK
 } Dir;
 
 typedef enum
 {
-	EXT,
+	EDGE,
 	STRAIGHT,
 	CORNER
 } Unit;

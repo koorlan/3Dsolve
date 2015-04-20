@@ -1,18 +1,21 @@
 #include "renderer.h"
 
+//TODO: camera
+//TODO: snake du dessous
+//TODO: cube en surbrillance
+
 void* renderer ( void *arg )
 {
 
-	log_write ("[RENDR] Renderer started\n");
+	logWrite ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
-	
-	glfwMakeContextCurrent ( context->window );
 
+	glfwMakeContextCurrent ( context->window );
 	glEnable (GL_DEPTH_TEST);
 	glDepthFunc (GL_LEQUAL);
 	glPointSize (4.0f);
-	
+
 	glUseProgram (context->shader_program);
 
 	glViewport (0, 0, context->screen_width, context->screen_height);
@@ -25,7 +28,7 @@ void* renderer ( void *arg )
 	while (context->running)
 	{
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
-		
+
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
@@ -37,7 +40,7 @@ void* renderer ( void *arg )
 		}
 		else last_time = cur_time;
 		//printf ("%f\n", fps);
-				
+
 		mat4x4 WMat;
 		mat4x4 PVMat;
 		mat4x4 viewMat;
@@ -54,13 +57,23 @@ void* renderer ( void *arg )
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		int i;
+		Step* step = context->snake->solutions->head->step;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
-			if (i%2!=0)
-				glBindVertexArray (context->dcube_mesh->vao_id);
-			else glBindVertexArray (context->lcube_mesh->vao_id);
+			if (i==context->snake->currentUnit)
+			{
+				if (i%2==0)
+					glBindVertexArray (context->dcube_mesh->vao_id);
+				else glBindVertexArray (context->lcube_mesh->vao_id);
+			}
+			else
+			{
+				if (i%2==0)
+					glBindVertexArray (context->rdcube_mesh->vao_id);
+				else glBindVertexArray (context->rlcube_mesh->vao_id);
+			}
 
-			mat4x4_translate( WMat, context->snake->tmpSteps[i].coord.x, context->snake->tmpSteps[i].coord.y, context->snake->tmpSteps[i].coord.z );
+			mat4x4_translate( WMat, step[i].coord.x-1, step[i].coord.y-1, step[i].coord.z-1 );
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
@@ -68,10 +81,9 @@ void* renderer ( void *arg )
 
 
 		glfwSwapBuffers (context->window);
-		glfwPollEvents ();
 	}
 
-	log_write ("[RENDR] Renderer stopped\n");
+	logWrite ("[RENDR] Renderer stopped\n");
 
 	return NULL;
 };

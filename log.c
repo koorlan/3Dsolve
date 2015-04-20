@@ -1,6 +1,6 @@
 #include "log.h"
 
-int log_start ()
+int logStart ()
 {
 	FILE* file = fopen (LOG_FILE, "w");
 	if (!file)
@@ -15,7 +15,7 @@ int log_start ()
 	return 1;
 }
 
-int log_write (const char* message, ...)
+int logWrite (const char* message, ...)
 {
 	va_list argptr;
 	FILE* file = fopen (LOG_FILE, "a");
@@ -32,7 +32,7 @@ int log_write (const char* message, ...)
 	return 1;
 }
 
-int log_error (const char* message, ...)
+int logError (const char* message, ...)
 {
 	va_list argptr;
 	FILE* file = fopen (LOG_FILE, "a");
@@ -53,7 +53,7 @@ int log_error (const char* message, ...)
 	return 1;
 }
 
-int log_warning (const char* message, ...)
+int logWarning (const char* message, ...)
 {
 	va_list argptr;
 	FILE* file = fopen (LOG_FILE, "a");
@@ -74,7 +74,7 @@ int log_warning (const char* message, ...)
 	return 1;
 }
 
-void log_gl_params ()
+void logGLParams ()
 {
 
 	GLenum params[] = {
@@ -105,20 +105,20 @@ void log_gl_params ()
 		"GL_MAX_VIEWPORT_DIMS",
 		"GL_STEREO",
 	};
-	log_write ("[GLNFO] GL context parameters:\n");
+	logWrite ("[GLNFO] GL context parameters:\n");
 	int i;
 	for (i = 0; i < 10; i++) {
 		int v = 0;
 		glGetIntegerv (params[i], &v);
-		log_write ("[GLNFO] %s %i\n", names[i], v);
+		logWrite ("[GLNFO] %s %i\n", names[i], v);
 	}
 	int v[2];
 	v[0] = v[1] = 0;
 	glGetIntegerv (params[10], v);
-	log_write ("[GLNFO] %s %i %i\n", names[10], v[0], v[1]);
+	logWrite ("[GLNFO] %s %i %i\n", names[10], v[0], v[1]);
 	unsigned char s = 0;
 	glGetBooleanv (params[11], &s);
-	log_write ("[GLNFO] %s %u\n", names[11], (unsigned int)s);
-	log_write ("[GLNFO] End of GL context parameters\n");
+	logWrite ("[GLNFO] %s %u\n", names[11], (unsigned int)s);
+	logWrite ("[GLNFO] End of GL context parameters\n");
 
 }

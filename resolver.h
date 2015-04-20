@@ -2,6 +2,17 @@
 #define RESOLVER_H
 
 #include "snake.h"
+#include "context.h"
+
+ const int cornerTruthTable[6][6] =
+  {
+    {0 , 0 , 1 , 1 , 1 , 1 },
+    {0 , 0 , 1 , 1 , 1 , 1 },
+    {1 , 1 , 0 , 0 , 1 , 1 },
+    {1 , 1 , 0 , 0 , 1 , 1 },
+    {1 , 1 , 1 , 1 , 0 , 0 },
+    {1 , 1 , 1 , 1 , 0 , 0 }
+  } ;
 
 typedef struct nodeTree
 {
@@ -13,5 +24,6 @@ typedef struct nodeTree
 } NodeTree;
 
 void resolverSolveSnake(Snake *snake);
-
+Coord calcCoord(Coord coord,Dir dir);
+int validCoord(Coord coord, Coord max);
 #endif
