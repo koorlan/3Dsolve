@@ -79,8 +79,10 @@ int main ( int arg, char ** argv )
 	snake->units[25] = STRAIGHT ;
 	snake->units[26] = EDGE ;
 
+	resolverFindSymmetry(snake->volume);
+
 	resolverSolveSnake(snake);
-	printf("Snakeresolved with %d  solutions \n",snake->solutions->size);
+
 	char *buffer = malloc(5*sizeof(char));
 	for (i = 0;  i< snake->length; i++) {
 

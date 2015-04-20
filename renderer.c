@@ -18,12 +18,13 @@ void* renderer ( void *arg )
 
 	glUseProgram (context->shader_program);
 
-	glViewport (0, 0, context->screen_width, context->screen_height);
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
 	float last_time=127.f;
 	struct timespec time1;
 	struct timespec time2;
+
+	int i;
 
 	while (context->running)
 	{
@@ -48,6 +49,7 @@ void* renderer ( void *arg )
 		GLuint vpID;
 		GLuint wID;
 
+		glViewport (0, 0, context->screen_width, context->screen_height);
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
@@ -56,7 +58,6 @@ void* renderer ( void *arg )
 
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		int i;
 		Step* step = context->snake->solutions->head->step;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
@@ -73,6 +74,51 @@ void* renderer ( void *arg )
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
+		}
+
+		glViewport (-20, -240, context->screen_height, context->screen_height);
+		mat4x4_identity(viewMat);
+		mat4x4_identity(perMat);
+		mat4x4_identity(WMat);
+		mat4x4_scale3d(WMat, WMat, 0.05f);
+		mat4x4_mul (PVMat, perMat, viewMat);
+		vpID = glGetUniformLocation(context->shader_program, "VP");
+		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+
+
+		int xdir = 0;
+		int ydir = 1;
+		float r_angle =  -M_PI/4;
+		for ( i=0; i <= context->snake->length-1; i++ )
+		{
+			mat4x4_rotate_Z(WMat, WMat, r_angle);
+
+			if (i%2==0)
+				glBindVertexArray (context->dcube_mesh->vao_id);
+			else glBindVertexArray (context->lcube_mesh->vao_id);
+
+			mat4x4_translate_in_place( WMat, xdir, ydir, 0);
+			
+		
+			mat4x4_scale3d(WMat, WMat, 0.9f);
+
+			if (i==context->snake->currentUnit)
+				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
+			wID = glGetUniformLocation(context->shader_program, "W");
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
+			if (i==context->snake->currentUnit)
+				mat4x4_scale3d(WMat, WMat, (1/(0.9f*abs(cos(4*glfwGetTime())))) );
+
+
+			mat4x4_rotate_Z(WMat, WMat, -r_angle);
+			
+			mat4x4_scale3d(WMat, WMat, 1.1f);
+			if (context->snake->units[i]==CORNER)
+			{
+				xdir = (xdir==0?1:0);
+				ydir = (ydir==0?1:0);
+			}
 		}
 
 

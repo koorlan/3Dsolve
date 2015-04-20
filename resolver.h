@@ -1,6 +1,10 @@
 #ifndef RESOLVER_H
 #define RESOLVER_H
 
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "log.h"
 #include "snake.h"
 #include "context.h"
 
@@ -24,6 +28,7 @@ typedef struct nodeTree
 } NodeTree;
 
 void resolverSolveSnake(Snake *snake);
+void resolverFindSymmetry(Volume volume);
 Coord calcCoord(Coord coord,Dir dir);
 int validCoord(Coord coord, Coord max);
 #endif

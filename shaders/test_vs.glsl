@@ -7,7 +7,7 @@ layout(location = 1) in vec3 vertex_color;
 uniform mat4 VP;
 uniform mat4 W;
 
-out vec3 color;
+varying vec3 color;
 
 void main () {
   color = vertex_color;
