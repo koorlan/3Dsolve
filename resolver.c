@@ -2,7 +2,7 @@
 
 void resolverSolveSnake(Snake *snake)
 {
-  log_write ("[RESO] Resolver started\n");
+  logWrite ("[RESO] Resolver started\n");
 
   NodeTree *currentNode = NULL;
   NodeTree *rootNode = NULL;
@@ -105,22 +105,13 @@ void resolverSolveSnake(Snake *snake)
     return; //Impossible snake ...
   }
 
-<<<<<<< HEAD
-  struct timespec time1;
-	struct timespec time2;
-  time1.tv_sec = 0;
-	time1.tv_nsec = 1000000;
-
-
-=======
->>>>>>> d8aa4a87cae7738ddc2c346bef2db46d14e3131f
   while(currentNode != rootNode && rootNode->hasPlayed == 1 && !(rootNode->currentChild == NULL))
   {
 
     if (snake->currentUnit == snake->length - 1)
     {
     snakeAddSolution(snake);
-    log_write ("[RESO] Resolver found a solution \n");
+    logWrite ("[RESO] Resolver found a solution \n");
     snakeRewind(snake);
     }
 
@@ -254,7 +245,7 @@ void resolverSolveSnake(Snake *snake)
       }
     }
   }
-  log_write ("[RESO] Resolver Ended, found %d solutions\n",snake->solutions->size);
+  logWrite ("[RESO] Resolver Ended, found %d solutions\n",snake->solutions->size);
 }
 
 void resolverFindSymmetry(Volume volume){
