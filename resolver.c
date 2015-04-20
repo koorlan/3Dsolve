@@ -105,8 +105,8 @@ void resolverSolveSnake(Snake *snake)
 
   struct timespec time1;
 	struct timespec time2;
-time1.tv_sec = 0;
-			time1.tv_nsec = 10000000;
+  time1.tv_sec = 0;
+	time1.tv_nsec = 100000000;
 
 
   while(currentNode != rootNode && rootNode->hasPlayed == 1 && !(rootNode->currentChild == NULL))
