@@ -66,9 +66,9 @@ void* renderer ( void *arg )
 
 			mat4x4_translate( WMat, step[i].coord.x-1, step[i].coord.y-1, step[i].coord.z-1 );
 			if (i==context->snake->currentUnit)
-			{
 				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
-			}
+			else
+				mat4x4_scale3d(WMat, WMat, 0.9f);
 
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);

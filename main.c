@@ -116,7 +116,7 @@ int main ( int arg, char ** argv )
 
 	while (context->running)
 	{
-		int key = getInput(context);
+		getInput(context);
 
 		nanosleep(&time1, &time2);
 	}
