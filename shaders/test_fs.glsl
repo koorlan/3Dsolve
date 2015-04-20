@@ -1,9 +1,9 @@
-#version 130
+#version 110
 #extension GL_ARB_explicit_attrib_location : enable
 
 in vec3 color;
-out vec4 frag_color;
+varying vec4 gl_FragColor;
 
 void main () {
-  frag_color = vec4 (color, 1.0);
+  gl_FragColor = vec4 (color, 1.0);
 }

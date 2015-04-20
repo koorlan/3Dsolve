@@ -2,6 +2,8 @@
 
 void resolverSolveSnake(Snake *snake)
 {
+  log_write ("[RESO] Resolver started\n");
+
   NodeTree *currentNode = NULL;
   NodeTree *rootNode = NULL;
   /*Initialization*/
@@ -106,17 +108,17 @@ void resolverSolveSnake(Snake *snake)
   struct timespec time1;
 	struct timespec time2;
   time1.tv_sec = 0;
-	time1.tv_nsec = 100000000;
+	time1.tv_nsec = 1000000;
 
 
   while(currentNode != rootNode && rootNode->hasPlayed == 1 && !(rootNode->currentChild == NULL))
   {
     nanosleep (&time1, &time2);
 
-    if (snake->currentUnit == snake->length -1)
+    if (snake->currentUnit == snake->length - 1)
     {
     snakeAddSolution(snake);
-    printf("Added a solution\n");
+    log_write ("[RESO] Resolver found a solution \n");
     snakeRewind(snake);
     }
 
@@ -250,6 +252,89 @@ void resolverSolveSnake(Snake *snake)
       }
     }
   }
+  log_write ("[RESO] Resolver Ended, found %d solutions\n",snake->solutions->size);
+}
+
+void resolverFindSymmetry(Volume volume){
+  int i,j,k,l ;
+  int nbCube = volume.max.x * volume.max.y * volume.max.z;
+  Coord cubeCenter;
+  cubeCenter.x = volume.max.x/2;
+  cubeCenter.y = volume.max.y/2;
+  cubeCenter.x = volume.max.z/2;
+
+  Step ****figure = malloc( volume.max.x * sizeof(*figure));
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    figure[i] = malloc( volume.max.y * sizeof(**figure));
+  }
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    for ( j = 0; j < volume.max.y; j++)
+    {
+      figure[i][j] = malloc( volume.max.z * sizeof(***figure));
+    }
+  }
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    for ( j = 0; j < volume.max.y; j++)
+    {
+      for ( k = 0; k < volume.max.y; k++)
+      {
+        figure[i][j][k] = malloc(6 * sizeof(****figure));
+        for ( l = 0; l < 6; l++)
+        {
+          switch(l){
+            case 0:
+              figure[i][j][k][l].dir = UP ;
+              break;
+            case 1:
+              figure[i][j][k][l].dir = DOWN ;
+              break;
+            case 2:
+              figure[i][j][k][l].dir= LEFT ;
+              break;
+            case 3:
+              figure[i][j][k][l].dir = RIGHT ;
+              break;
+            case 4:
+              figure[i][j][k][l].dir = FRONT ;
+              break;
+            case 5:
+              figure[i][j][k][l].dir = BACK ;
+              break;
+          }
+        }
+      }
+    }
+  }
+
+
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    for ( j = 0; j < volume.max.y; j++)
+    {
+      for ( k = 0; k < volume.max.y; k++)
+      {
+          free(figure[i][j][k]);
+        }
+      }
+    }
+
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    for ( j = 0; j < volume.max.y; j++)
+    {
+      figure[i][j] = malloc( volume.max.z * sizeof(***figure));
+    }
+  }
+
+  for ( i = 0; i < volume.max.x; i++)
+  {
+    free(figure[i]);
+  }
+
+  free(figure);
 
 
 }
