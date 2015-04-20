@@ -22,6 +22,8 @@ void listSolutionDestroy(ListSolution* listSolution)
     listSolution->head = curr;
   }
 
+  free(listSolution);
+
 }
 void listSolutionInsert(ListSolution* listSolution, Step* steps)
 {
