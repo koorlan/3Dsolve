@@ -33,7 +33,10 @@
 #define K_LF	0b00000100
 #define K_RT	0b00001000
 
+#define BHV_ROTATE	0b00000001
+
 unsigned char key_flags;
+unsigned char bhv_flags;
 unsigned char mouse_flags;
 float last_xpos;
 float last_ypos;

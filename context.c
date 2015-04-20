@@ -48,6 +48,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_RIGHT:
 					key_flags |= K_RT;
 					break;
+				case GLFW_KEY_SPACE:
+					bhv_flags ^= BHV_ROTATE;
+					break;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -97,9 +100,9 @@ int getInput ( Context* context )
 		if (context->camera->angle[1] < (-M_PI/2+0.01f)) context->camera->angle[1] = (-M_PI/2+0.01f);
 		//printf("accx=%f  accy=%f\n", accx, accy);
 	}
-	else
+	else if ((bhv_flags&BHV_ROTATE)==BHV_ROTATE)
 	{
-		context->camera->angle[0]+=0.001f;
+		context->camera->angle[0]+=0.002f;
 	}
 
 	context->camera->eye[0] = context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
@@ -203,6 +206,7 @@ void contextInit ( Context* context )
 	camera->distance = 4.f;
 	context->camera = camera;
 
+	bhv_flags |= BHV_ROTATE;	
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
