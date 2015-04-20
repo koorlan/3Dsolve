@@ -18,6 +18,7 @@
 #define RESOLVER_H
 
 #include "snake.h"
+#include "context.h"
 
  const int cornerTruthTable[6][6] =
   {

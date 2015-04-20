@@ -1,23 +1,23 @@
 #include "object.h"
 
 
-Object * object_load(const char * file)
+Object * objectLoad(const char * file)
 {
-	
+
 	Object * object = (Object *) malloc(sizeof(Object));
 
-	
-	log_write ("[OBJCT] Loading object from %s\n", file);
+
+	logWrite ("[OBJCT] Loading object from %s\n", file);
 
 	FILE * fp;
 
 	fp = fopen ( file , "r" );
 	if( !fp )
 	{
-		log_error ("[OBJCT] Could not open %s for reading\n", file);
+		logError ("[OBJCT] Could not open %s for reading\n", file);
 		return 0;
 	}
-	
+
 	fscanf(fp, "method %d\n", &(object->method));
 	//printf("method %d\n", (object->method));
 	int npoints;
@@ -30,9 +30,9 @@ Object * object_load(const char * file)
 		fscanf(fp, "%f %f %f\n", &(points[i]), &(points[i+1]), &(points[i+2]));
 		//printf("%f %f %f\n", (points[i]), (points[i+1]), (points[i+2]));
 	}
-	log_write ("[OBJCT] Read %d vertices\n", npoints);
-	
-	
+	logWrite ("[OBJCT] Read %d vertices\n", npoints);
+
+
 	int color_format;
 	fscanf(fp, "colors %d\n", &color_format);
 	//printf("colors %d\n", color_format);
@@ -42,9 +42,9 @@ Object * object_load(const char * file)
 		fscanf(fp, "%f %f %f\n", &(colors[i]), &(colors[i+1]), &(colors[i+2]));
 		//printf("%f %f %f\n", (colors[i]), (colors[i+1]), (colors[i+2]));
 	}
-	log_write ("[OBJCT] Read %d vertex colors\n", npoints);
+	logWrite ("[OBJCT] Read %d vertex colors\n", npoints);
 
-	
+
 	fscanf(fp, "faces %d\n", &(object->nb_faces));
 	// printf("faces %d\n", object->nb_faces);
 	object->indices = (GLubyte *) malloc (4 * object->nb_faces * sizeof(GLubyte));
@@ -64,26 +64,26 @@ Object * object_load(const char * file)
 				 // (object->indices[i+3]));
 		}
 	}
-	log_write ("[OBJCT] Read %d indices\n", object->nb_faces);
-	
+	logWrite ("[OBJCT] Read %d indices\n", object->nb_faces);
+
 	free(t_indices);
 
 	fclose(fp);
 
-	log_write ("[OBJCT] Object loaded from %s\n", file);
+	logWrite ("[OBJCT] Object loaded from %s\n", file);
 
 	GLuint points_vbo = 0;
 	glGenBuffers (1, &points_vbo);
 	glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
 	glBufferData (GL_ARRAY_BUFFER, (3*npoints) * sizeof (float), points, GL_STATIC_DRAW);
-	log_write ("[OBJCT] VBO %d created for vertices\n", points_vbo);
+	logWrite ("[OBJCT] VBO %d created for vertices\n", points_vbo);
 
 	GLuint colors_vbo = 0;
 	glGenBuffers (1, &colors_vbo);
 	glBindBuffer (GL_ARRAY_BUFFER, colors_vbo);
-	glBufferData (GL_ARRAY_BUFFER, (3*npoints) * sizeof (float), colors, GL_STATIC_DRAW);	
-	log_write ("[OBJCT] VBO %d created for colors\n", colors_vbo);
-	
+	glBufferData (GL_ARRAY_BUFFER, (3*npoints) * sizeof (float), colors, GL_STATIC_DRAW);
+	logWrite ("[OBJCT] VBO %d created for colors\n", colors_vbo);
+
 	GLuint vao = 0;
 	glGenVertexArrays (1, &vao);
 	glBindVertexArray (vao);
@@ -93,15 +93,15 @@ Object * object_load(const char * file)
 	glVertexAttribPointer (1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray (0);
 	glEnableVertexAttribArray (1);
-	
+
 	glBindVertexArray (vao);
 	object->vao_id = vao;
 
-	log_write ("[OBJCT] VAO %d created bound to VBO %d and VBO %d\n", vao, points_vbo, colors_vbo);
+	logWrite ("[OBJCT] VAO %d created bound to VBO %d and VBO %d\n", vao, points_vbo, colors_vbo);
 	return object;
 }
 
-int object_destroy(Object * object)
+int objectDestroy(Object * object)
 {
 	return 0;
 }

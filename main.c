@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "context.h"
 #include "log.h"
@@ -11,9 +12,9 @@
 int main ( int arg, char ** argv )
 {
 
-	if(!log_start())
+	if(!logStart())
 	{
-		log_error ("[MAIN.] Could not start log\n");
+		logError ("[MAIN.] Could not start log\n");
 		return EXIT_FAILURE;
 	}
 
@@ -24,15 +25,13 @@ int main ( int arg, char ** argv )
 		return;
 
 
-	Context* context = context_create ();
+	Context* context = contextCreate ();
 	if ( !context )
 	{
-		log_error ("[MAIN.] Could not create context\n");
+		logError ("[MAIN.] Could not create context\n");
 		return EXIT_FAILURE;
 	}
 	context->snake = snake;
-
-	context_init ( context );
 
 	int i,j,k;
 	/*
@@ -110,25 +109,25 @@ int main ( int arg, char ** argv )
 		}
 		//printf("ste %d => %s à %d - %d - %d \n",i, buffer,snake->solutions->head->step[i].coord.x,snake->solutions->head->step[i].coord.y,snake->solutions->head->step[i].coord.z );
 	}
-	while ( context->running )
+
+	struct timespec time1;
+	struct timespec time2;
+	time1.tv_sec = 0;
+	time1.tv_nsec = 1000000;
+
+	contextInit ( context );
+
+	while (context->running)
 	{
-		int key;
-		key = getInput ( context );
-		//printf("%d, %d\n", keys, key);
-		if (key == 1 && snake->currentUnit < snake->length)
-		{
-			//snake->tmpSteps[snake->currentUnit].coord.x = 2;
-			//snake->tmpSteps[snake->currentUnit].coord.y = snake->currentUnit-3;
-			//snake->tmpSteps[snake->currentUnit].coord.z = -1;
-			snake->currentUnit++;
-			sleep(1);
-		}
+		int key = getInput(context);
+
+		nanosleep(&time1, &time2);
 	}
 
-	context_destroy ( context );
+	contextDestroy ( context );
 
 	snakeDestroy ( snake );
 
-	log_write ("[MAIN.] Terminated\n");
+	logWrite ("[MAIN.] Terminated\n");
 	return EXIT_SUCCESS;
 }

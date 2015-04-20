@@ -8,9 +8,6 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 
-	last_xpos = xpos;
-	last_ypos = ypos;
-	glfwGetCursorPos (window, &xpos, &ypos);
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
 		mouse_flags |= M_RIGHT;
@@ -23,6 +20,9 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
 {
+	mouse_flags |= M_MOVE;
+	gxpos = xpos;
+	gypos = ypos;
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -37,16 +37,22 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					glfwSetWindowShouldClose(window, GL_TRUE);
 					break;
 				case GLFW_KEY_UP:
-					keys = 1;
+					key_flags |= K_UP;
+					break;
+				case GLFW_KEY_DOWN:
+					key_flags |= K_DN;
+					break;
+				case GLFW_KEY_LEFT:
+					key_flags |= K_LF;
+					break;
+				case GLFW_KEY_RIGHT:
+					key_flags |= K_RT;
 					break;
 			}
 		break;
 		case GLFW_RELEASE:
 			switch(key)
 			{
-				case GLFW_KEY_UP:
-					keys = 0;
-					break;
 				default:
 					break;
 			}
@@ -58,26 +64,62 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 int getInput ( Context* context )
 {
+	//mouse_flags = M_NONE;
+	last_xpos = gxpos;
+	last_ypos = gypos;
+	key_flags = M_NONE;
+	glfwPollEvents ();
+	
+	if ((key_flags&K_UP)==K_UP)
+	{
+	}
+	else if ((key_flags&K_DN)==K_DN)
+	{
+	}
+	else if ((key_flags&K_LF)==K_LF)
+	{
+		context->snake->currentUnit =
+			(context->snake->currentUnit>0?context->snake->currentUnit-1:0);
+	}
+	else if ((key_flags&K_RT)==K_RT)
+	{
+		context->snake->currentUnit =
+			(context->snake->currentUnit>=context->snake->length-2?context->snake->length-1:context->snake->currentUnit+1);
+	}
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
 	{
-		//context->camera->eye[0] += (xpos-last_xpos)*0.000000001f;
+		float accx = (last_xpos-gxpos)*0.01f;
+		float accy = (last_ypos-gypos)*0.01f;
+		context->camera->angle[0] += accx;
+		context->camera->angle[1] += accy;
+		if (context->camera->angle[1] > (M_PI/2-0.01f)) context->camera->angle[1] = (M_PI/2-0.01f);
+		if (context->camera->angle[1] < (-M_PI/2+0.01f)) context->camera->angle[1] = (-M_PI/2+0.01f);
+		//printf("accx=%f  accy=%f\n", accx, accy);
+	}
+	else
+	{
+		context->camera->angle[0]+=0.001f;
 	}
 
-	return keys;
+	context->camera->eye[0] = context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->distance * sin(context->camera->angle[1]);
+
+	return 0;
 }
 
-Context* context_create ()
+Context* contextCreate ()
 {
 
 	Context* context = (Context*) malloc ( sizeof (Context) );
 
 	if (!glfwInit ())
 	{
-		log_error ("[CNTXT] Could not start GLFW\n");
+		logError ("[CNTXT] Could not start GLFW\n");
 		return NULL;
 	}
-	log_write ("[CNTXT] GLFW started\n");
+	logWrite ("[CNTXT] GLFW started\n");
 
 	context->window = NULL;
 	if(FULLSCREEN)
@@ -94,17 +136,17 @@ Context* context_create ()
 		context->screen_height = DRESY;
 		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "Solid Snake", NULL, NULL );
 	}
-	log_write ("[CNTXT] Using resolution %dx%d\n", context->screen_width, context->screen_height);
+	logWrite ("[CNTXT] Using resolution %dx%d\n", context->screen_width, context->screen_height);
 
 	if ( !context->window ) {
-		log_error ("[CNTXT] GLFW could not create window\n");
+		logError ("[CNTXT] GLFW could not create window\n");
 		glfwTerminate();
-		context_destroy ( context );
+		contextDestroy ( context );
 		return NULL;
 	}
 
 	glfwMakeContextCurrent ( context->window );
-	log_write ("[CNTXT] Window created\n");
+	logWrite ("[CNTXT] Window created\n");
 
 	glfwSetKeyCallback(context->window, keyCallback);
 	glfwSetWindowSizeCallback(context->window, resizeCallback);
@@ -119,36 +161,38 @@ Context* context_create ()
 
 	glewExperimental = GL_TRUE;
 	glewInit ();
-	log_write ("[CNTXT] GLEW started\n");
+	logWrite ("[CNTXT] GLEW started\n");
 
 	const GLubyte* renderer = glGetString (GL_RENDERER);
 	const GLubyte* version = glGetString (GL_VERSION);
-	log_write ("[CNTXT] Renderer: %s\n", renderer);
-	log_write ("[CNTXT] OpenGL version supported %s\n", version);
-	log_gl_params ();
+	logWrite ("[CNTXT] Renderer: %s\n", renderer);
+	logWrite ("[CNTXT] OpenGL version supported %s\n", version);
+	logGLParams ();
 
-	log_write ("[CNTXT] Context succesfully created\n");
+	logWrite ("[CNTXT] Context succesfully created\n");
 
 	return context;
 
 }
 
-void context_init ( Context* context )
+void contextInit ( Context* context )
 {
-	log_write ("[CNTXT] Starting Renderer thread\n");
+	logWrite ("[CNTXT] Starting Renderer thread\n");
 
-	GLuint vs = shader_load ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
-	GLuint fs = shader_load ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
-	shader_compile(vs);
-	shader_compile(fs);
-	context->shader_program = shader_create_program(vs, fs);
-	context->dcube_mesh = object_load ( "stc/dcube.stc" );
-	context->lcube_mesh = object_load ( "stc/lcube.stc" );
+	GLuint vs = shaderLoad ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
+	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(vs);
+	shaderCompile(fs);
+	context->shader_program = shaderCreateProgram(vs, fs);
+	context->dcube_mesh = objectLoad ( "stc/dcube.stc" );
+	context->lcube_mesh = objectLoad ( "stc/lcube.stc" );
+	context->rdcube_mesh = objectLoad ( "stc/rdcube.stc" );
+	context->rlcube_mesh = objectLoad ( "stc/rlcube.stc" );
 
-	Camera * camera = camera_create();
-	camera->eye[0] = 5.f;
-	camera->eye[1] = 5.f;
-	camera->eye[2] = 5.f;
+	Camera * camera = cameraCreate();
+	camera->eye[0] = 7.f;
+	camera->eye[1] = 0.f;
+	camera->eye[2] = 0.f;
 	camera->target[0] = 0.f;
 	camera->target[1] = 0.f;
 	camera->target[2] = 0.f;
@@ -156,9 +200,9 @@ void context_init ( Context* context )
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.f;
-	camera->fov = 1.3f;
-	camera->distance = 10.f;
+	camera->angle[1] = 0.5f;
+	camera->fov = 1.6f;
+	camera->distance = 4.f;
 	context->camera = camera;
 
 	context->running = 1;
@@ -166,12 +210,12 @@ void context_init ( Context* context )
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
-void context_destroy ( Context * context )
+void contextDestroy ( Context * context )
 {
 	context->running = 0;
 	pthread_join ( context->render_thread, NULL );
 	glfwTerminate ();
-	log_write ("[CNTXT] GLFW terminated\n");
+	logWrite ("[CNTXT] GLFW terminated\n");
 	free ( context );
-	log_write ("[CNTXT] Context destroyed\n");
+	logWrite ("[CNTXT] Context destroyed\n");
 }

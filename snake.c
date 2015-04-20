@@ -88,7 +88,7 @@ Snake* snakeInit(char* templatePath)
 	snake->volume.max.y = 3;
 	snake->volume.max.z = 3;
 
-  snake->volume.state = malloc( snake->volume.max.x * sizeof (*snake->volume.state) );
+	snake->volume.state = malloc( snake->volume.max.x * sizeof (*snake->volume.state) );
 
 	int i,j;
 	for ( i = 0; i < snake->volume.max.x; i++)
