@@ -51,8 +51,6 @@ typedef struct context
 	GLuint shader_program;
 	Object* dcube_mesh;
 	Object* lcube_mesh;
-	Object* rdcube_mesh;
-	Object* rlcube_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;

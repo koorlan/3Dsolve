@@ -186,8 +186,6 @@ void contextInit ( Context* context )
 	context->shader_program = shaderCreateProgram(vs, fs);
 	context->dcube_mesh = objectLoad ( "stc/dcube.stc" );
 	context->lcube_mesh = objectLoad ( "stc/lcube.stc" );
-	context->rdcube_mesh = objectLoad ( "stc/rdcube.stc" );
-	context->rlcube_mesh = objectLoad ( "stc/rlcube.stc" );
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 7.f;
