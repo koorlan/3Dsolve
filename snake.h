@@ -6,17 +6,18 @@
 
 typedef enum
 {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	FRONT,
-	BACK
+	D_UP,
+	D_DOWN,
+	D_LEFT,
+	D_RIGHT,
+	D_FRONT,
+	D_BACK,
+	D_NONE
 } Dir;
 
 typedef enum
 {
-	EDGE,
+	EXT,
 	STRAIGHT,
 	CORNER
 } Unit;

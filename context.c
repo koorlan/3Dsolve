@@ -67,7 +67,7 @@ int getInput ( Context* context )
 	return keys;
 }
 
-Context* context_create ()
+Context* contextCreate ()
 {
 
 	Context* context = (Context*) malloc ( sizeof (Context) );
@@ -133,7 +133,7 @@ Context* context_create ()
 
 }
 
-void context_init ( Context* context )
+void contextInit ( Context* context )
 {
 	log_write ("[CNTXT] Starting Renderer thread\n");
 
@@ -165,7 +165,7 @@ void context_init ( Context* context )
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
-void context_destroy ( Context * context )
+void contextDestroy ( Context * context )
 {
 	context->running = 0;
 	pthread_join ( context->render_thread, NULL );

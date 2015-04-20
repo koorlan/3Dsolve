@@ -21,7 +21,7 @@ int main ( int arg, char ** argv )
 	Snake* snake = snakeInit ();
 
 
-	Context* context = context_create ();
+	Context* context = contextCreate ();
 	if ( !context )
 	{
 		log_error ("[MAIN.] Could not create context\n");
@@ -29,8 +29,9 @@ int main ( int arg, char ** argv )
 	}
 	context->snake = snake;
 
-	context_init ( context );
+	contextInit ( context );
 
+	//vieux snake fake
 	context->snake->tmpSteps[0].coord.x = 0;
 	context->snake->tmpSteps[0].coord.y = 0;
 	context->snake->tmpSteps[0].coord.z = 0;
@@ -49,7 +50,6 @@ int main ( int arg, char ** argv )
 	{
 		int key;
 		key = getInput ( context );
-		//printf("%d, %d\n", keys, key);
 		if (key == 1 && snake->currentUnit < snake->length)
 		{
 			snake->tmpSteps[snake->currentUnit].coord.x = 2;
@@ -60,7 +60,7 @@ int main ( int arg, char ** argv )
 		}
 	}
 
-	context_destroy ( context );
+	contextDestroy ( context );
 	
 	snakeDestroy ( snake );
 

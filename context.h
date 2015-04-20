@@ -33,7 +33,7 @@ double xpos;
 double ypos;
 
 
-typedef struct context_t
+typedef struct context
 {
 	GLFWwindow* window;
 	int screen_width;
@@ -54,8 +54,8 @@ void cursorCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 int getInput ( Context* context );
 
-Context* context_create ();
-void context_init ( Context* context );
-void context_destroy ( Context * context );
+Context* contextCreate ();
+void contextInit ( Context* context );
+void contextDestroy ( Context * context );
 
 #endif //CONTEXT_H
