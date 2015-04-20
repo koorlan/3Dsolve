@@ -5,7 +5,7 @@
 
 #include "linmath.h"
 
-typedef struct camera_t {
+typedef struct camera {
 	vec3 eye;
 	vec3 target;
 	vec3 up;
@@ -15,6 +15,6 @@ typedef struct camera_t {
 } Camera;
 
 
-Camera* camera_create ();
+Camera* cameraCreate ();
 
 #endif //CAMERA_H

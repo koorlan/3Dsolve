@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "log.h"
 #include "snake.h"
+#include "context.h"
 
  const int cornerTruthTable[6][6] =
   {

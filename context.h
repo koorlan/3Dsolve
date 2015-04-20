@@ -24,16 +24,24 @@
 #define DRESY 600
 #define M_RIGHT	0b00000001
 #define M_LEFT	0b00000010
+#define M_MOVE	0b00000100
+#define M_NONE	0b00000000
+#define MOUSE_SPEED	0.01f
 
-int keys;
+#define K_UP	0b00000001
+#define K_DN	0b00000010
+#define K_LF	0b00000100
+#define K_RT	0b00001000
+
+unsigned char key_flags;
 unsigned char mouse_flags;
 float last_xpos;
 float last_ypos;
-double xpos;
-double ypos;
+float gxpos;
+float gypos;
 
 
-typedef struct context_t
+typedef struct context
 {
 	GLFWwindow* window;
 	int screen_width;
@@ -43,6 +51,8 @@ typedef struct context_t
 	GLuint shader_program;
 	Object* dcube_mesh;
 	Object* lcube_mesh;
+	Object* rdcube_mesh;
+	Object* rlcube_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;
@@ -54,8 +64,8 @@ void cursorCallback(GLFWwindow* window, double xpos, double ypos);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 int getInput ( Context* context );
 
-Context* context_create ();
-void context_init ( Context* context );
-void context_destroy ( Context * context );
+Context* contextCreate ();
+void contextInit ( Context* context );
+void contextDestroy ( Context * context );
 
 #endif //CONTEXT_H

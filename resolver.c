@@ -105,15 +105,17 @@ void resolverSolveSnake(Snake *snake)
     return; //Impossible snake ...
   }
 
+<<<<<<< HEAD
   struct timespec time1;
 	struct timespec time2;
   time1.tv_sec = 0;
 	time1.tv_nsec = 1000000;
 
 
+=======
+>>>>>>> d8aa4a87cae7738ddc2c346bef2db46d14e3131f
   while(currentNode != rootNode && rootNode->hasPlayed == 1 && !(rootNode->currentChild == NULL))
   {
-    nanosleep (&time1, &time2);
 
     if (snake->currentUnit == snake->length - 1)
     {

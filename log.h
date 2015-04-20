@@ -10,10 +10,10 @@
 
 #define LOG_FILE "snake.log"
 
-int log_start ();
-int log_write (const char* message, ...);
-int log_warning (const char* message, ...);
-int log_error (const char* message, ...);
-void log_gl_params ();
+int logStart ();
+int logWrite (const char* message, ...);
+int logWarning (const char* message, ...);
+int logError (const char* message, ...);
+void logGLParams ();
 
 #endif //LOG_H
