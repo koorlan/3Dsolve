@@ -18,7 +18,10 @@ int main ( int arg, char ** argv )
 	}
 
 
-	Snake* snake = snakeInit ();
+	Snake* snake = snakeInit("Snakes/snake.snake");
+
+	if(snake == NULL)
+		return;
 
 
 	Context* context = context_create ();
@@ -40,7 +43,7 @@ int main ( int arg, char ** argv )
 	}*/
 
 	//Initialize a 3*3*3 Cube to fill
-	for (i = 0; i < snake->volume.max.x; i++)
+/*	for (i = 0; i < snake->volume.max.x; i++)
 	{
 		for (j = 0; j < snake->volume.max.y; j++)
 		{
@@ -49,10 +52,10 @@ int main ( int arg, char ** argv )
 				snake->volume.state[i][j][k] = FREE;
 			}
 		}
-	}
+	}*/
 	//With this snake
 
-	snake->units[0] = EDGE ;
+/*	snake->units[0] = EDGE ;
 	snake->units[1] = STRAIGHT ;
 	snake->units[2] = CORNER ;
 	snake->units[3] = CORNER ;
@@ -78,7 +81,7 @@ int main ( int arg, char ** argv )
 	snake->units[23] = STRAIGHT ;
 	snake->units[24] = CORNER ;
 	snake->units[25] = STRAIGHT ;
-	snake->units[26] = EDGE ;
+	snake->units[26] = EDGE ;*/
 
 	resolverSolveSnake(snake);
 	printf("Snakeresolved with %d  solutions \n",snake->solutions->size);
