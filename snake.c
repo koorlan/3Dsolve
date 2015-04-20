@@ -6,19 +6,22 @@ Snake* snakeInit(char* templatePath)
     file = fopen(templatePath, "r");
     if(file == NULL)
     {
-		// Log error
-		printf("Error on opening template file");
+		logError("[SNINI] Error on opening template : %s\n", templatePath);
 		return NULL;
     }
 
 	Snake* snake = malloc ( sizeof(Snake) );
+	snake->tmpSteps = NULL;
+	snake->units = NULL;
+	snake->solutions = NULL;
+	snake->volume.state = NULL;
 
 	// Loading volume size informations
-	if(fscanf(file, "[Volume]\n%d;%d;%d\n", &(snake->volume.max).x,
-		&(snake->volume.max).y, &(snake->volume.max).z) != 3)
+	if(fscanf(file, "[Volume]\n%d;%d;%d\n", &(snake->volume.max.x),
+		&(snake->volume.max.y), &(snake->volume.max.z)) != 3)
 	{
-		// Log error
-		printf("Error on reading volume size info");
+		logError("[SNINI] Error on reading volume size info\n");
+		snakeDestroy(snake);
 		return NULL;
 	}
 
@@ -41,7 +44,8 @@ Snake* snakeInit(char* templatePath)
 		z = (i / (snake->volume.max.x * snake->volume.max.y));
 		if(fscanf(file, "%d;", &tmp) != 1)
 		{
-			printf("Error on reading volume state");
+			logError("[SNINI] Error on reading volume state\n");
+			snakeDestroy(snake);
 			return NULL;
 		}
 
@@ -50,7 +54,8 @@ Snake* snakeInit(char* templatePath)
 
 	if(fscanf(file, "\n[Snake]\n%d\n", &(snake->length)) != 1)
 	{
-		printf("Error on reading snake size");
+		logError("[SNINI] Error on reading snake size\n");
+		snakeDestroy(snake);
 		return NULL;
 	}
 
@@ -61,7 +66,8 @@ Snake* snakeInit(char* templatePath)
 	{
 		if(fscanf(file, "%d;", &tmp) != 1)
 		{
-			printf("Error on reading snake units");
+			logError("[SNINI] Error on reading snake units\n");
+			snakeDestroy(snake);
 			return NULL;
 		}
 
@@ -75,65 +81,32 @@ Snake* snakeInit(char* templatePath)
 	snake->tmpSteps = malloc(snake->length * sizeof(Step));
 	memset(snake->tmpSteps, 0,snake->length * sizeof(Step));
 
-	/* Old initialization
-
-	snake->length = 27; //ne to be read from the template file
-	snake->tmpSteps = malloc ( snake->length * sizeof(Step) );
-	memset(snake->tmpSteps, 0,snake->length * sizeof(Step) );
-	snake->units = malloc ( snake->length * sizeof(Unit) );
-	memset(snake->units, 0,snake->length *  sizeof(Unit) );
-	snake->currentUnit = 0;
-	snake->solutions = listSolutionCreate();
-	snake->volume.max.x = 3;
-	snake->volume.max.y = 3;
-	snake->volume.max.z = 3;
-
-	snake->volume.state = malloc( snake->volume.max.x * sizeof (*snake->volume.state) );
-
-	int i,j;
-	for ( i = 0; i < snake->volume.max.x; i++)
-	{
-		snake->volume.state[i] = malloc( snake->volume.max.y * sizeof (**snake->volume.state) );
-	}
-	for ( i = 0; i < snake->volume.max.x; i++)
-	{
-		for ( j = 0; j < snake->volume.max.y; j++)
-		{
-			snake->volume.state[i][j] = malloc( snake->volume.max.z * sizeof (***snake->volume.state) );
-		}
-	}
-
-*/
-	printf("Snake loaded");
-
-	int k;
-	for(i = 0; i < snake->volume.max.x; i++)
-		for(j = 0; j < snake->volume.max.y; j++)
-			for(k = 0; k < snake->volume.max.z; k++)
-				printf("%d", snake->volume.state[i][j][k]);
+	logWrite("[SNINI] Snake loaded\n");
 
 	return snake;
 }
 
 void snakeDestroy ( Snake* snake )
 {
-	free(snake->tmpSteps);
-	free(snake->units);
-	listSolutionDestroy(snake->solutions);
+	if(snake->tmpSteps != NULL)
+		free(snake->tmpSteps);
+	if(snake->units != NULL)
+		free(snake->units);
+	if(snake->solutions != NULL)
+		listSolutionDestroy(snake->solutions);
 
-	int i,j;
-	for ( i = 0; i < snake->volume.max.x; i++)
+	if(snake->volume.state != NULL)
 	{
-		for ( j = 0; j < snake->volume.max.y; j++)
+		int i, j;
+		for(i = 0; i < snake->volume.max.x; i++)
 		{
-			free(snake->volume.state[i][j]);
+			for(j = 0; j < snake->volume.max.y; j++)
+				free(snake->volume.state[i][j]);
+			free(snake->volume.state[i]);
 		}
+		free(snake->volume.state);
+		logWrite("[SNDES] Volume freed\n");
 	}
-	for ( i = 0; i < snake->volume.max.x; i++)
-	{
-		free(snake->volume.state[i]);
-	}
-	free(snake->volume.state);
 
 	free(snake);
 }
@@ -163,4 +136,30 @@ int snakeRewind ( Snake* snake){
 void snakeAddStep ( Snake* snake, Step* step){
 	//Todo, error handling (index overflow)
 	memcpy( &(snake->tmpSteps[snake->currentUnit]), step,sizeof(Step));  //maybe an error here
+}
+
+char* snakePrint(Snake* snake)
+{
+	char* snakeString = malloc(snake->length);
+	int i;
+	for(i = 0; i < snake->length; i++)
+	{
+		switch(snake->units[i])
+		{
+			case EDGE:
+				snakeString[i] = 'E';
+				break;
+			case STRAIGHT:
+				snakeString[i] = 'S';
+				break;
+			case CORNER:
+				snakeString[i] = 'C';
+				break;
+			default:
+				snakeString[i] = '-';
+				break;
+		}
+	}
+
+	return snakeString;
 }

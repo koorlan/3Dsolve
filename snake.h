@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "listSolution.h"
+#include "log.h"
 
 /*
 	Type énuméré des direction
@@ -80,7 +81,7 @@ typedef struct volume
 */
 typedef struct snake
 {
-	int length // Nombre d'élement dans units
+	int length; // Nombre d'élement dans units
 	Step* tmpSteps; // Solution en cour de recherche
 	Unit* units; // Eléments unitaire du snake
 	int currentUnit; // Index de l'élément en cour de traitement
@@ -132,5 +133,15 @@ int snakeRewind ( Snake* snake);
 	à l'index "currentUnit" de <snake>
 */
 void snakeAddStep ( Snake* snake, Step* step);
+
+/*
+	Renvoie une chaine de caractère de type
+	"ESCCSC...", étant une représentation "graphique"
+	du snake.
+
+	Il appartien à l'appellant de la fonction de libérer la chaine de caractère
+	de la mémoire.
+*/
+char* snakePrint(Snake* snake);
 
 #endif //SNAKE_H
