@@ -257,6 +257,7 @@ void resolverFindSymmetry(Volume volume){
   cubeCenter.y = volume.max.y/2;
   cubeCenter.x = volume.max.z/2;
 
+  //Allocate space for working object
   Step ****figure = malloc( volume.max.x * sizeof(*figure));
   for ( i = 0; i < volume.max.x; i++)
   {
@@ -279,13 +280,14 @@ void resolverFindSymmetry(Volume volume){
         for ( l = 0; l < 6; l++)
         {
               figure[i][j][k][l].dir = l ;
-          
+
         }
       }
     }
   }
 
 
+  //Free working object
   for ( i = 0; i < volume.max.x; i++)
   {
     for ( j = 0; j < volume.max.y; j++)
