@@ -3,7 +3,7 @@ CC = gcc
 SUFFIXES	?= .c .o
 .SUFFIXES: $(SUFFIXES) .
 
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Wl,--allow-multiple-definition
 LDLIBS = -lGLEW -lGLU -lGL -lglfw3 -lX11 -lXxf86vm -lXrandr -lXi -lXinerama -lXcursor -lm -lpthread
 PROG  = snake
 
