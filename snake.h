@@ -19,7 +19,8 @@ typedef enum
 	LEFT,
 	RIGHT,
 	FRONT,
-	BACK
+	BACK,
+	DNONE
 } Dir;
 
 /*
@@ -61,7 +62,7 @@ typedef enum
 {
 	FORBIDDEN, // état interdi (permet des forme plus complexes que le cube)
 	FREE, // état libre (on peut y positionner un élement du snake)
-	BUSY // état occupé (un élément du snake y est déjà présent)
+	FILL // état occupé (un élément du snake y est déjà présent)
 } VolumeState;
 
 /*
@@ -143,5 +144,8 @@ void snakeAddStep ( Snake* snake, Step* step);
 	de la mémoire.
 */
 char* snakePrint(Snake* snake);
+
+
+void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength);
 
 #endif //SNAKE_H
