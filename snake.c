@@ -25,6 +25,7 @@ Snake* snakeInit(char* templatePath)
 		return NULL;
 	}
 
+	// Loading volume
 	int i, j;
 	const int stateNb = snake->volume.max.x*snake->volume.max.y*
 								snake->volume.max.z;
@@ -39,19 +40,17 @@ Snake* snakeInit(char* templatePath)
 	int tmp;
 	for(i=0; i < stateNb; i++)
 	{
-		x = i % snake->volume.max.x;
-		y = (i / snake->volume.max.x) % snake->volume.max.y;
-		z = (i / (snake->volume.max.x * snake->volume.max.y));
-		if(fscanf(file, "%d;", &tmp) != 1)
+		if(fscanf(file, "%d;%d;%d;%d", &x, &y, &z, &tmp) != 4)
 		{
 			logError("[SNINI] Error on reading volume state\n");
 			snakeDestroy(snake);
 			return NULL;
 		}
-
 		snake->volume.state[x][y][z] = tmp;
 	}
 
+
+	// Loading snake
 	if(fscanf(file, "\n[Snake]\n%d\n", &(snake->length)) != 1)
 	{
 		logError("[SNINI] Error on reading snake size\n");

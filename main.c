@@ -19,7 +19,7 @@ int main ( int arg, char ** argv )
 	}
 
 
-	Snake* snake = snakeInit("Snakes/snake.snake");
+	Snake* snake = snakeInit("Snakes/snake_test.snake");
 
 	if(snake == NULL)
 		return -10;
