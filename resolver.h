@@ -24,6 +24,8 @@
 #include "snake.h"
 #include "context.h"
 
+#include "time.h"
+
 const int cornerTruthTable[6][6] =
   {
     {0 , 0 , 1 , 1 , 1 , 1 },
@@ -43,7 +45,7 @@ typedef struct nodeTree
   int hasPlayed;
 } NodeTree;
 
-typedef NodeTree * Tree; 
+typedef NodeTree * Tree;
 
 /*
   Fonction principale dans la résolution du snake
@@ -51,14 +53,14 @@ typedef NodeTree * Tree;
 void resolverSolveSnake(Snake *snake);
 
 /*
-  Initialise initialise la racine d'un arbre n-aire 
+  Initialise la racine d'un arbre n-aire
   La racine est un élément "dummy",
   permettant simplement d'accéder à l'arbre
 */
 void initTree(Tree * rootNode);
 
 /*
-  Affichage console des champs "units" qui composent le snake 
+  Affichage console des champs "units" qui composent le snake
 */
 void printSnake(Snake snake);
 
@@ -66,25 +68,25 @@ void printSnake(Snake snake);
   Copie un vecteur (Step) source dans un vecteur destination
   Seront copiés :
     - Un n-uplet de coordonnées
-    - Sa direction 
+    - Sa direction
 */
 void copyStep (Step * dest, Step src);
 
 /*
- Ajoute les différents vecteurs initiaux à la hauteur 1 de l'arbre 
+ Ajoute les différents vecteurs initiaux à la hauteur 1 de l'arbre
 */
 void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir);
 
 /*
   Affichage console du noeud de l'arbre courant
-  Seront listés : 
+  Seront listés :
     - Le n-uplet correspondant aux coordonnées du noeud
-    - La direction 
+    - La direction
 */
 void printCurrentNode(Tree currentNode);
 
 /*
-  A partir d'un noeud donné et du snake, cette procédure : 
+  A partir d'un noeud donné et du snake, cette procédure :
     - Calcule les fils du noeud courant
     - Accroche les fils au noeud courant
     - Ajoute le noeud courant dans la liste solution courante
@@ -92,14 +94,14 @@ void printCurrentNode(Tree currentNode);
 */
 int buildChildren(Tree * currentNode, Snake * snake);
 
-/* 
-  Idem que printCurrentNode étendu à tous les noeud sur une hauteur donnée 
+/*
+  Idem que printCurrentNode étendu à tous les noeud sur une hauteur donnée
 */
 void printTree (Tree rootNode);
 
 /*
-  Trouve les vecteurs initiaux dans un volume donné 
-  Elimine les noeuds identiques par symétrie ou rotation 
+  Trouve les vecteurs initiaux dans un volume donné
+  Elimine les noeuds identiques par symétrie ou rotation
 */
 void resolverFindSymmetry(Volume volume);
 

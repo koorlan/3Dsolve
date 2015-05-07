@@ -167,21 +167,19 @@ char* snakePrint(Snake* snake)
 }
 
 void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength)
-{ 
-  int i;
+{
+  int i; 
 
-  printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) \033[00m\n", nbSolutions); 
-  
   if (snakeSolutions->head!=NULL)
-  { 
+  {
   	ListSolution *tmpSol = malloc(sizeof(ListSolution));
     memset(tmpSol, 0, sizeof(snakeSolutions));
   	memcpy(tmpSol, snakeSolutions, sizeof(snakeSolutions));
     while(tmpSol->head != NULL)
-    { 
+    {
       i=0;
-      while(i < snakeLength) 
-      { 
+      while(i < snakeLength)
+      {
         printf("\n \033[33;01m %d \033[00m", i);
         switch (tmpSol->head->step[i].dir)
         {
@@ -204,14 +202,14 @@ void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int sna
             printf("BACK ");
             break;
           case DNONE:
-          default : 
+          default :
             printf("Error in solutions string\n");
             exit(-1);
         }
         i++;
       }
       printf("\n");
-      tmpSol->head = tmpSol->head->next;  
+      tmpSol->head = tmpSol->head->next;
     }
   }
 }
