@@ -43,6 +43,14 @@ typedef struct nodeTree
   int hasPlayed;
 } NodeTree;
 
+typedef struct {
+  int a;
+  int b;
+  int c;
+  Coord pointA;
+  Coord pointB;
+}Line;
+
 typedef NodeTree * Tree; 
 
 /*
@@ -97,11 +105,49 @@ int buildChildren(Tree * currentNode, Snake * snake);
 */
 void printTree (Tree rootNode);
 
+
 /*
-  Trouve les vecteurs initiaux dans un volume donné 
-  Elimine les noeuds identiques par symétrie ou rotation 
+  Affiche les composantes d'une droite :
+    - 2 points 
+    - La valeur des coefficients dans son écriture cartésienne
 */
-void resolverFindSymmetry(Volume volume);
+void printLine (Line line);
+
+
+/*
+  Définit l'équation d'une droite à partir de deux points
+*/
+void linearEquation (Line *line); 
+
+/*
+  Retourne 1 si deux directions sont opposées selon une symétrie définie par typeOfAxis
+*/
+int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis);
+
+
+/*
+  Recopie les champs de src dans dest. 
+  Le type Line correspond à une droite définie par deux points et la valeur des coefficients relatifs à son équation catésienne
+*/
+void cpyLine(Line *dest, Line src);
+
+
+/*
+  Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan
+*/
+int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis);
+
+
+/*
+  Construit une liste de vecteurs initiaux dans un volume donné, pour cela : 
+    - On détermine le centre du volume
+    - On considère tour à tour chacune des faces de cette figure
+    - On projette orthogonalement le centre de la figure sur une face
+    - On construit les axes de symétrie passant par le centre
+    - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique  
+*/
+void findInitialVectors(Volume volume);
+
 
 /*
   A partir d'une direction et d'un n-uplet de coordonnées,
@@ -109,10 +155,17 @@ void resolverFindSymmetry(Volume volume);
 */
 Coord calcCoord(Coord coord,Dir dir);
 
+
 /*
   Retourne 1 si des coordonnées appartiennent au volume à remplir,
   0 sinon
 */
 int validCoord(Coord coord, Coord max);
+
+
+/*
+  Idem que précédemment mais avec des inégalités larges
+*/
+int validCoordSym(Coord coord, Coord max);
 
 #endif
