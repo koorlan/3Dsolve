@@ -43,15 +43,23 @@ typedef struct nodeTree
   int hasPlayed;
 } NodeTree;
 
+typedef struct 
+{
+  float x;
+  float y;
+  float z;
+}FloatCoord;
+
 typedef struct {
-  int a;
-  int b;
-  int c;
-  Coord pointA;
-  Coord pointB;
+  float a;
+  float b;
+  float c;
+  FloatCoord pointA;
+  FloatCoord pointB;
 }Line;
 
 typedef NodeTree * Tree; 
+
 
 /*
   Fonction principale dans la résolution du snake
@@ -166,6 +174,7 @@ int validCoord(Coord coord, Coord max);
 /*
   Idem que précédemment mais avec des inégalités larges
 */
-int validCoordSym(Coord coord, Coord max);
+int validCoordSym(Coord coord, FloatCoord max);
+
 
 #endif

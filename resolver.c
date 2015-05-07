@@ -12,17 +12,6 @@ void resolverSolveSnake(Snake *snake)
   printSnake(*snake);
 
   printTree(rootNode);
-
-  /*Initialize dummy elt */
-//  initTree(&rootNode);
-
-  /* Add all first vectors */
-//  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
-//  addInitialVector(&rootNode, 1, 2, 2, LEFT);
-//  addInitialVector(&rootNode, 1, 1, 2, UP);
-//  addInitialVector(&rootNode, 1, 2, 2, DOWN);
-//  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
-//  addInitialVector(&rootNode, 1, 1, 1, UP);
   
   currentNode = rootNode->currentChild;
 
@@ -309,7 +298,7 @@ void printTree (Tree rootNode)
 
 void printLine (Line line)
 {
-  printf("A : (%d, %d, %d)\tB : (%d, %d, %d)\nd : %dx + %dy = %d\n", \
+  printf("A : (%lf %lf, %lf)\tB : (%lf, %lf, %lf)\nd : %lfx + %lfy = %lf\n", \
   line.pointA.x, line.pointA.y, line.pointA.z, \
   line.pointB.x, line.pointB.y, line.pointB.z, \
   line.a, line.b, line.c );
@@ -379,7 +368,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
 
     }
   
-    int n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
+    float n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
     int cm = symmetryAxis.a*initialStep.coord.x + symmetryAxis.b*initialStep.coord.y;
     int xm = initialStep.coord.x + 2*symmetryAxis.a*(symmetryAxis.c - cm)/n;
     int ym = initialStep.coord.y + 2*symmetryAxis.b*(symmetryAxis.c - cm)/n;
@@ -419,8 +408,8 @@ int lineCmp(Step step, Coord coord, Dir dir)
 
 Tree findInitialVectors(Volume volume)
 {
-  Coord projectionCenter;
-  
+  FloatCoord projectionCenter;
+
   Line verticalAxis;
   Line horizontalAxis;
   Line diagonalAxis;
@@ -432,10 +421,12 @@ Tree findInitialVectors(Volume volume)
 
   Coord nCoord;
 
-  Coord cubeCenter;
-  cubeCenter.x = volume.max.x/2;
-  cubeCenter.y = volume.max.y/2;
-  cubeCenter.z = volume.max.z/2;
+  FloatCoord cubeCenter;
+  cubeCenter.x = (float)(volume.max.x-1)/2;
+  cubeCenter.y = (float)(volume.max.y-1)/2;
+  cubeCenter.z = (float)(volume.max.z-1)/2;
+
+  printf("cube center %lf %lf %lf\n", cubeCenter.x, cubeCenter.y, cubeCenter.z);
 
   Tree tmpNode = malloc(sizeof(NodeTree));
 
@@ -626,7 +617,7 @@ int validCoord(Coord coord, Coord max)
   return (coord.x >= 0 && coord.x < max.x) && (coord.y >= 0 && coord.y < max.y) && (coord.z >= 0 && coord.z < max.z) ;
 }
 
-int validCoordSym(Coord coord, Coord max)
+int validCoordSym(Coord coord, FloatCoord max)
 {
   return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
 }
