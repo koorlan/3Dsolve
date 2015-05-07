@@ -12,7 +12,7 @@
 int main ( int arg, char ** argv )
 {
 	int i;
-
+	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 	if(!logStart())
 	{
 		logError ("[MAIN.] Could not start log\n");
@@ -34,7 +34,7 @@ int main ( int arg, char ** argv )
 	}
 	context->snake = snake;
 
-	resolverFindSymmetry(snake->volume);
+	findInitialVectors(snake->volume);
 
 	resolverSolveSnake(snake);
 

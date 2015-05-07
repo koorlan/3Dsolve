@@ -192,7 +192,9 @@ void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir)
 
 void printCurrentNode(Tree currentNode)
 {
-  printf("\033[36;01mVector in current node :\033[00m \n\tCoord  : %d %d %d\n\t", currentNode->step.coord.x, currentNode->step.coord.y, currentNode->step.coord.z);
+  printf("\033[36;01mVector in current node :\033[00m \n\tCoord  : %d %d %d\n\t", \
+    currentNode->step.coord.x, currentNode->step.coord.y, currentNode->step.coord.z);
+
   switch(currentNode->step.dir)
   {
     case LEFT:
@@ -316,72 +318,278 @@ void printTree (Tree rootNode)
   }
 }
 
-
-void resolverFindSymmetry(Volume volume)
+void printLine (Line line)
 {
-  int i,j,k,l ;
-  int nbCube = volume.max.x * volume.max.y * volume.max.z;
+  printf("A : (%d, %d, %d)\tB : (%d, %d, %d)\nd : %dx + %dy = %d\n", \
+  line.pointA.x, line.pointA.y, line.pointA.z, \
+  line.pointB.x, line.pointB.y, line.pointB.z, \
+  line.a, line.b, line.c );
+}
+
+void linearEquation (Line *line)
+{
+
+  if((line->pointB.x - line->pointA.x)==0)
+  { line->a = 1;
+    line->b = 0;
+  }
+  else
+  {
+    line->a = (int) (line->pointB.y - line->pointA.y) / (line->pointB.x - line->pointA.x);
+    line->b = -1;
+  }
+  line->c = line->a * line->pointA.x - line->pointA.y;
+}
+
+int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis)
+{
+  if(!strcmp(typeOfAxis, "vertical"))
+    return ((srcDir==UP && destDir==UP) || (srcDir==DOWN && destDir==DOWN) || (srcDir==LEFT && destDir==RIGHT) || (srcDir==RIGHT && destDir==LEFT));
+  else if(!strcmp(typeOfAxis, "horizontal"))
+    return ((srcDir==UP && destDir==DOWN) || (srcDir==DOWN && destDir==UP) || (srcDir==LEFT && destDir==LEFT) || (srcDir==RIGHT && destDir==RIGHT));
+  else if(!strcmp(typeOfAxis, "diagonal"))
+    return((srcDir==UP && destDir==LEFT) || (srcDir==LEFT && destDir==UP) || (srcDir==RIGHT && destDir==DOWN) || (srcDir==DOWN && destDir==RIGHT));
+  else
+    return((srcDir==UP && destDir==RIGHT) || (srcDir==RIGHT && destDir==UP) || (srcDir==LEFT && destDir==DOWN) || (srcDir==DOWN && destDir==LEFT));
+
+}
+
+void cpyLine(Line *dest, Line src)
+{
+  dest->a = src.a;
+  dest->b = src.b;
+  dest->c = src.c;
+}
+
+int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis)
+{
+  Line symmetryAxis;
+  char *typeOfAxis;
+  int i;
+
+  for(i=0; i<4; i++)
+  {
+    switch (i)
+    {
+      case 0 :
+        cpyLine(&symmetryAxis, verticalAxis);
+        typeOfAxis = "vertical";
+        break;
+      case 1 :
+        cpyLine(&symmetryAxis, horizontalAxis);
+        typeOfAxis = "horizontal";
+        break;
+      case 2 :
+        cpyLine(&symmetryAxis, diagonalAxis);
+        typeOfAxis = "diagonal";
+        break;
+      case 3 :
+        cpyLine(&symmetryAxis, slashAxis);
+        typeOfAxis = "slash";
+        break;
+
+    }
+
+    int n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
+    int cm = symmetryAxis.a*initialStep.coord.x + symmetryAxis.b*initialStep.coord.y;
+    int xm = initialStep.coord.x + 2*symmetryAxis.a*(symmetryAxis.c - cm)/n;
+    int ym = initialStep.coord.y + 2*symmetryAxis.b*(symmetryAxis.c - cm)/n;
+
+    if(nCoord.x == xm && nCoord.y == ym && oppositeDir(initialStep.dir, nDir, typeOfAxis))
+    {
+      printf ("\n\033[31;01mSymmetry found here\033[00m\n");
+      printf("%d %d %d ", nCoord.x, nCoord.y, nCoord.z);
+      switch(nDir)
+      {
+        case UP :
+          printf("UP\n");
+          break;
+        case DOWN :
+          printf("DOWN\n");
+          break;
+        case LEFT :
+          printf("LEFT\n");
+          break;
+        case RIGHT :
+          printf("RIGHT\n");
+          break;
+        default :
+          printf("error\n");
+          break;
+      }
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int lineCmp(Step step, Coord coord, Dir dir)
+{
+  return(step.coord.x == coord.x && step.coord.y == coord.y && step.coord.z == coord.z && dir == step.dir);
+}
+
+void findInitialVectors(Volume volume)
+{
+  Coord projectionCenter;
+
+  Line verticalAxis;
+  Line horizontalAxis;
+  Line diagonalAxis;
+  Line slashAxis;
+
+  int i, j, k, dirIndex, flag;
+
+  Tree initialNode = malloc(sizeof(NodeTree));
+
+  Coord nCoord;
+
   Coord cubeCenter;
   cubeCenter.x = volume.max.x/2;
   cubeCenter.y = volume.max.y/2;
-  cubeCenter.x = volume.max.z/2;
+  cubeCenter.z = volume.max.z/2;
 
-  Step ****figure = malloc( volume.max.x * sizeof(*figure));
-  for ( i = 0; i < volume.max.x; i++)
+  Tree tmpNode = malloc(sizeof(NodeTree));
+
+  initTree(&initialNode);
+  addInitialVector(&initialNode, 0, 0, 2, UP);
+  tmpNode=initialNode->currentChild;
+
+  k = 0;
+  flag = 0;
+
+  //select each face of the cube, parallel to the plan (0,x,y)
+  while(volume.max.z -1 - k > 0)
   {
-    figure[i] = malloc( volume.max.y * sizeof(**figure));
-  }
-  for ( i = 0; i < volume.max.x; i++)
-  {
-    for ( j = 0; j < volume.max.y; j++)
+    //projected othogonal of the cube center on the considered face
+    projectionCenter.x = cubeCenter.x;
+    projectionCenter.y = cubeCenter.y;
+    projectionCenter.z = volume.max.z -1 - k;
+
+    //initialize axes of symmetry
+    verticalAxis.pointA.x = projectionCenter.x;
+    verticalAxis.pointA.y = projectionCenter.y-1;
+    verticalAxis.pointA.z = projectionCenter.z;
+    verticalAxis.pointB.x = projectionCenter.x;
+    verticalAxis.pointB.y = projectionCenter.y+1;
+    verticalAxis.pointB.z = projectionCenter.z;
+
+    horizontalAxis.pointA.x = projectionCenter.x-1;
+    horizontalAxis.pointA.y = projectionCenter.y;
+    horizontalAxis.pointA.z = projectionCenter.z;
+    horizontalAxis.pointB.x = projectionCenter.x+1;
+    horizontalAxis.pointB.y = projectionCenter.y;
+    horizontalAxis.pointB.z = projectionCenter.z;
+
+    diagonalAxis.pointA.x = projectionCenter.x-1;
+    diagonalAxis.pointA.y = projectionCenter.y+1;
+    diagonalAxis.pointA.z = projectionCenter.z;
+    diagonalAxis.pointB.x = projectionCenter.x+1;
+    diagonalAxis.pointB.y = projectionCenter.y-1;
+    diagonalAxis.pointB.z = projectionCenter.z;
+
+    slashAxis.pointA.x = projectionCenter.x+1;
+    slashAxis.pointA.y = projectionCenter.y+1;
+    slashAxis.pointA.z = projectionCenter.z;
+    slashAxis.pointB.x = projectionCenter.x-1;
+    slashAxis.pointB.y = projectionCenter.y-1;
+    slashAxis.pointB.z = projectionCenter.z;
+
+
+    //calculation of the linear equations
+    linearEquation(&verticalAxis);
+    linearEquation(&horizontalAxis);
+    linearEquation(&diagonalAxis);
+    linearEquation(&slashAxis);
+
+    printf ("\n\033[38;01mVertical axis\033[00m\n");
+    printLine(verticalAxis);
+    printf ("\n\033[38;01mHorizontal axis\033[00m\n");
+    printLine(horizontalAxis);
+    printf ("\n\033[38;01mDiagonal axis\033[00m\n");
+    printLine(diagonalAxis);
+    printf ("\n\033[38;01mSlash axis\033[00m\n");
+    printLine(slashAxis);
+
+    for(i=0; i<=volume.max.x/2; i++)
     {
-      figure[i][j] = malloc( volume.max.z * sizeof(***figure));
-    }
-  }
-  for ( i = 0; i < volume.max.x; i++)
-  {
-    for ( j = 0; j < volume.max.y; j++)
-    {
-      for ( k = 0; k < volume.max.y; k++)
+      for(j=0; j<=volume.max.y/2; j++)
       {
-        figure[i][j][k] = malloc(6 * sizeof(****figure));
-        for ( l = 0; l < 6; l++)
+        tmpNode=initialNode->currentChild;
+        nCoord.x = i;
+        nCoord.y = j;
+        nCoord.z = projectionCenter.z;
+
+        for (dirIndex = 0; dirIndex < 4; dirIndex++)
         {
-              figure[i][j][k][l].dir = l ;
+          tmpNode=initialNode->currentChild;
+          Dir tempDir;
+          switch(dirIndex)
+          {
+            case 0:
+              tempDir = UP ;
+              break;
+            case 1:
+              tempDir = DOWN ;
+              break;
+            case 2:
+              tempDir = LEFT ;
+              break;
+            case 3:
+              tempDir = RIGHT ;
+              break;
+          }
+          if(validCoordSym(calcCoord(nCoord, tempDir), projectionCenter))
+          {
+            while(tmpNode!=NULL && !flag )
+            {
+              if(!lineCmp(tmpNode->step, nCoord, tempDir))
+                flag = symmetries(tmpNode->step, nCoord, tempDir, verticalAxis, horizontalAxis, diagonalAxis, slashAxis);
+              else
+                flag = 1;
+              tmpNode=tmpNode->brother;
+            }
+            if(flag)
+            {
+              printf("symmetry found\n");
+              flag = 0;
 
+            }
+            else
+            { printf("symmetry not found\n");
+              addInitialVector(&initialNode, i, j, projectionCenter.z, tempDir);
+            }
+          }
+          else
+          { printf ("\n\033[31;01mUnvalid coord\033[00m\n");
+            printf("%d %d %d ", nCoord.x, nCoord.y, nCoord.z);
+            switch(tempDir)
+            {
+                case UP :
+                  printf("UP\n");
+                  break;
+                case DOWN :
+                  printf("DOWN\n");
+                  break;
+                case LEFT :
+                  printf("LEFT\n");
+                  break;
+                case RIGHT :
+                  printf("RIGHT\n");
+                  break;
+                default :
+                  printf("error\n");
+                 break;
+            }
+          }
         }
       }
     }
+    k++;
+    //k=12;
   }
+  printTree(initialNode);
 
-
-  for ( i = 0; i < volume.max.x; i++)
-  {
-    for ( j = 0; j < volume.max.y; j++)
-    {
-      for ( k = 0; k < volume.max.y; k++)
-      {
-          free(figure[i][j][k]);
-        }
-      }
-    }
-
-  for ( i = 0; i < volume.max.x; i++)
-  {
-    for ( j = 0; j < volume.max.y; j++)
-    {
-      figure[i][j] = malloc( volume.max.z * sizeof(***figure));
-    }
-  }
-
-  for ( i = 0; i < volume.max.x; i++)
-  {
-    free(figure[i]);
-  }
-
-  free(figure);
-
-
+  k = 0;
 }
 
 Coord calcCoord(Coord coord,Dir dir){
@@ -427,4 +635,9 @@ Coord calcCoord(Coord coord,Dir dir){
 int validCoord(Coord coord, Coord max)
 {
   return (coord.x >= 0 && coord.x < max.x) && (coord.y >= 0 && coord.y < max.y) && (coord.z >= 0 && coord.z < max.z) ;
+}
+
+int validCoordSym(Coord coord, Coord max)
+{
+  return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
 }
