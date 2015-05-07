@@ -12,17 +12,22 @@ void resolverSolveSnake(Snake *snake)
   Tree currentNode = malloc(sizeof(NodeTree));
   Tree rootNode = malloc(sizeof(NodeTree));
 
-  /*Initialize dummy elt */
+  rootNode = findInitialVectors(snake->volume);
+
   printSnake(*snake);
-  initTree(&rootNode);
+
+  printTree(rootNode);
+
+  /*Initialize dummy elt */
+//  initTree(&rootNode);
 
   /* Add all first vectors */
-  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
-  addInitialVector(&rootNode, 1, 2, 2, LEFT);
-  addInitialVector(&rootNode, 1, 1, 2, UP);
-  addInitialVector(&rootNode, 1, 2, 2, DOWN);
-  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
-  addInitialVector(&rootNode, 1, 1, 1, UP);
+//  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
+//  addInitialVector(&rootNode, 1, 2, 2, LEFT);
+//  addInitialVector(&rootNode, 1, 1, 2, UP);
+//  addInitialVector(&rootNode, 1, 2, 2, DOWN);
+//  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
+//  addInitialVector(&rootNode, 1, 1, 1, UP);
 
   currentNode = rootNode->currentChild;
 
@@ -92,12 +97,16 @@ void resolverSolveSnake(Snake *snake)
         }
       }
     }
+    if(exploredWayNb % 10000 == 0)
+        printf("%d ways explored\n", exploredWayNb);
   }
-  if (currentNode == rootNode && snake->currentUnit == (snake->length)-1)
+  /*if (currentNode == rootNode && snake->currentUnit == (snake->length)-1)
   {
     snakeAddSolution(snake);
     printf ("\n\033[36;01mSolution added\033[00m\n");
-  }
+}*/
+
+    printf("What's up ?\n");
 
   clock_t endTime = clock();
   if(endTime == (clock_t)(-1))
@@ -134,7 +143,7 @@ void printSnake(Snake snake)
 {
   int i;
   printf ("\n\033[34;01mSnake : \033[00m");
-  for (i = 0; i < 27; ++i)
+  for (i = 0; i < snake.length; ++i)
   {
     switch (snake.units[i])
     {   case (EDGE) :
@@ -428,7 +437,7 @@ int lineCmp(Step step, Coord coord, Dir dir)
   return(step.coord.x == coord.x && step.coord.y == coord.y && step.coord.z == coord.z && dir == step.dir);
 }
 
-void findInitialVectors(Volume volume)
+Tree findInitialVectors(Volume volume)
 {
   Coord projectionCenter;
 
@@ -587,9 +596,9 @@ void findInitialVectors(Volume volume)
     k++;
     //k=12;
   }
-  printTree(initialNode);
+  //printTree(initialNode);
+  return initialNode;
 
-  k = 0;
 }
 
 Coord calcCoord(Coord coord,Dir dir){
