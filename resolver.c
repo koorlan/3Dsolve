@@ -6,18 +6,23 @@ void resolverSolveSnake(Snake *snake)
 {
   Tree currentNode = malloc(sizeof(NodeTree));
   Tree rootNode = malloc(sizeof(NodeTree));
+  
+  rootNode = findInitialVectors(snake->volume);
+
+  printSnake(*snake);
+
+  printTree(rootNode);
 
   /*Initialize dummy elt */
-  printSnake(*snake);
-  initTree(&rootNode);
+//  initTree(&rootNode);
 
   /* Add all first vectors */
-  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
-  addInitialVector(&rootNode, 1, 2, 2, LEFT);
-  addInitialVector(&rootNode, 1, 1, 2, UP);
-  addInitialVector(&rootNode, 1, 2, 2, DOWN);
-  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
-  addInitialVector(&rootNode, 1, 1, 1, UP);
+//  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
+//  addInitialVector(&rootNode, 1, 2, 2, LEFT);
+//  addInitialVector(&rootNode, 1, 1, 2, UP);
+//  addInitialVector(&rootNode, 1, 2, 2, DOWN);
+//  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
+//  addInitialVector(&rootNode, 1, 1, 1, UP);
   
   currentNode = rootNode->currentChild;
 
@@ -118,7 +123,7 @@ void printSnake(Snake snake)
 {
   int i;
   printf ("\n\033[34;01mSnake : \033[00m");
-  for (i = 0; i < 27; ++i)
+  for (i = 0; i < snake.length; ++i)
   {
     switch (snake.units[i])
     {   case (EDGE) :
@@ -412,7 +417,7 @@ int lineCmp(Step step, Coord coord, Dir dir)
   return(step.coord.x == coord.x && step.coord.y == coord.y && step.coord.z == coord.z && dir == step.dir);
 }
 
-void findInitialVectors(Volume volume)
+Tree findInitialVectors(Volume volume)
 {
   Coord projectionCenter;
   
@@ -571,9 +576,9 @@ void findInitialVectors(Volume volume)
     k++;
     //k=12;
   }
-  printTree(initialNode);  
+  //printTree(initialNode);  
+  return initialNode;
 
-  k = 0;
 }
 
 Coord calcCoord(Coord coord,Dir dir){

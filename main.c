@@ -34,8 +34,6 @@ int main ( int arg, char ** argv )
 	}
 	context->snake = snake;
 
-	findInitialVectors(snake->volume);
-
 	resolverSolveSnake(snake);
 
 	snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);

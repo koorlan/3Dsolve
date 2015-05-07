@@ -146,7 +146,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
     - On construit les axes de symétrie passant par le centre
     - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique  
 */
-void findInitialVectors(Volume volume);
+Tree findInitialVectors(Volume volume);
 
 
 /*
