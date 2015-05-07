@@ -11,6 +11,7 @@
 
 int main ( int arg, char ** argv )
 {
+	int i;
 
 	if(!logStart())
 	{
@@ -37,33 +38,49 @@ int main ( int arg, char ** argv )
 
 	resolverSolveSnake(snake);
 
+	snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
+	
 	char *buffer = malloc(5*sizeof(char));
-	int i;
-	for (i = 0;  i< snake->length; i++)
-	{
 
-		switch (snake->solutions->head->step[i].dir){
-			case UP:
-				strcpy(buffer,"UP");
-				break;
-			case DOWN:
-				strcpy(buffer,"DOWN");
-				break;
-			case LEFT:
-				strcpy(buffer,"LEFT");
-				break;
-			case RIGHT:
-				strcpy(buffer,"RIGHT");
-				break;
-			case FRONT:
-				strcpy(buffer,"FRONT");
-				break;
-			case BACK:
-				strcpy(buffer,"BACK");
-				break;
+	if (snake->solutions->head!=NULL)
+	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
+		tmpSol = snake->solutions;
+		{	
+			i=0;
+			while(i < snake->length) 
+			{	
+				switch (tmpSol->head->step[i].dir)
+				{
+					case UP:
+						strcpy(buffer,"UP");
+						break;
+					case DOWN:
+						strcpy(buffer,"DOWN");
+						break;
+					case LEFT:
+						strcpy(buffer,"LEFT");
+						break;
+					case RIGHT:
+						strcpy(buffer,"RIGHT");
+						break;
+					case FRONT:
+						strcpy(buffer,"FRONT");
+						break;
+					case BACK:
+						strcpy(buffer,"BACK");
+						break;
+					case DNONE:
+					default :	
+						printf("Error in solutions string\n");
+						exit(-1);
+				
+				}
+				i++;
+			}
 		}
-		//printf("ste %d => %s à %d - %d - %d \n",i, buffer,snake->solutions->head->step[i].coord.x,snake->solutions->head->step[i].coord.y,snake->solutions->head->step[i].coord.z );
 	}
+
+	
 
 	struct timespec time1;
 	struct timespec time2;
