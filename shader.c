@@ -44,7 +44,7 @@ GLuint shaderLoad (char * file, GLenum type)
 	fclose(fp);
 
 	GLuint new_shader = glCreateShader (type);
-	glShaderSource (new_shader, 1, (const GLchar * const *)&buffer, NULL);
+	glShaderSource (new_shader, 1, (const GLchar **)&buffer, NULL);
 	free(buffer);
 
 	logWrite ("[SHADR] Shader id:%d type:%d loaded from %s\n", new_shader, type, file);
