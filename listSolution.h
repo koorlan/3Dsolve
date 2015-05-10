@@ -18,7 +18,9 @@ typedef struct listSolution
 } ListSolution;
 
 ListSolution* listSolutionCreate();
+
 void listSolutionDestroy();
+
 void listSolutionInsert();
 
 #endif

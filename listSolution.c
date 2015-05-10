@@ -25,6 +25,8 @@ void listSolutionDestroy(ListSolution* listSolution)
   free(listSolution);
 
 }
+
+
 void listSolutionInsert(ListSolution* listSolution, Step* steps)
 {
     Solution* solution = malloc ( sizeof (Solution) );

@@ -25,6 +25,7 @@ Snake* snakeInit(char* templatePath)
 		return NULL;
 	}
 
+	// Loading volume
 	int i, j;
 	const int stateNb = snake->volume.max.x*snake->volume.max.y*
 								snake->volume.max.z;
@@ -39,19 +40,17 @@ Snake* snakeInit(char* templatePath)
 	int tmp;
 	for(i=0; i < stateNb; i++)
 	{
-		x = i % snake->volume.max.x;
-		y = (i / snake->volume.max.x) % snake->volume.max.y;
-		z = (i / (snake->volume.max.x * snake->volume.max.y));
-		if(fscanf(file, "%d;", &tmp) != 1)
+		if(fscanf(file, "%d;%d;%d;%d", &x, &y, &z, &tmp) != 4)
 		{
 			logError("[SNINI] Error on reading volume state\n");
 			snakeDestroy(snake);
 			return NULL;
 		}
-
 		snake->volume.state[x][y][z] = tmp;
 	}
 
+
+	// Loading snake
 	if(fscanf(file, "\n[Snake]\n%d\n", &(snake->length)) != 1)
 	{
 		logError("[SNINI] Error on reading snake size\n");
@@ -114,18 +113,20 @@ void snakeDestroy ( Snake* snake )
 void snakeAddSolution ( Snake* snake ){
 	Step * tmp = malloc ( snake->length * sizeof(Step) );
 	memset(tmp, 0,snake->length * sizeof(Step));
-	memcpy( tmp , snake->tmpSteps,snake->length*sizeof(Step));
+	memcpy(tmp , snake->tmpSteps,snake->length*sizeof(Step));
 	listSolutionInsert(snake->solutions,snake->tmpSteps);
 	snake->tmpSteps = tmp; //Need to allocate space again to write next solution
+
 }
 
 Unit snakeGetNextUnit ( Snake* snake )
 {
-	snake->currentUnit ++;
+	(snake->currentUnit)++;
 	//Todo , error handling (index overflow)
 	return snake->units[snake->currentUnit];
 
 }
+
 int snakeRewind ( Snake* snake){
 	snake->currentUnit --;
 	if(snake->currentUnit < 0)
@@ -133,8 +134,9 @@ int snakeRewind ( Snake* snake){
 	//Todo , error handling (index overflow)
 	return snake->currentUnit;
 }
+
 void snakeAddStep ( Snake* snake, Step* step){
-	//Todo, error handling (index overflow)
+	//Todo , error handling (index overflow)
 	memcpy( &(snake->tmpSteps[snake->currentUnit]), step,sizeof(Step));  //maybe an error here
 }
 
@@ -162,4 +164,54 @@ char* snakePrint(Snake* snake)
 	}
 
 	return snakeString;
+}
+
+void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength)
+{ 
+  int i;
+
+  printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) \033[00m\n", nbSolutions); 
+  
+  if (snakeSolutions->head!=NULL)
+  { 
+  	ListSolution *tmpSol = malloc(sizeof(ListSolution));
+    memset(tmpSol, 0, sizeof(snakeSolutions));
+  	memcpy(tmpSol, snakeSolutions, sizeof(snakeSolutions));
+    while(tmpSol->head != NULL)
+    { 
+      i=0;
+      while(i < snakeLength) 
+      { 
+        printf("\n \033[33;01m %d \033[00m", i);
+        switch (tmpSol->head->step[i].dir)
+        {
+          case UP:
+            printf("UP ");
+            break;
+          case DOWN:
+            printf("DOWN ");
+            break;
+          case LEFT:
+            printf("LEFT ");
+            break;
+          case RIGHT:
+            printf("RIGHT ");
+            break;
+          case FRONT:
+            printf("FRONT ");
+            break;
+          case BACK:
+            printf("BACK ");
+            break;
+          case DNONE:
+          default : 
+            printf("Error in solutions string\n");
+            exit(-1);
+        }
+        i++;
+      }
+      printf("\n");
+      tmpSol->head = tmpSol->head->next;  
+    }
+  }
 }
