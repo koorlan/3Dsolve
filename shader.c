@@ -21,7 +21,7 @@ GLuint shaderLoad (char * file, GLenum type)
 	lSize = ftell( fp );
 	fseek(fp, 0, SEEK_SET);
 
-	buffer = (char*)malloc( lSize +1);
+	buffer = (char*)malloc( lSize + 2);
 	if( !buffer )
 	{
 		logError ("[SHADR] Could not allocate memory for shader in %s\n", file);

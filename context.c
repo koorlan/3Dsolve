@@ -187,8 +187,35 @@ void contextInit ( Context* context )
 	shaderCompile(vs);
 	shaderCompile(fs);
 	context->shader_program = shaderCreateProgram(vs, fs);
-	context->dcube_mesh = objectLoad ( "stc/dcube.stc" );
-	context->lcube_mesh = objectLoad ( "stc/lcube.stc" );
+	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
+	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
+
+
+	glEnable(GL_TEXTURE_2D);
+	unsigned char* buffer;
+	unsigned int width, height;
+	GLuint textureID;
+
+/*
+	lodepng_decode32_file(&buffer, &width, &height, "textures/fisher.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->lwoodtex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/fisher.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->dwoodtex = textureID;
+*/
+
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 7.f;

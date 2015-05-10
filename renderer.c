@@ -1,8 +1,5 @@
 #include "renderer.h"
 
-//TODO: camera
-//TODO: snake du dessous
-//TODO: cube en surbrillance
 
 void* renderer ( void *arg )
 {
@@ -14,7 +11,6 @@ void* renderer ( void *arg )
 	glfwMakeContextCurrent ( context->window );
 	glEnable (GL_DEPTH_TEST);
 	glDepthFunc (GL_LEQUAL);
-	glPointSize (4.0f);
 
 	glUseProgram (context->shader_program);
 
@@ -30,6 +26,7 @@ void* renderer ( void *arg )
 	{
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
 
+		//cap to 60 fps, be resource friendly my friend
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
@@ -42,6 +39,7 @@ void* renderer ( void *arg )
 		else last_time = cur_time;
 		//printf ("%f\n", fps);
 
+
 		mat4x4 WMat;
 		mat4x4 PVMat;
 		mat4x4 viewMat;
@@ -50,14 +48,15 @@ void* renderer ( void *arg )
 		GLuint wID;
 
 		glViewport (0, 0, context->screen_width, context->screen_height);
+		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		vpID = glGetUniformLocation(context->shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Step* step = context->snake->solutions->head->step;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
@@ -66,6 +65,7 @@ void* renderer ( void *arg )
 			else glBindVertexArray (context->lcube_mesh->vao_id);
 
 			mat4x4_translate( WMat, step[i].coord.x-1, step[i].coord.y-1, step[i].coord.z-1 );
+
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
 			else
@@ -73,9 +73,10 @@ void* renderer ( void *arg )
 
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
+			glDrawArrays(GL_TRIANGLES, 0, context->dcube_mesh->nb_faces);
+			//glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
 		}
-
+		/*
 		glViewport (-20, -240, context->screen_height, context->screen_height);
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
@@ -119,8 +120,9 @@ void* renderer ( void *arg )
 				xdir = (xdir==0?1:0);
 				ydir = (ydir==0?1:0);
 			}
+		
 		}
-
+		*/
 
 		glfwSwapBuffers (context->window);
 	}

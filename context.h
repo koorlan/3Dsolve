@@ -18,6 +18,7 @@
 #include "object.h"
 #include "camera.h"
 #include "snake.h"
+#include "lodepng.h"
 
 #define FULLSCREEN 0
 #define DRESX 800
@@ -52,6 +53,8 @@ typedef struct context
 	int running;
 	pthread_t render_thread;
 	GLuint shader_program;
+	GLuint dwoodtex;
+	GLuint lwoodtex;
 	Object* dcube_mesh;
 	Object* lcube_mesh;
 	Camera* camera;

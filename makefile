@@ -7,7 +7,7 @@ CFLAGS = -g -Wall -Wl,--allow-multiple-definition
 LDLIBS = -lGLEW -lGLU -lGL -lglfw3 -lX11 -lXxf86vm -lXrandr -lXi -lXinerama -lXcursor -lm -lpthread
 PROG  = snake
 
-OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o object.o context.o renderer.o main.o
+OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o main.o
 
 all: $(PROG)
 
