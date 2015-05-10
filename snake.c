@@ -168,48 +168,42 @@ char* snakePrint(Snake* snake)
 	return snakeString;
 }
 
-void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength)
+void snakePrintSolutions(Snake *snake)
 {
   int i;
 
-  if (snakeSolutions->head!=NULL)
-  {
-  	ListSolution *tmpSol = snakeSolutions;
-    while(tmpSol->head != NULL)
-    {
-      i=0;
-      while(i < snakeLength)
-      {
-        printf("\n \033[33;01m %d \033[00m", i);
-        switch (tmpSol->head->step[i].dir)
-        {
-          case UP:
-            printf("UP ");
-            break;
-          case DOWN:
-            printf("DOWN ");
-            break;
-          case LEFT:
-            printf("LEFT ");
-            break;
-          case RIGHT:
-            printf("RIGHT ");
-            break;
-          case FRONT:
-            printf("FRONT ");
-            break;
-          case BACK:
-            printf("BACK ");
-            break;
-          case DNONE:
-          default :
-            printf("Error in solutions string\n");
-            exit(-1);
-        }
-        i++;
-      }
-      printf("\n");
-      tmpSol->head = tmpSol->head->next;
-    }
-  }
+  printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) \033[00m\n", snake->solutions->size);
+
+	Solution *curr = NULL;
+	for (curr = snake->solutions->head; curr!= NULL ; curr = curr->next) {
+	 	for ( i = 0; i < snake->length; i++) {
+			printf("\n \033[33;01m %d \033[00m", i);
+			switch (curr->step[i].dir)
+			{
+				case UP:
+					printf("UP ");
+					break;
+				case DOWN:
+					printf("DOWN ");
+					break;
+				case LEFT:
+					printf("LEFT ");
+					break;
+				case RIGHT:
+					printf("RIGHT ");
+					break;
+				case FRONT:
+					printf("FRONT ");
+					break;
+				case BACK:
+					printf("BACK ");
+					break;
+				case DNONE:
+				default :
+					printf("Error in solutions string\n");
+					exit(-1);
+			}
+	 	}
+		printf("\n");
+	}
 }

@@ -26,16 +26,6 @@
 
 #include "time.h"
 
-const int cornerTruthTable[6][6] =
-  {
-    {0 , 0 , 1 , 1 , 1 , 1 },
-    {0 , 0 , 1 , 1 , 1 , 1 },
-    {1 , 1 , 0 , 0 , 1 , 1 },
-    {1 , 1 , 0 , 0 , 1 , 1 },
-    {1 , 1 , 1 , 1 , 0 , 0 },
-    {1 , 1 , 1 , 1 , 0 , 0 }
-  } ;
-
 typedef struct nodeTree
 {
   Step step;
@@ -69,7 +59,11 @@ typedef NodeTree * Tree;
 void resolverSolveSnake(Snake *snake);
 
 /*
+<<<<<<< HEAD
   Initialise la racine d'un arbre n-aire
+=======
+  Initialise initialise la racine d'un arbre n-aire
+>>>>>>> 7c2f7a8de3c3dd728fbc9af3f2796966bef0077a
   La racine est un élément "dummy",
   permettant simplement d'accéder à l'arbre
 */

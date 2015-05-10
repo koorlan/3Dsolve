@@ -42,9 +42,9 @@ int main ( int argc, char ** argv )
 
 	resolverSolveSnake(snake);
 
-	/*snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
+//	snakePrintSolutions(snake);
 
-	char *buffer = malloc(5*sizeof(char));
+	/*char *buffer = malloc(5*sizeof(char));
 
 	if (snake->solutions->head!=NULL)
 	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
@@ -83,8 +83,6 @@ int main ( int argc, char ** argv )
 			}
 		}
 	}*/
-
-
 
 	struct timespec time1;
 	struct timespec time2;

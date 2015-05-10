@@ -1,5 +1,15 @@
 #include "resolver.h"
 
+const int cornerTruthTable[6][6] =
+ {
+   {0 , 0 , 1 , 1 , 1 , 1 },
+   {0 , 0 , 1 , 1 , 1 , 1 },
+   {1 , 1 , 0 , 0 , 1 , 1 },
+   {1 , 1 , 0 , 0 , 1 , 1 },
+   {1 , 1 , 1 , 1 , 0 , 0 },
+   {1 , 1 , 1 , 1 , 0 , 0 }
+ } ;
+
 void resolverSolveSnake(Snake *snake)
 {
     // Let's resolve <snake>
@@ -183,7 +193,6 @@ void printCurrentNode(Tree currentNode)
   }
 }
 
-
 int buildChildren(Tree currentNode, Snake * snake)
 {
   int i = 0;
@@ -255,7 +264,6 @@ int buildChildren(Tree currentNode, Snake * snake)
                   tempDir = BACK ;
                   break;
               }
-
 
               newChild->parent = currentNode;
               newChild->brother = currentNode->currentChild;
@@ -438,6 +446,7 @@ Tree findInitialVectors(Volume volume)
 
   //select each face of the cube, parallel to the plan (0,x,y)
   while(volume.max.z -1 - k > 0)
+
   {
     //projected othogonal of the cube center on the considered face
     projectionCenter.x = cubeCenter.x;
