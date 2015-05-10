@@ -240,9 +240,7 @@ int buildChildren(Tree * currentNode, Snake * snake)
           (*currentNode)->currentChild = newChild;
           break;
         case CORNER:
-          printf("");
           free(newChild);
-
           for ( i = 0; i < 6; i++)
           {
             Tree newChild = malloc(sizeof(NodeTree));

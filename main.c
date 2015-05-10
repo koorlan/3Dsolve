@@ -36,17 +36,17 @@ int main ( int arg, char ** argv )
 
 	resolverSolveSnake(snake);
 
-	snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
-	
+	snakePrintSolutions(snake);
+
 	char *buffer = malloc(5*sizeof(char));
 
 	if (snake->solutions->head!=NULL)
 	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
 		tmpSol = snake->solutions;
-		{	
+		{
 			i=0;
-			while(i < snake->length) 
-			{	
+			while(i < snake->length)
+			{
 				switch (tmpSol->head->step[i].dir)
 				{
 					case UP:
@@ -68,17 +68,17 @@ int main ( int arg, char ** argv )
 						strcpy(buffer,"BACK");
 						break;
 					case DNONE:
-					default :	
+					default :
 						printf("Error in solutions string\n");
 						exit(-1);
-				
+
 				}
 				i++;
 			}
 		}
 	}
 
-	
+
 
 	struct timespec time1;
 	struct timespec time2;
