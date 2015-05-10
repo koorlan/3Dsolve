@@ -9,7 +9,7 @@
 #include "snake.h"
 #include "resolver.h"
 
-int main ( int arg, char ** argv )
+int main ( int argc, char ** argv )
 {
 	int i;
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
@@ -19,8 +19,14 @@ int main ( int arg, char ** argv )
 		return EXIT_FAILURE;
 	}
 
+	char* filePath = malloc(50);
+	if(argc == 2)
+		strncpy(filePath, argv[1], 50);
+	else
+		strncpy(filePath, "Snakes/snake.snake", 50);
 
-	Snake* snake = snakeInit("Snakes/snake4x4.snake");
+	Snake* snake = snakeInit(filePath);
+	free(filePath);
 
 	if(snake == NULL)
 		return -10;
@@ -36,7 +42,7 @@ int main ( int arg, char ** argv )
 
 	resolverSolveSnake(snake);
 
-	snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
+	/*snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
 
 	char *buffer = malloc(5*sizeof(char));
 
@@ -76,7 +82,7 @@ int main ( int arg, char ** argv )
 				i++;
 			}
 		}
-	}
+	}*/
 
 
 

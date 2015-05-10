@@ -45,15 +45,23 @@ typedef struct nodeTree
   int hasPlayed;
 } NodeTree;
 
+typedef struct
+{
+  float x;
+  float y;
+  float z;
+}FloatCoord;
+
 typedef struct {
-  int a;
-  int b;
-  int c;
-  Coord pointA;
-  Coord pointB;
+  float a;
+  float b;
+  float c;
+  FloatCoord pointA;
+  FloatCoord pointB;
 }Line;
 
 typedef NodeTree * Tree;
+
 
 /*
   Fonction principale dans la résolution du snake
@@ -65,7 +73,7 @@ void resolverSolveSnake(Snake *snake);
   La racine est un élément "dummy",
   permettant simplement d'accéder à l'arbre
 */
-void initTree(Tree * rootNode);
+Tree initTree();
 
 /*
   Affichage console des champs "units" qui composent le snake
@@ -83,7 +91,7 @@ void copyStep (Step * dest, Step src);
 /*
  Ajoute les différents vecteurs initiaux à la hauteur 1 de l'arbre
 */
-void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir);
+void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir);
 
 /*
   Affichage console du noeud de l'arbre courant
@@ -100,7 +108,7 @@ void printCurrentNode(Tree currentNode);
     - Ajoute le noeud courant dans la liste solution courante
     - Retire les coordonnées du noeud courant dans le volume à remplir
 */
-int buildChildren(Tree * currentNode, Snake * snake);
+int buildChildren(Tree currentNode, Snake * snake);
 
 /*
   Idem que printCurrentNode étendu à tous les noeud sur une hauteur donnée
@@ -173,6 +181,7 @@ int validCoord(Coord coord, Coord max);
 /*
   Idem que précédemment mais avec des inégalités larges
 */
-int validCoordSym(Coord coord, Coord max);
+int validCoordSym(Coord coord, FloatCoord max);
+
 
 #endif

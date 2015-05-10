@@ -80,7 +80,7 @@ Snake* snakeInit(char* templatePath)
 	snake->tmpSteps = malloc(snake->length * sizeof(Step));
 	memset(snake->tmpSteps, 0,snake->length * sizeof(Step));
 
-	logWrite("[SNINI] Snake loaded\n");
+	logWrite("[SNINI] Snake loaded (size : %d)\n", snake->length);
 
 	return snake;
 }
@@ -110,34 +110,36 @@ void snakeDestroy ( Snake* snake )
 	free(snake);
 }
 
-void snakeAddSolution ( Snake* snake ){
+void snakeAddSolution ( Snake* snake )
+{
 	Step * tmp = malloc ( snake->length * sizeof(Step) );
 	memset(tmp, 0,snake->length * sizeof(Step));
-	memcpy(tmp , snake->tmpSteps,snake->length*sizeof(Step));
-	listSolutionInsert(snake->solutions,snake->tmpSteps);
-	snake->tmpSteps = tmp; //Need to allocate space again to write next solution
-
+	memcpy(tmp , snake->tmpSteps, snake->length*sizeof(Step));
+	listSolutionInsert(snake->solutions,tmp);
 }
 
 Unit snakeGetNextUnit ( Snake* snake )
 {
 	(snake->currentUnit)++;
-	//Todo , error handling (index overflow)
-	return snake->units[snake->currentUnit];
+	if(snake->currentUnit >= snake->length)
+		snake->currentUnit = snake->length - 1;
 
+	return snake->units[snake->currentUnit];
 }
 
 int snakeRewind ( Snake* snake){
 	snake->currentUnit --;
 	if(snake->currentUnit < 0)
 		snake->currentUnit = 0;
-	//Todo , error handling (index overflow)
+
 	return snake->currentUnit;
 }
 
-void snakeAddStep ( Snake* snake, Step* step){
-	//Todo , error handling (index overflow)
-	memcpy( &(snake->tmpSteps[snake->currentUnit]), step,sizeof(Step));  //maybe an error here
+void snakeAddStep ( Snake* snake, Step* step)
+{
+	if(snake->currentUnit < 0 || snake->currentUnit >= snake->length)
+		return;
+	memcpy( &(snake->tmpSteps[snake->currentUnit]), step, sizeof(Step));
 }
 
 char* snakePrint(Snake* snake)
@@ -168,13 +170,11 @@ char* snakePrint(Snake* snake)
 
 void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength)
 {
-  int i; 
+  int i;
 
   if (snakeSolutions->head!=NULL)
   {
-  	ListSolution *tmpSol = malloc(sizeof(ListSolution));
-    memset(tmpSol, 0, sizeof(snakeSolutions));
-  	memcpy(tmpSol, snakeSolutions, sizeof(snakeSolutions));
+  	ListSolution *tmpSol = snakeSolutions;
     while(tmpSol->head != NULL)
     {
       i=0;

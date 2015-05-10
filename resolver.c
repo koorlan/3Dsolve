@@ -1,129 +1,81 @@
 #include "resolver.h"
 
-
-
 void resolverSolveSnake(Snake *snake)
 {
-    logWrite("[RESO] Starting resolution (snake size : %d x %d x %d)\n",
+    // Let's resolve <snake>
+    logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",
     snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
+
     clock_t startTime = clock();
-    int exploredWayNb = 0;
+    long unsigned int exploredWayNb = 0;
 
-  Tree currentNode = malloc(sizeof(NodeTree));
-  Tree rootNode = malloc(sizeof(NodeTree));
+    Tree rootNode = findInitialVectors(snake->volume);
 
-  rootNode = findInitialVectors(snake->volume);
+    printSnake(*snake);
+    printTree(rootNode);
 
-  printSnake(*snake);
+    Tree currentNode = rootNode->currentChild;
+    int buildResult = -1;
 
-  printTree(rootNode);
-
-  /*Initialize dummy elt */
-//  initTree(&rootNode);
-
-  /* Add all first vectors */
-//  addInitialVector(&rootNode, 0, 2, 2, RIGHT);
-//  addInitialVector(&rootNode, 1, 2, 2, LEFT);
-//  addInitialVector(&rootNode, 1, 1, 2, UP);
-//  addInitialVector(&rootNode, 1, 2, 2, DOWN);
-//  addInitialVector(&rootNode, 0, 1, 1, RIGHT);
-//  addInitialVector(&rootNode, 1, 1, 1, UP);
-
-  currentNode = rootNode->currentChild;
-
-  while (currentNode != rootNode)
-  {
-    /* solution found */
-    if (snake->currentUnit == (snake->length)-1)
+    while (currentNode != rootNode)
     {
-      snakeAddStep(snake, &(currentNode->step));
-      snakeAddSolution(snake);
-      logWrite ("[RESO] Resolver found a solution \n");
-      printf ("\n\033[36;01mSolution added\033[00m\n");
-      snakeRewind(snake);
-      exploredWayNb++;
-    }
-
-    /* children already created */
-    if(currentNode->hasPlayed)
-    {
-        if(currentNode->currentChild != NULL)
+        if(currentNode->hasPlayed == 0)
         {
-          currentNode = currentNode->currentChild;
-          snake->currentUnit ++;
+            // Play the currentNode
+            buildResult = buildChildren(currentNode, snake);
+            if(buildResult == 1) // Build is OK
+                currentNode = currentNode->currentChild;
+            else if(buildResult == 2) // Snake edge -> solution found
+            {
+                snakeAddStep(snake, &(currentNode->currentChild->step));
+                snakeAddSolution(snake);
+                free(currentNode->currentChild);
+                currentNode->currentChild = NULL;
+                logWrite ("[RESOL] Resolver found a solution \n");
+                printf ("\n\033[36;01mSolution added\033[00m\n");
+
+                snakeRewind(snake);
+
+                exploredWayNb++;
+            }
         }
         else
         {
-          if(currentNode->brother == NULL)
-          {
-              snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FREE;
-              currentNode = currentNode->parent;
-              free(currentNode->currentChild);
-              currentNode->currentChild = NULL;
-              snakeRewind(snake);
-          }
-          else
-          {
             snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FREE;
-            currentNode = currentNode->brother;
-            free(currentNode->parent->currentChild);
-            currentNode->parent->currentChild = currentNode;
-          }
+            if(currentNode->brother != NULL)
+            {
+                currentNode = currentNode->brother;
+                free(currentNode->parent->currentChild);
+                currentNode->parent->currentChild = currentNode;
+            }
+            else
+            {
+                exploredWayNb++;
 
+                currentNode = currentNode->parent;
+                free(currentNode->currentChild);
+                currentNode->currentChild = NULL;
+                snakeRewind(snake);
+            }
         }
-
     }
-    else
-    {
-      if(buildChildren(&currentNode, snake)==1)
-        currentNode = currentNode->currentChild;
-      else
-      {
-        exploredWayNb++;
-        if(currentNode->brother != NULL)
-        {
-          snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FREE;
-          currentNode = currentNode->brother;
-          free(currentNode->parent->currentChild);
-          currentNode->parent->currentChild = currentNode;
-        }
-        else
-        {
-          snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FREE;
-          currentNode = currentNode->parent;
-          free(currentNode->currentChild);
-          currentNode->currentChild = NULL;
-          snakeRewind(snake);
-        }
-      }
-    }
-    if(exploredWayNb % 10000 == 0)
-        printf("%d ways explored\n", exploredWayNb);
-  }
-  /*if (currentNode == rootNode && snake->currentUnit == (snake->length)-1)
-  {
-    snakeAddSolution(snake);
-    printf ("\n\033[36;01mSolution added\033[00m\n");
-}*/
 
-    printf("What's up ?\n");
+    logWrite("[RESOL] Snake resolved\n");
+    clock_t endTime = clock();
+    if(endTime == (clock_t)(-1))
+    logError("[RESOL] CPU clock time not available");
 
-  clock_t endTime = clock();
-  if(endTime == (clock_t)(-1))
-    logError("[RESO] CPU clock time not available");
+    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
 
-  double elapsedTime = ((double)(endTime - startTime)) / CLOCKS_PER_SEC;
-
-  printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %f \033[38;01mseconds\033[00m\n", snake->solutions->size,
-  elapsedTime);
-  printf("\033[31;01m%d \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
-  logWrite ("[RESO] Resolver Ended, found %d solutions in %f seconds\n",snake->solutions->size,
-  elapsedTime);
-
+    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
+    elapsedTime);
+    printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
+    logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,
+    elapsedTime);
 }
 
 
-void initTree(Tree * rootNode)
+Tree initTree()
 {
     Tree elt = malloc(sizeof(NodeTree));
 
@@ -136,7 +88,7 @@ void initTree(Tree * rootNode)
     elt->step.dir = DNONE;
     elt->hasPlayed = 1;
 
-    *rootNode = elt;
+    return elt;
 }
 
 void printSnake(Snake snake)
@@ -169,11 +121,10 @@ void copyStep (Step * dest, Step src)
   dest->coord.y = src.coord.y;
   dest->coord.z = src.coord.z;
   dest->dir = src.dir;
-
 }
 
 
-void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir)
+void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir)
 {
   Tree newNode = malloc(sizeof(NodeTree));
 
@@ -190,12 +141,11 @@ void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir)
   }
 
   copyStep(&(newNode->step), newVector) ;
-  newNode->brother = (*rootNode)->currentChild ;
+  newNode->brother = rootNode->currentChild ;
   newNode->currentChild = NULL;
-  newNode->parent = (*rootNode);
+  newNode->parent = rootNode;
   newNode->hasPlayed = 0;
-  (*rootNode)->currentChild = newNode ;
-
+  rootNode->currentChild = newNode;
 }
 
 
@@ -234,44 +184,58 @@ void printCurrentNode(Tree currentNode)
 }
 
 
-int buildChildren(Tree * currentNode, Snake * snake)
+int buildChildren(Tree currentNode, Snake * snake)
 {
   int i = 0;
 
   Unit nextUnit;
+  Tree newChild;
 
-  Tree newChild = malloc(sizeof(NodeTree));
-
-  Coord nCoord = calcCoord((*currentNode)->step.coord, (*currentNode)->step.dir);
+  Coord nCoord = calcCoord(currentNode->step.coord, currentNode->step.dir);
 
   if(validCoord(nCoord, snake->volume.max) && snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
   {
-      snakeAddStep(snake, &((*currentNode)->step));
-      snake->volume.state[(*currentNode)->step.coord.x][(*currentNode)->step.coord.y][(*currentNode)->step.coord.z] = FILL;
+      snakeAddStep(snake, &(currentNode->step));
+      snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FILL;
       nextUnit = snakeGetNextUnit(snake);
-      switch (nextUnit) {
+      switch (nextUnit)
+      {
         case EDGE:
+            currentNode->hasPlayed = 1;
+            currentNode->currentChild = NULL;
+            newChild = malloc(sizeof(NodeTree));
+            newChild->parent = currentNode;
+            newChild->brother = NULL;
+            newChild->hasPlayed = 1;
+            newChild->currentChild = NULL;
+            newChild->step.dir = currentNode->step.dir;
+            newChild->step.coord.x = nCoord.x;
+            newChild->step.coord.y = nCoord.y;
+            newChild->step.coord.z = nCoord.z;
+            currentNode->currentChild = newChild;
+            return 2;
+        break;
         case STRAIGHT:
-          newChild->parent = *currentNode;
-          newChild->brother = (*currentNode)->currentChild;
+          newChild = malloc(sizeof(NodeTree));
+          newChild->parent = currentNode;
+          newChild->brother = currentNode->currentChild;
           newChild->hasPlayed = 0;
           newChild->currentChild = NULL;
-          newChild->step.dir = (*currentNode)->step.dir;
+          newChild->step.dir = currentNode->step.dir;
           newChild->step.coord.x = nCoord.x;
           newChild->step.coord.y = nCoord.y;
           newChild->step.coord.z = nCoord.z;
-          (*currentNode)->currentChild = newChild;
+          currentNode->currentChild = newChild;
           break;
         case CORNER:
-          printf("");
-          free(newChild);
-
           for ( i = 0; i < 6; i++)
           {
-            Tree newChild = malloc(sizeof(NodeTree));
-            if(cornerTruthTable[(*currentNode)->step.dir][i]){
+            if(cornerTruthTable[currentNode->step.dir][i])
+            {
+                newChild = malloc(sizeof(NodeTree));
               Dir tempDir;
-              switch(i){
+              switch(i)
+              {
                 case 0:
                   tempDir = UP ;
                   break;
@@ -293,8 +257,8 @@ int buildChildren(Tree * currentNode, Snake * snake)
               }
 
 
-              newChild->parent = *currentNode;
-              newChild->brother = (*currentNode)->currentChild;
+              newChild->parent = currentNode;
+              newChild->brother = currentNode->currentChild;
               newChild->hasPlayed = 0;
               newChild->currentChild = NULL;
 
@@ -303,23 +267,27 @@ int buildChildren(Tree * currentNode, Snake * snake)
               newChild->step.coord.y = nCoord.y;
               newChild->step.coord.z = nCoord.z;
 
-              (*currentNode)->currentChild = newChild;
+              currentNode->currentChild = newChild;
               }
           }
           break;
+      default:
+        break;
       }
-      (*currentNode)->hasPlayed = 1;
+      currentNode->hasPlayed = 1;
     return 1;
   }
   else
-    return -1;
+  {
+      currentNode->hasPlayed = 1;
+      return -1;
+  }
 }
 
 
 void printTree (Tree rootNode)
 {
-  Tree tmpNode = malloc(sizeof(NodeTree));
-  tmpNode=rootNode->currentChild;
+  Tree tmpNode = rootNode->currentChild;
   while(tmpNode!=NULL)
   {
     printCurrentNode(tmpNode);
@@ -329,7 +297,7 @@ void printTree (Tree rootNode)
 
 void printLine (Line line)
 {
-  printf("A : (%d, %d, %d)\tB : (%d, %d, %d)\nd : %dx + %dy = %d\n", \
+  printf("A : (%lf %lf, %lf)\tB : (%lf, %lf, %lf)\nd : %lfx + %lfy = %lf\n", \
   line.pointA.x, line.pointA.y, line.pointA.z, \
   line.pointB.x, line.pointB.y, line.pointB.z, \
   line.a, line.b, line.c );
@@ -344,7 +312,7 @@ void linearEquation (Line *line)
   }
   else
   {
-    line->a = (int) (line->pointB.y - line->pointA.y) / (line->pointB.x - line->pointA.x);
+    line->a = (line->pointB.y - line->pointA.y) / (line->pointB.x - line->pointA.x);
     line->b = -1;
   }
   line->c = line->a * line->pointA.x - line->pointA.y;
@@ -398,8 +366,8 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
         break;
 
     }
+    float n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
 
-    int n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
     int cm = symmetryAxis.a*initialStep.coord.x + symmetryAxis.b*initialStep.coord.y;
     int xm = initialStep.coord.x + 2*symmetryAxis.a*(symmetryAxis.c - cm)/n;
     int ym = initialStep.coord.y + 2*symmetryAxis.b*(symmetryAxis.c - cm)/n;
@@ -439,7 +407,7 @@ int lineCmp(Step step, Coord coord, Dir dir)
 
 Tree findInitialVectors(Volume volume)
 {
-  Coord projectionCenter;
+  FloatCoord projectionCenter;
 
   Line verticalAxis;
   Line horizontalAxis;
@@ -448,20 +416,22 @@ Tree findInitialVectors(Volume volume)
 
   int i, j, k, dirIndex, flag;
 
-  Tree initialNode = malloc(sizeof(NodeTree));
+  //Tree initialNode = malloc(sizeof(NodeTree));
 
   Coord nCoord;
 
-  Coord cubeCenter;
-  cubeCenter.x = volume.max.x/2;
-  cubeCenter.y = volume.max.y/2;
-  cubeCenter.z = volume.max.z/2;
+  FloatCoord cubeCenter;
+  cubeCenter.x = (float)(volume.max.x-1)/2;
+  cubeCenter.y = (float)(volume.max.y-1)/2;
+  cubeCenter.z = (float)(volume.max.z-1)/2;
 
-  Tree tmpNode = malloc(sizeof(NodeTree));
+  printf("cube center %lf %lf %lf\n", cubeCenter.x, cubeCenter.y, cubeCenter.z);
 
-  initTree(&initialNode);
-  addInitialVector(&initialNode, 0, 0, 2, UP);
-  tmpNode=initialNode->currentChild;
+  //Tree tmpNode = malloc(sizeof(NodeTree));
+
+  Tree initialNode = initTree();
+  addInitialVector(initialNode, 0, 0, 2, UP);
+  Tree tmpNode = initialNode->currentChild;
 
   k = 0;
   flag = 0;
@@ -565,7 +535,7 @@ Tree findInitialVectors(Volume volume)
             }
             else
             { printf("symmetry not found\n");
-              addInitialVector(&initialNode, i, j, projectionCenter.z, tempDir);
+              addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
             }
           }
           else
@@ -646,7 +616,7 @@ int validCoord(Coord coord, Coord max)
   return (coord.x >= 0 && coord.x < max.x) && (coord.y >= 0 && coord.y < max.y) && (coord.z >= 0 && coord.z < max.z) ;
 }
 
-int validCoordSym(Coord coord, Coord max)
+int validCoordSym(Coord coord, FloatCoord max)
 {
   return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
 }
