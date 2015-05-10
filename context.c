@@ -196,8 +196,8 @@ void contextInit ( Context* context )
 	unsigned int width, height;
 	GLuint textureID;
 
-/*
-	lodepng_decode32_file(&buffer, &width, &height, "textures/fisher.png");
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/lightwood.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -206,7 +206,7 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/fisher.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/darkwood.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -214,7 +214,6 @@ void contextInit ( Context* context )
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
-*/
 
 
 	Camera * camera = cameraCreate();
@@ -233,7 +232,7 @@ void contextInit ( Context* context )
 	camera->distance = 4.f;
 	context->camera = camera;
 
-	bhv_flags |= BHV_ROTATE;	
+	//bhv_flags |= BHV_ROTATE;	
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );

@@ -146,6 +146,6 @@ void snakeAddStep ( Snake* snake, Step* step);
 char* snakePrint(Snake* snake);
 
 
-void snakePrintSolutions(int nbSolutions, ListSolution * snakeSolutions, int snakeLength);
+void snakePrintSolutions(Snake *snake);
 
 #endif //SNAKE_H

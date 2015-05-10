@@ -24,15 +24,7 @@
 #include "snake.h"
 #include "context.h"
 
-const int cornerTruthTable[6][6] =
-  {
-    {0 , 0 , 1 , 1 , 1 , 1 },
-    {0 , 0 , 1 , 1 , 1 , 1 },
-    {1 , 1 , 0 , 0 , 1 , 1 },
-    {1 , 1 , 0 , 0 , 1 , 1 },
-    {1 , 1 , 1 , 1 , 0 , 0 },
-    {1 , 1 , 1 , 1 , 0 , 0 }
-  } ;
+#include "time.h"
 
 typedef struct nodeTree
 {
@@ -43,7 +35,7 @@ typedef struct nodeTree
   int hasPlayed;
 } NodeTree;
 
-typedef struct 
+typedef struct
 {
   float x;
   float y;
@@ -58,7 +50,7 @@ typedef struct {
   FloatCoord pointB;
 }Line;
 
-typedef NodeTree * Tree; 
+typedef NodeTree * Tree;
 
 
 /*
@@ -67,14 +59,18 @@ typedef NodeTree * Tree;
 void resolverSolveSnake(Snake *snake);
 
 /*
-  Initialise initialise la racine d'un arbre n-aire 
+<<<<<<< HEAD
+  Initialise la racine d'un arbre n-aire
+=======
+  Initialise initialise la racine d'un arbre n-aire
+>>>>>>> 7c2f7a8de3c3dd728fbc9af3f2796966bef0077a
   La racine est un élément "dummy",
   permettant simplement d'accéder à l'arbre
 */
-void initTree(Tree * rootNode);
+Tree initTree();
 
 /*
-  Affichage console des champs "units" qui composent le snake 
+  Affichage console des champs "units" qui composent le snake
 */
 void printSnake(Snake snake);
 
@@ -82,41 +78,41 @@ void printSnake(Snake snake);
   Copie un vecteur (Step) source dans un vecteur destination
   Seront copiés :
     - Un n-uplet de coordonnées
-    - Sa direction 
+    - Sa direction
 */
 void copyStep (Step * dest, Step src);
 
 /*
- Ajoute les différents vecteurs initiaux à la hauteur 1 de l'arbre 
+ Ajoute les différents vecteurs initiaux à la hauteur 1 de l'arbre
 */
-void addInitialVector(Tree * rootNode, int x, int y, int z, Dir newDir);
+void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir);
 
 /*
   Affichage console du noeud de l'arbre courant
-  Seront listés : 
+  Seront listés :
     - Le n-uplet correspondant aux coordonnées du noeud
-    - La direction 
+    - La direction
 */
 void printCurrentNode(Tree currentNode);
 
 /*
-  A partir d'un noeud donné et du snake, cette procédure : 
+  A partir d'un noeud donné et du snake, cette procédure :
     - Calcule les fils du noeud courant
     - Accroche les fils au noeud courant
     - Ajoute le noeud courant dans la liste solution courante
     - Retire les coordonnées du noeud courant dans le volume à remplir
 */
-int buildChildren(Tree * currentNode, Snake * snake);
+int buildChildren(Tree currentNode, Snake * snake);
 
-/* 
-  Idem que printCurrentNode étendu à tous les noeud sur une hauteur donnée 
+/*
+  Idem que printCurrentNode étendu à tous les noeud sur une hauteur donnée
 */
 void printTree (Tree rootNode);
 
 
 /*
   Affiche les composantes d'une droite :
-    - 2 points 
+    - 2 points
     - La valeur des coefficients dans son écriture cartésienne
 */
 void printLine (Line line);
@@ -125,16 +121,21 @@ void printLine (Line line);
 /*
   Définit l'équation d'une droite à partir de deux points
 */
-void linearEquation (Line *line); 
+void linearEquation (Line *line);
 
 /*
+<<<<<<< HEAD
+  Trouve les vecteurs initiaux dans un volume donné
+  Elimine les noeuds identiques par symétrie ou rotation
+=======
   Retourne 1 si deux directions sont opposées selon une symétrie définie par typeOfAxis
+>>>>>>> ff1eb01d9d6f9287a1742dece0ce90719df60d98
 */
 int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis);
 
 
 /*
-  Recopie les champs de src dans dest. 
+  Recopie les champs de src dans dest.
   Le type Line correspond à une droite définie par deux points et la valeur des coefficients relatifs à son équation catésienne
 */
 void cpyLine(Line *dest, Line src);
@@ -147,12 +148,12 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
 
 
 /*
-  Construit une liste de vecteurs initiaux dans un volume donné, pour cela : 
+  Construit une liste de vecteurs initiaux dans un volume donné, pour cela :
     - On détermine le centre du volume
     - On considère tour à tour chacune des faces de cette figure
     - On projette orthogonalement le centre de la figure sur une face
     - On construit les axes de symétrie passant par le centre
-    - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique  
+    - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique
 */
 Tree findInitialVectors(Volume volume);
 

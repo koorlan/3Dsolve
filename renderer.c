@@ -57,12 +57,14 @@ void* renderer ( void *arg )
 		vpID = glGetUniformLocation(context->shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
+		glBindVertexArray (context->dcube_mesh->vao_id);
 		Step* step = context->snake->solutions->head->step;
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
 			if (i%2==0)
-				glBindVertexArray (context->dcube_mesh->vao_id);
-			else glBindVertexArray (context->lcube_mesh->vao_id);
+				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+			else		
+				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 
 			mat4x4_translate( WMat, step[i].coord.x-1, step[i].coord.y-1, step[i].coord.z-1 );
 
@@ -76,7 +78,7 @@ void* renderer ( void *arg )
 			glDrawArrays(GL_TRIANGLES, 0, context->dcube_mesh->nb_faces);
 			//glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
 		}
-		/*
+		
 		glViewport (-20, -240, context->screen_height, context->screen_height);
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
@@ -95,8 +97,9 @@ void* renderer ( void *arg )
 			mat4x4_rotate_Z(WMat, WMat, r_angle);
 
 			if (i%2==0)
-				glBindVertexArray (context->dcube_mesh->vao_id);
-			else glBindVertexArray (context->lcube_mesh->vao_id);
+				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+			else		
+				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 
 			mat4x4_translate_in_place( WMat, xdir, ydir, 0);
 			
@@ -107,7 +110,8 @@ void* renderer ( void *arg )
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
 			wID = glGetUniformLocation(context->shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
+			glDrawArrays(GL_TRIANGLES, 0, context->dcube_mesh->nb_faces);
+			//glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, (1/(0.9f*abs(cos(4*glfwGetTime())))) );
 
@@ -122,7 +126,7 @@ void* renderer ( void *arg )
 			}
 		
 		}
-		*/
+		
 
 		glfwSwapBuffers (context->window);
 	}

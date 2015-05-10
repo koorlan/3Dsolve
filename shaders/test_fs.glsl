@@ -1,7 +1,6 @@
 #version 110
-#extension GL_ARB_explicit_attrib_location : enable
 
-in vec2 UV;
+varying vec2 UV;
 
 uniform sampler2D CurTex;
 

@@ -9,7 +9,7 @@
 #include "snake.h"
 #include "resolver.h"
 
-int main ( int arg, char ** argv )
+int main ( int argc, char ** argv )
 {
 	int i;
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
@@ -19,8 +19,14 @@ int main ( int arg, char ** argv )
 		return EXIT_FAILURE;
 	}
 
+	char* filePath = malloc(50);
+	if(argc == 2)
+		strncpy(filePath, argv[1], 50);
+	else
+		strncpy(filePath, "Snakes/snake.snake", 50);
 
-	Snake* snake = snakeInit("Snakes/snake_test.snake");
+	Snake* snake = snakeInit(filePath);
+	free(filePath);
 
 	if(snake == NULL)
 		return -10;
@@ -36,17 +42,17 @@ int main ( int arg, char ** argv )
 
 	resolverSolveSnake(snake);
 
-	snakePrintSolutions(snake->solutions->size, snake->solutions, snake->length);
-	
-	char *buffer = malloc(5*sizeof(char));
+//	snakePrintSolutions(snake);
+
+	/*char *buffer = malloc(5*sizeof(char));
 
 	if (snake->solutions->head!=NULL)
 	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
 		tmpSol = snake->solutions;
-		{	
+		{
 			i=0;
-			while(i < snake->length) 
-			{	
+			while(i < snake->length)
+			{
 				switch (tmpSol->head->step[i].dir)
 				{
 					case UP:
@@ -68,17 +74,15 @@ int main ( int arg, char ** argv )
 						strcpy(buffer,"BACK");
 						break;
 					case DNONE:
-					default :	
+					default :
 						printf("Error in solutions string\n");
 						exit(-1);
-				
+
 				}
 				i++;
 			}
 		}
-	}
-
-	
+	}*/
 
 	struct timespec time1;
 	struct timespec time2;

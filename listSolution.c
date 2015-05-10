@@ -31,18 +31,7 @@ void listSolutionInsert(ListSolution* listSolution, Step* steps)
 {
     Solution* solution = malloc ( sizeof (Solution) );
     solution->step = steps;
-    solution->next = NULL;
-    if( listSolution->head == NULL)
-    {
-      //First Node
-      listSolution->head = solution;
-    }
-    else
-    {
-      //Other Node
-      solution->next = listSolution->head;
-      listSolution->head = solution;
-    }
-
+    solution->next = listSolution->head;
+    listSolution->head = solution;
     listSolution->size ++;
 }
