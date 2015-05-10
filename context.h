@@ -23,10 +23,12 @@
 #define FULLSCREEN 0
 #define DRESX 800
 #define DRESY 600
-#define M_RIGHT	0b00000001
-#define M_LEFT	0b00000010
-#define M_MOVE	0b00000100
-#define M_NONE	0b00000000
+#define M_RIGHT		0b00000001
+#define M_LEFT		0b00000010
+#define M_MOVE		0b00000100
+#define M_ROLLF		0b00001000
+#define M_ROLLB		0b00010000
+#define M_NONE		0b00000000
 #define MOUSE_SPEED	0.01f
 
 #define K_UP	0b00000001
@@ -65,6 +67,7 @@ typedef struct context
 
 void resizeCallback (GLFWwindow* window, int width, int height);
 void cursorCallback(GLFWwindow* window, double xpos, double ypos);
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 int getInput ( Context* context );
 

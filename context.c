@@ -5,6 +5,12 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 {
 }
 
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (yoffset>0) mouse_flags |= M_ROLLF;
+	else if (yoffset<0) mouse_flags |= M_ROLLB;
+}
+
 void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 
@@ -104,6 +110,17 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
+	
+	if ((mouse_flags&M_ROLLF)==M_ROLLF)
+	{
+		context->camera->distance-=0.4f;
+		mouse_flags = M_NONE;
+	}
+	else if ((mouse_flags&M_ROLLB)==M_ROLLB)
+	{
+		context->camera->distance+=0.4f;
+		mouse_flags = M_NONE;
+	}
 
 	context->camera->eye[0] = context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
 	context->camera->eye[2] = context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
@@ -155,6 +172,7 @@ Context* contextCreate ()
 	glfwSetWindowSizeCallback(context->window, resizeCallback);
 	glfwSetCursorPosCallback(context->window, cursorCallback);
 	glfwSetMouseButtonCallback (context->window, buttonCallback);
+	glfwSetScrollCallback (context->window, scrollCallback);
 
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -210,8 +228,8 @@ void contextInit ( Context* context )
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
 
