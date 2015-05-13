@@ -1,6 +1,5 @@
 #include "renderer.h"
 
-
 void* renderer ( void *arg )
 {
 
