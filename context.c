@@ -142,6 +142,9 @@ Context* contextCreate ()
 	logWrite ("[CNTXT] GLFW started\n");
 
 	context->window = NULL;
+
+	glfwWindowHint (GLFW_SAMPLES, 4);
+
 	if(FULLSCREEN)
 	{
 		GLFWmonitor* mon = glfwGetPrimaryMonitor ();
@@ -178,7 +181,7 @@ Context* contextCreate ()
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint (GLFW_SAMPLES, 4);
+	
 
 	glewExperimental = GL_TRUE;
 	glewInit ();
@@ -210,6 +213,7 @@ void contextInit ( Context* context )
 
 
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_MULTISAMPLE);
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
@@ -219,8 +223,9 @@ void contextInit ( Context* context )
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
 
@@ -229,7 +234,8 @@ void contextInit ( Context* context )
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
 

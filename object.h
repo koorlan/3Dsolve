@@ -6,7 +6,11 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 
 #include "linmath.h"
 #include "log.h"

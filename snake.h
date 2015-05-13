@@ -48,12 +48,13 @@ typedef struct coord
 	Définit une étape de résolution
 	Les étapes sont stockées dans un tableau, qui représente
 	alors une solution
+	Précédemment définis dans listSolution.h
 */
-typedef struct step
+struct step
 {
 	Coord coord; // Coordonnée (dans le volume) de l'élément à placer
 	Dir dir; // Orientation de l'élément à placer
-} Step;
+};
 
 /*
 	Type énuméré définisant l'état d'un élement du volume.
