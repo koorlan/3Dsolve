@@ -203,6 +203,11 @@ void contextInit ( Context* context )
 {
 	logWrite ("[CNTXT] Starting Renderer thread\n");
 
+	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_MULTISAMPLE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	GLuint vs = shaderLoad ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
 	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
@@ -211,9 +216,6 @@ void contextInit ( Context* context )
 	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
 	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
 
-
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_MULTISAMPLE);
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
