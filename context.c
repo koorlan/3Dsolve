@@ -3,6 +3,8 @@
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
+	resize_w = width;
+	resize_h = height;
 }
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
@@ -85,8 +87,17 @@ int getInput ( Context* context )
 	last_xpos = gxpos;
 	last_ypos = gypos;
 	key_flags = M_NONE;
+	resize_h = -1;
+	resize_w = -1;
 	glfwPollEvents ();
 	
+	if (resize_h!=-1 || resize_w!=-1)
+	{
+		context->screen_width = resize_w;
+		context->screen_height = resize_h;
+		context->ratio = ((float)resize_w)/(float)resize_h;
+	}
+
 	if ((key_flags&K_UP)==K_UP)
 	{
 	}
@@ -222,13 +233,17 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT_AND_BACK); 
+	glFrontFace(GL_CCW);  
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
 	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
 	shaderCompile(fs);
-	context->volume_program = shaderCreateProgram(vs, fs);
+	context->snake_program = shaderCreateProgram(vs, fs);
 
 	vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
 	fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);

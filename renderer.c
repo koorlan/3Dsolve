@@ -19,11 +19,11 @@ void* renderer ( void *arg )
 	mat4x4 PVMat;
 	mat4x4 viewMat;
 	mat4x4 perMat;
-	GLuint vpID = glGetUniformLocation(context->volume_program, "VP");
+	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
 	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
-	GLuint wID = glGetUniformLocation(context->volume_program, "W");
+	GLuint wID = glGetUniformLocation(context->snake_program, "W");
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
-	GLuint timeID = glGetUniformLocation(context->volume_program, "time");
+	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 
 	vec3 vol_offset;
 	vol_offset[0] = (context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
@@ -97,7 +97,7 @@ void* renderer ( void *arg )
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		glUseProgram (context->volume_program);
+		glUseProgram (context->snake_program);
 
 
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
@@ -127,7 +127,6 @@ void* renderer ( void *arg )
 			else
 				mat4x4_scale3d(WMat, WMat, 0.9f);
 
-
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 		}
@@ -136,7 +135,6 @@ void* renderer ( void *arg )
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
 		mat4x4_identity(WMat);
-		//mat4x4_ortho(perMat, 0.f, context->screen_width, context->screen_height, 0.f, 0.f, 1.f);
 		mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
 		mat4x4_scale3d(WMat, WMat, 0.05f);
 		mat4x4_mul (PVMat, perMat, viewMat);
