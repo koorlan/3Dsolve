@@ -1,17 +1,19 @@
 #include "renderer.h"
 
+
+
 void* renderer ( void *arg )
 {
-
 	logWrite ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
 
 	glfwMakeContextCurrent ( context->window );
 	glEnable (GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
 	glDepthFunc (GL_LEQUAL);
 
-	glUseProgram (context->shader_program);
+	glUseProgram (context->volumetric_shader_program);
 
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
@@ -20,6 +22,7 @@ void* renderer ( void *arg )
 	struct timespec time2;
 
 	int i;
+
 
 	while (context->running)
 	{
@@ -50,11 +53,14 @@ void* renderer ( void *arg )
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glUseProgram (context->volumetric_shader_program);
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
-		vpID = glGetUniformLocation(context->shader_program, "VP");
+		vpID = glGetUniformLocation(context->volumetric_shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+
+		
 
 		glBindVertexArray (context->dcube_mesh->vao_id);
 		Step* step = context->snake->solutions->head->step;
@@ -72,9 +78,10 @@ void* renderer ( void *arg )
 			else
 				mat4x4_scale3d(WMat, WMat, 0.9f);
 
-			wID = glGetUniformLocation(context->shader_program, "W");
+			wID = glGetUniformLocation(context->volumetric_shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, context->dcube_mesh->nb_faces);
+			
 			//glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
 		}
 		
@@ -84,7 +91,7 @@ void* renderer ( void *arg )
 		mat4x4_identity(WMat);
 		mat4x4_scale3d(WMat, WMat, 0.05f);
 		mat4x4_mul (PVMat, perMat, viewMat);
-		vpID = glGetUniformLocation(context->shader_program, "VP");
+		vpID = glGetUniformLocation(context->volumetric_shader_program, "VP");
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
 
@@ -107,7 +114,7 @@ void* renderer ( void *arg )
 
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
-			wID = glGetUniformLocation(context->shader_program, "W");
+			wID = glGetUniformLocation(context->volumetric_shader_program, "W");
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, context->dcube_mesh->nb_faces);
 			//glDrawElements(GL_QUADS, 4 * context->dcube_mesh->nb_faces, GL_UNSIGNED_BYTE, context->dcube_mesh->indices);
@@ -125,8 +132,13 @@ void* renderer ( void *arg )
 			}
 		
 		}
-		
-
+		glViewport (0, 0, context->screen_width, context->screen_height);
+		glUseProgram (0);
+		glRasterPos2f( 0.f, 0.f);	
+		glColor4f (1.0, 0.0, 0.0, abs(cos(cur_time)));
+		ftglSetFontFaceSize(myfont, 70+20*sin(10*cur_time), 72);
+        ftglRenderFont(myfont, "AB", FTGL_RENDER_ALL);
+        
 		glfwSwapBuffers (context->window);
 	}
 
@@ -134,3 +146,4 @@ void* renderer ( void *arg )
 
 	return NULL;
 };
+

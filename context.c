@@ -1,5 +1,7 @@
 #include "context.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
@@ -212,14 +214,13 @@ void contextInit ( Context* context )
 	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
 	shaderCompile(fs);
-	context->shader_program = shaderCreateProgram(vs, fs);
+	context->volumetric_shader_program = shaderCreateProgram(vs, fs);
 	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
 	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
-
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/lightwood.png");
 	glGenTextures(1, &textureID);
@@ -240,7 +241,6 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
-
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 7.f;

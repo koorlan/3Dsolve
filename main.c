@@ -8,9 +8,12 @@
 #include "log.h"
 #include "snake.h"
 #include "resolver.h"
+#include "fonts.h"
+
 
 int main ( int argc, char ** argv )
 {
+	myfont = LoadFont("fonts/Libertine.ttf");
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 	if(!logStart())
 	{

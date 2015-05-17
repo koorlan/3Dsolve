@@ -60,7 +60,7 @@ typedef struct context
 	int screen_height;
 	int running;
 	pthread_t render_thread;
-	GLuint shader_program;
+	GLuint volumetric_shader_program;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
 	Object* dcube_mesh;
