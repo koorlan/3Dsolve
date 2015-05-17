@@ -22,6 +22,14 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 	{
 		mouse_flags ^= M_RIGHT;
 	}
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		mouse_flags |= M_LEFT;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		mouse_flags ^= M_LEFT;
+	}
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
@@ -95,6 +103,14 @@ int getInput ( Context* context )
 		context->snake->currentUnit =
 			(context->snake->currentUnit>=context->snake->length-2?context->snake->length-1:context->snake->currentUnit+1);
 	}
+
+
+	if ((mouse_flags&M_LEFT)==M_LEFT)
+	{
+		context->drawpick = 1;
+		//printf("accx=%f  accy=%f\n", accx, accy);
+	}
+
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
 	{
@@ -181,7 +197,7 @@ Context* contextCreate ()
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+	glfwSwapInterval(1);
 
 	glewExperimental = GL_TRUE;
 	glewInit ();
@@ -208,13 +224,20 @@ void contextInit ( Context* context )
 	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLuint vs = shaderLoad ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
-	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
+	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
+	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
 	shaderCompile(fs);
-	context->shader_program = shaderCreateProgram(vs, fs);
-	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
-	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
+	context->volume_program = shaderCreateProgram(vs, fs);
+
+	vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
+	fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(vs);
+	shaderCompile(fs);
+	context->picking_program = shaderCreateProgram(vs, fs);
+
+	context->cube_mesh = objectLoad ( "stc/cube.stc" );
+	context->square_mesh = objectLoad ( "stc/square.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
