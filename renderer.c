@@ -31,6 +31,7 @@ void* renderer ( void *arg )
 	vol_offset[2] = (context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
 
 	context->camera->distance = 4.f;
+	int selected = -1;
 
 	while (context->running)
 	{
@@ -46,7 +47,6 @@ void* renderer ( void *arg )
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			int objID = 0;
-			int selected = -1;
 
 			glUseProgram (context->picking_program);
 
@@ -73,6 +73,8 @@ void* renderer ( void *arg )
 
 				if (i==context->snake->currentUnit)
 					mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
+				else if (i==selected)
+					mat4x4_scale3d(WMat, WMat, 0.8f);
 				else
 					mat4x4_scale3d(WMat, WMat, 0.9f);
 
@@ -85,7 +87,7 @@ void* renderer ( void *arg )
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			selected = data[0];
+			selected = (data[0]==255?selected:data[0]);
 			printf ("cube %d selected\n", selected);
 
 			context->drawpick = 0;
@@ -117,11 +119,14 @@ void* renderer ( void *arg )
 				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 
 			mat4x4_translate( WMat, step[i].coord.x-vol_offset[0], step[i].coord.y-vol_offset[1], step[i].coord.z-vol_offset[2] );
-
+			
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
+			else if (i==selected)
+				mat4x4_scale3d(WMat, WMat, 0.8f);
 			else
 				mat4x4_scale3d(WMat, WMat, 0.9f);
+
 
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
