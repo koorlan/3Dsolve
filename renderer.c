@@ -63,7 +63,7 @@ void* renderer ( void *arg )
 			{
 				if (i%2==0)
 					glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-				else		
+				else
 					glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 
 				glUniform3f(pickcolorID, ((float)objID)/255.f, 0.f, 0.f);
@@ -83,7 +83,7 @@ void* renderer ( void *arg )
 			}
 
 			glFlush();
-			glFinish(); 
+			glFinish();
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -115,11 +115,11 @@ void* renderer ( void *arg )
 		{
 			if (i%2==0)
 				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-			else		
+			else
 				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 
 			mat4x4_translate( WMat, step[i].coord.x-vol_offset[0], step[i].coord.y-vol_offset[1], step[i].coord.z-vol_offset[2] );
-			
+
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
 			else if (i==selected)
@@ -172,8 +172,16 @@ void* renderer ( void *arg )
 				xdir = (xdir==0?1:0);
 				ydir = (ydir==0?1:0);
 			}
-		
+
 		}
+
+		glViewport (0, 0, context->screen_width, context->screen_height);
+		glUseProgram (0);
+		glRasterPos2f( -0.98f, 0.92f);
+		glColor4f (0.2f+abs(cos(20*glfwGetTime())), 0.2f+abs(cos(10*glfwGetTime())), 0.2f+abs(cos(15*glfwGetTime())), 0.2f+abs(cos(5*glfwGetTime())));
+		//glRotatef(1.f,0.f,0.f,0.f);
+		ftglSetFontFaceSize(myfont, 20, 72);
+    ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
 
 		glfwSwapBuffers (context->window);
 	}

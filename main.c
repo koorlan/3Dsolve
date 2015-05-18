@@ -1,16 +1,39 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <unistd.h>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#ifdef _WIN32
+   //define something for Windows (32-bit and 64-bit, this part is common)
+	#include <windows.h>
+   #ifdef _WIN64
+      //define something for Windows (64-bit only)
+   #endif
+#elif __APPLE__
+    #include "TargetConditionals.h"
+    #if TARGET_OS_MAC
+        // Other kinds of Mac OS
+		#endif
+#elif __linux
+    #include <unistd.h>
+#else
+		#error "Unspported Plateform"
+#endif
+
 #include <time.h>
 
 #include "context.h"
 #include "log.h"
 #include "snake.h"
 #include "resolver.h"
+#include "fonts.h"
 
 int main ( int argc, char ** argv )
 {
+	myfont = LoadFont("fonts/Libertine.ttf");
+
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 	if(!logStart())
 	{

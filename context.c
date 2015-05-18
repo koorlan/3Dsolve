@@ -90,7 +90,7 @@ int getInput ( Context* context )
 	resize_h = -1;
 	resize_w = -1;
 	glfwPollEvents ();
-	
+
 	if (resize_h!=-1 || resize_w!=-1)
 	{
 		context->screen_width = resize_w;
@@ -137,7 +137,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
 		context->camera->distance-=0.4f;
@@ -233,9 +233,9 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT_AND_BACK); 
-	glFrontFace(GL_CCW);  
+	//glEnable(GL_CULL_FACE);
+//	glCullFace(GL_FRONT_AND_BACK); 
+	//glFrontFace(GL_CCW);  
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -296,7 +296,7 @@ void contextInit ( Context* context )
 	camera->distance = 4.f;
 	context->camera = camera;
 
-	//bhv_flags |= BHV_ROTATE;	
+	//bhv_flags |= BHV_ROTATE;
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );

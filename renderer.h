@@ -24,11 +24,14 @@
 #include "log.h"
 #include "object.h"
 #include "snake.h"
+#include "fonts.h"
 
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f
 
 #define abs(X) ((X)<0?-(X):(X))
+
+FTGLfont *myfont;
 
 void* renderer ( void *arg );
 
