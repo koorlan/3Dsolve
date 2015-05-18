@@ -186,14 +186,7 @@ void* renderer ( void *arg )
 			}
 
 		}
-        
-		glViewport (0, 0, context->screen_width, context->screen_height);
-		glUseProgram (0);
-		glRasterPos2f( -0.98f, 0.92f);	
-		glColor4f (0.2f + abs(sin(10*glfwGetTime())), 0.2f + abs(sin(5*glfwGetTime())), 0.2f + abs(sin(2*glfwGetTime())), 0.2f + abs(cos(glfwGetTime())));
-		ftglSetFontFaceSize(myfont, 20, 72);
-        ftglRenderFont(myfont, "Snake Resolver 0.1.70a", FTGL_RENDER_ALL);
-
+		
 		glViewport (0, 0, context->screen_width, context->screen_height);
 		glUseProgram (0);
 		glRasterPos2f( -0.98f, 0.92f);
@@ -204,11 +197,10 @@ void* renderer ( void *arg )
 
 		glfwSwapBuffers (context->window);
 
-		
+
 	}
 
 	logWrite ("[RENDR] Renderer stopped\n");
 
 	return NULL;
 };
-
