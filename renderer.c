@@ -8,10 +8,11 @@ void* renderer ( void *arg )
 
 	Context* context = (Context*) arg;
 
-	glfwMakeContextCurrent ( context->window );
+	glfwMakeContextCurrent (context->window);
 	glEnable (GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glDepthFunc (GL_LEQUAL);
+
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
 	int i;
@@ -20,11 +21,11 @@ void* renderer ( void *arg )
 	mat4x4 PVMat;
 	mat4x4 viewMat;
 	mat4x4 perMat;
-	GLuint vpID = glGetUniformLocation(context->volume_program, "VP");
+	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
 	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
-	GLuint wID = glGetUniformLocation(context->volume_program, "W");
+	GLuint wID = glGetUniformLocation(context->snake_program, "W");
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
-	GLuint timeID = glGetUniformLocation(context->volume_program, "time");
+	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 
 	vec3 vol_offset;
 	vol_offset[0] = (context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
@@ -33,7 +34,6 @@ void* renderer ( void *arg )
 
 	context->camera->distance = 4.f;
 	int selected = -1;
-
 
 	while (context->running)
 	{
@@ -57,7 +57,11 @@ void* renderer ( void *arg )
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 
+			#ifdef __APPLE__
+			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
 			glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
 
 			Step* step = context->snake->solutions->head->step;
 
@@ -98,8 +102,7 @@ void* renderer ( void *arg )
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram (context->volume_program);
-
+		glUseProgram (context->snake_program);
 
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
@@ -108,12 +111,17 @@ void* renderer ( void *arg )
 
 		glUniform1f(timeID, glfwGetTime());
 
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+		#else
 		glBindVertexArray (context->cube_mesh->vao_id);
+		#endif
 
 		Step* step = context->snake->solutions->head->step;
 
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
+
 			if (i%2==0)
 				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 			else		
@@ -127,21 +135,24 @@ void* renderer ( void *arg )
 				mat4x4_scale3d(WMat, WMat, 0.8f);
 			else
 				mat4x4_scale3d(WMat, WMat, 0.9f);
+
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 		}
 
-
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
 		mat4x4_identity(WMat);
-		//mat4x4_ortho(perMat, 0.f, context->screen_width, context->screen_height, 0.f, 0.f, 1.f);
 		mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
 		mat4x4_scale3d(WMat, WMat, 0.05f);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+		#else
 		glBindVertexArray (context->square_mesh->vao_id);
+		#endif
 
 		int xdir = 0;
 		int ydir = 1;
@@ -175,15 +186,17 @@ void* renderer ( void *arg )
 			}
 		
 		}
-
+        
 		glViewport (0, 0, context->screen_width, context->screen_height);
 		glUseProgram (0);
-		glRasterPos2f( 0.f, 0.f);	
-		glColor4f (1.0, 0.0, 0.0, 1.f);
-		ftglSetFontFaceSize(myfont, 40, 72);
-        ftglRenderFont(myfont, "AB", FTGL_RENDER_ALL);
-        
+		glRasterPos2f( -0.98f, 0.92f);	
+		glColor4f (0.2f + abs(sin(10*glfwGetTime())), 0.2f + abs(sin(5*glfwGetTime())), 0.2f + abs(sin(2*glfwGetTime())), 0.2f + abs(cos(glfwGetTime())));
+		ftglSetFontFaceSize(myfont, 20, 72);
+        ftglRenderFont(myfont, "Snake Resolver 0.1.70a", FTGL_RENDER_ALL);
+
 		glfwSwapBuffers (context->window);
+
+		
 	}
 
 	logWrite ("[RENDR] Renderer stopped\n");

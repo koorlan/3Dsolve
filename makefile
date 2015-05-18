@@ -4,7 +4,7 @@ SUFFIXES	?= .c .o
 .SUFFIXES: $(SUFFIXES) .
 
 CFLAGS = -g -Wall `pkg-config --cflags glfw3 glew freetype2 `
-LDLIBS = `pkg-config --libs --static glfw3 glew freetype2 ftgl` -lpthread -lm 
+LDLIBS = -L/usr/local/lib -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo `pkg-config --libs  glfw3 glew freetype2 ftgl` -lpthread -lm 
 PROG  = snake
 
 OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o fonts.o main.o
