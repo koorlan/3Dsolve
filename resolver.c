@@ -17,9 +17,13 @@ void resolverSolveSnake(Snake *snake)
     snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
     clock_t startTime = clock();
+    /*struct timespec timer;
+    timer.tv_sec = 0;
+    timer.tv_nsec = 10;*/
     long unsigned int exploredWayNb = 0;
 
     Tree rootNode = findInitialVectors(snake->volume);
+    //Tree rootNode = createAllInitialVectors(snake->volume);
 
     printSnake(*snake);
     printTree(rootNode);
@@ -66,6 +70,8 @@ void resolverSolveSnake(Snake *snake)
                 free(currentNode->currentChild);
                 currentNode->currentChild = NULL;
                 snakeRewind(snake);
+
+                //nanosleep(&timer, NULL);
             }
         }
     }
@@ -628,4 +634,24 @@ int validCoord(Coord coord, Coord max)
 int validCoordSym(Coord coord, FloatCoord max)
 {
   return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
+}
+
+Tree createAllInitialVectors(Volume volume)
+{
+    Tree root = initTree();
+    int x, y, z, dir;
+    for(x=0; x < volume.max.x; x++)
+    {
+        for(y=0; y < volume.max.y; y++)
+        {
+            for(z=0; z < volume.max.z; z++)
+            {
+                for(dir=0; dir < 6; dir++)
+                {
+                    addInitialVector(root, x, y, z, dir);
+                }
+            }
+        }
+    }
+    return root;
 }
