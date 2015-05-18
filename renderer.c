@@ -1,14 +1,16 @@
 #include "renderer.h"
 
+
+
 void* renderer ( void *arg )
 {
-
 	logWrite ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
 
-	glfwMakeContextCurrent ( context->window );
+	glfwMakeContextCurrent (context->window);
 	glEnable (GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
 	glDepthFunc (GL_LEQUAL);
 
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
@@ -55,7 +57,11 @@ void* renderer ( void *arg )
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 
+			#ifdef __APPLE__
+			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
 			glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
 
 			Step* step = context->snake->solutions->head->step;
 
@@ -96,9 +102,7 @@ void* renderer ( void *arg )
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 		glUseProgram (context->snake_program);
-
 
 		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
@@ -107,12 +111,17 @@ void* renderer ( void *arg )
 
 		glUniform1f(timeID, glfwGetTime());
 
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+		#else
 		glBindVertexArray (context->cube_mesh->vao_id);
+		#endif
 
 		Step* step = context->snake->solutions->head->step;
 
 		for ( i=0; i <= context->snake->currentUnit; i++ )
 		{
+
 			if (i%2==0)
 				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 			else
@@ -131,7 +140,6 @@ void* renderer ( void *arg )
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 		}
 
-
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
 		mat4x4_identity(WMat);
@@ -140,7 +148,11 @@ void* renderer ( void *arg )
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+		#else
 		glBindVertexArray (context->square_mesh->vao_id);
+		#endif
 
 		int xdir = 0;
 		int ydir = 1;
@@ -174,6 +186,13 @@ void* renderer ( void *arg )
 			}
 
 		}
+        
+		glViewport (0, 0, context->screen_width, context->screen_height);
+		glUseProgram (0);
+		glRasterPos2f( -0.98f, 0.92f);	
+		glColor4f (0.2f + abs(sin(10*glfwGetTime())), 0.2f + abs(sin(5*glfwGetTime())), 0.2f + abs(sin(2*glfwGetTime())), 0.2f + abs(cos(glfwGetTime())));
+		ftglSetFontFaceSize(myfont, 20, 72);
+        ftglRenderFont(myfont, "Snake Resolver 0.1.70a", FTGL_RENDER_ALL);
 
 		glViewport (0, 0, context->screen_width, context->screen_height);
 		glUseProgram (0);
@@ -184,9 +203,12 @@ void* renderer ( void *arg )
     ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
 
 		glfwSwapBuffers (context->window);
+
+		
 	}
 
 	logWrite ("[RENDR] Renderer stopped\n");
 
 	return NULL;
 };
+

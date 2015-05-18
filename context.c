@@ -1,5 +1,7 @@
 #include "context.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
@@ -233,9 +235,6 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_CULL_FACE);
-//	glCullFace(GL_FRONT_AND_BACK); 
-	//glFrontFace(GL_CCW);  
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -258,7 +257,6 @@ void contextInit ( Context* context )
 	unsigned int width, height;
 	GLuint textureID;
 
-
 	lodepng_decode32_file(&buffer, &width, &height, "textures/lightwood.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -278,7 +276,6 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
-
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 7.f;

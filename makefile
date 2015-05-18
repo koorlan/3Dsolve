@@ -12,9 +12,13 @@ else
    ifeq ($(shell uname), Linux)
 		RM = rm -f
 		EXT = $1
+		CFLAGS = -g -Wall `pkg-config --cflags glfw3 glew freetype2 `
+		LDLIBS = -L/usr/local/lib -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo `pkg-config --libs  glfw3 glew freetype2 ftgl` -lpthread -lm
 	 elif ($(shell uname), Darwin)
 		RM = rm -f
 		EXT = $1
+		CFLAGS = -g -Wall `pkg-config --cflags glfw3 glew freetype2 `
+		LDLIBS = -L/usr/local/lib -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo `pkg-config --libs  glfw3 glew freetype2 ftgl` -lpthread -lm
    endif
 endif
 

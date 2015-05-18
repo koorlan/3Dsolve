@@ -15,6 +15,9 @@
 #include <GL/glu.h>
 #endif
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include <pthread.h>
 #include <time.h>
 #include <math.h>
@@ -26,13 +29,14 @@
 #include "snake.h"
 #include "fonts.h"
 
+FTGLfont *myfont;
+
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f
 
 #define abs(X) ((X)<0?-(X):(X))
 
-FTGLfont *myfont;
-
 void* renderer ( void *arg );
+void render_text(const char *text, float x, float y, float sx, float sy);
 
 #endif //RENDERERS_H
