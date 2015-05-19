@@ -15,9 +15,6 @@
 #include <GL/glu.h>
 #endif
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include <pthread.h>
 #include <time.h>
 #include <math.h>

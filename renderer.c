@@ -189,12 +189,20 @@ void* renderer ( void *arg )
 		
 		glViewport (0, 0, context->screen_width, context->screen_height);
 		glUseProgram (0);
-		glRasterPos2f( -0.98f, 0.92f);
+		glLoadIdentity();
+		//glScalef(0.02f,0.02f,0.02f);
+		//glRotatef(90.f,1.f,1.f,1.f);
+		//glTranslatef(-1.f,-1.f,0.f);
+		//glRasterPos2f( -1.0, -1.0f);
+		float ratio = context->screen_width/context->screen_height;
+		glOrtho(-1.f*(context->screen_width/2),1.f*(context->screen_width/2),-1*ratio*(context->screen_height/2),1.f*ratio*(context->screen_height/2),1.f,-1.f);
+		glTranslatef(200.f*abs(cos(1.f*glfwGetTime())),200.f*abs(cos(1.f*glfwGetTime())),0.f);
+		glRotatef(360.f*abs(cos(1.f*glfwGetTime())),0.f,0.f,1.f);
 		glColor4f (0.2f+abs(cos(20*glfwGetTime())), 0.2f+abs(cos(10*glfwGetTime())), 0.2f+abs(cos(15*glfwGetTime())), 0.2f+abs(cos(5*glfwGetTime())));
-		//glRotatef(1.f,0.f,0.f,0.f);
-		ftglSetFontFaceSize(myfont, 20, 72);
-    ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
-
+		//glRotatef(90.f,1.f,1.f,1.f);
+		//tglSetFontFaceSize(myfont, 1, 72);
+    	ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
+    	//glScalef(1.f/0.02f,1.f/0.02f,1.f/0.02f);
 		glfwSwapBuffers (context->window);
 
 
