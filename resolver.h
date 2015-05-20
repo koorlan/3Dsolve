@@ -59,11 +59,7 @@ typedef NodeTree * Tree;
 void resolverSolveSnake(Snake *snake);
 
 /*
-<<<<<<< HEAD
   Initialise la racine d'un arbre n-aire
-=======
-  Initialise initialise la racine d'un arbre n-aire
->>>>>>> 7c2f7a8de3c3dd728fbc9af3f2796966bef0077a
   La racine est un élément "dummy",
   permettant simplement d'accéder à l'arbre
 */
@@ -155,7 +151,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
     - On construit les axes de symétrie passant par le centre
     - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique
 */
-Tree findInitialVectors(Volume volume);
+Tree findInitialVectors(Snake *snake);
 
 
 /*

@@ -233,9 +233,9 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT_AND_BACK); 
-	glFrontFace(GL_CCW);  
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT_AND_BACK); 
+	//glFrontFace(GL_CCW);  
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

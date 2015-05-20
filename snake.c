@@ -27,8 +27,7 @@ Snake* snakeInit(char* templatePath)
 
 	// Loading volume
 	int i, j;
-	const int stateNb = snake->volume.max.x*snake->volume.max.y*
-								snake->volume.max.z;
+	const int stateNb = snake->volume.max.x * snake->volume.max.y * snake->volume.max.z;
 	snake->volume.state = malloc(snake->volume.max.x * sizeof(VolumeState*));
 	for(i = 0; i < snake->volume.max.x; i++)
 		snake->volume.state[i] = malloc(snake->volume.max.y * sizeof(VolumeState*));
@@ -72,6 +71,15 @@ Snake* snakeInit(char* templatePath)
 
 		snake->units[i] = tmp;
 	}
+
+	// Loading symetry axis informations
+	if(fscanf(file, "\n[Symetry]\n%d;%d;%d;%d", &(snake->symetries[0]), &(snake->symetries[1]), &(snake->symetries[2]), &(snake->symetries[3]) )!= 4)
+	{
+		logError("[SNINI] Error on reading symetry axis info\n");
+		snakeDestroy(snake);
+		return NULL;
+	} 
+
 
 	fclose(file);
 
