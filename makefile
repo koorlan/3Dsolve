@@ -9,7 +9,7 @@ LDLIBS = `pkg-config --libs --static glfw3 glew ` `pkg-config --libs glu` -lpthr
 
 PROG  = snake
 
-OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o main.o
+OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o player.o renderer.o main.o
 
 all: $(PROG)
 

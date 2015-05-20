@@ -89,6 +89,7 @@ typedef struct snake
 	int currentUnit; // Index de l'élément en cour de traitement
 	ListSolution* solutions; // Liste des solutions
 	Volume volume; // Volume que le snake doit remplir pour être solutionné
+	int symetries[4]; // Indique les différents axes de symétrie relatifs au snake  
 } Snake;
 
 /*

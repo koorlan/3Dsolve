@@ -8,6 +8,7 @@
 #include "log.h"
 #include "snake.h"
 #include "resolver.h"
+#include "player.h"
 
 int main ( int argc, char ** argv )
 {

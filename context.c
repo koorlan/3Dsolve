@@ -17,21 +17,13 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-	{
 		mouse_flags |= M_RIGHT;
-	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
-	{
 		mouse_flags ^= M_RIGHT;
-	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-	{
 		mouse_flags |= M_LEFT;
-	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-	{
-		mouse_flags ^= M_LEFT;
-	}
+//	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+//		mouse_flags ^= M_LEFT;
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
@@ -119,6 +111,7 @@ int getInput ( Context* context )
 	if ((mouse_flags&M_LEFT)==M_LEFT)
 	{
 		context->drawpick = 1;
+		mouse_flags ^= M_LEFT;
 		//printf("accx=%f  accy=%f\n", accx, accy);
 	}
 
@@ -264,7 +257,7 @@ void contextInit ( Context* context )
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
@@ -274,7 +267,7 @@ void contextInit ( Context* context )
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
