@@ -39,7 +39,23 @@ int main ( int argc, char ** argv )
 	}
 	context->snake = snake;
 
+	struct timespec time1;
+	struct timespec time2;
+	time1.tv_sec = 0;
+	time1.tv_nsec = 1000000;
+
+	contextInit ( context );
+
 	resolverSolveSnake(snake);
+
+	while (context->running)
+	{
+		getInput(context);
+
+		nanosleep(&time1, &time2);
+	}
+
+
 
 //	snakePrintSolutions(snake);
 
@@ -83,19 +99,6 @@ int main ( int argc, char ** argv )
 		}
 	}*/
 
-	struct timespec time1;
-	struct timespec time2;
-	time1.tv_sec = 0;
-	time1.tv_nsec = 1000000;
-
-	contextInit ( context );
-
-	while (context->running)
-	{
-		getInput(context);
-
-		nanosleep(&time1, &time2);
-	}
 
 	contextDestroy ( context );
 
