@@ -30,6 +30,22 @@ void resolverSolveSnake(Snake *snake)
 
     Tree currentNode = rootNode->currentChild;
     int buildResult = -1;
+/*
+
+    TMP WORK
+    int i = 0;
+    void* args[3] = {NULL, snake->units, snake->volume}
+    pthread_t threads[]
+
+    while(currentNode != NULL)
+    {
+        args[0] = currentNode;
+        currentNode->parent = NULL;
+        currentNode->brother = NULL;
+        currentNode = currentNode->brother;
+        args[0]->brother = NULL;
+    }
+    */
 
     while (currentNode != rootNode)
     {

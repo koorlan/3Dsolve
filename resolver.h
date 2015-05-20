@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
+#include <pthread.h>
 
 #include "log.h"
 #include "snake.h"
@@ -109,6 +110,8 @@ typedef NodeTree * Tree;
  */
 void resolverSolveSnake(Snake *snake);
 
+void resolverSolveNode(void* args);
+
 /**
  * @brief Crée une nouvelle racine d'arbre.
  * @return Un pointeur sur la racine crée.
@@ -117,7 +120,7 @@ Tree initTree();
 
 /**
  * @brief Affiche un snake.
- * 
+ *
  * Affiche dans la console les champs "units" qui composent le snake.
  * @param snake : le serpent à afficher
  */

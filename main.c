@@ -57,8 +57,7 @@ int main ( int argc, char ** argv )
 
 	if(snake == NULL)
 		return -10;
-
-
+		
 	Context* context = contextCreate ();
 	if ( !context )
 	{
