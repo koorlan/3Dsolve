@@ -85,6 +85,55 @@ Snake* snakeInit(char* templatePath)
 	return snake;
 }
 
+Snake* snakeCopy(Unit* units, Volume volume)
+{
+	Snake* snake = malloc ( sizeof(Snake) );
+	snake->currentUnit = 0;
+	snake->length = volume.max.x * volume.max.y * volume.max.z;
+	snake->tmpSteps = malloc(snake->length * sizeof(Step));
+	memset(snake->tmpSteps, 0,snake->length * sizeof(Step));
+	snake->units = snakeCopyUnits(units, snake->length);
+	snake->solutions = listSolutionCreate();
+	snake->volume = snakeCopyVolume(volume);
+
+	return snake;
+}
+
+
+Unit* snakeCopyUnits(Unit* units, int unitsNb)
+{
+	Unit* copiedUnits = malloc(unitsNb);
+	int i;
+	for(i = 0; i < unitsNb; i++)
+		copiedUnits[i] = units[i];
+	return copiedUnits;
+}
+
+Volume snakeCopyVolume(Volume volume)
+{
+	//logWrite("[TEST] max.x = %d; max.y = %d; max.z = %d", volume.max.x, volume.max.y, volume.max.z);
+	Volume copiedVolume;
+	copiedVolume.max.x = volume.max.x;
+	copiedVolume.max.y = volume.max.y;
+	copiedVolume.max.z = volume.max.z;
+
+	int i, j, k;
+
+	copiedVolume.state = malloc(copiedVolume.max.x * sizeof(VolumeState*));
+	for(i = 0; i < copiedVolume.max.x; i++)
+	{
+		copiedVolume.state[i] = malloc(copiedVolume.max.y * sizeof(VolumeState*));
+		for(j = 0; j < copiedVolume.max.y; j++)
+		{
+			copiedVolume.state[i][j] = malloc(copiedVolume.max.z * sizeof(VolumeState));
+			for(k = 0; k < copiedVolume.max.z; k++)
+				copiedVolume.state[i][j][k] = volume.state[i][j][k];
+		}
+	}
+
+	return copiedVolume;
+}
+
 void snakeDestroy ( Snake* snake )
 {
 	if(snake->tmpSteps != NULL)

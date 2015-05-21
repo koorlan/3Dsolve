@@ -10,6 +10,8 @@ const int cornerTruthTable[6][6] =
    {1 , 1 , 1 , 1 , 0 , 0 }
  } ;
 
+ pthread_mutex_t buildMutex = PTHREAD_MUTEX_INITIALIZER;
+
 void resolverSolveSnake(Snake *snake)
 {
     // Let's resolve <snake>
@@ -22,47 +24,109 @@ void resolverSolveSnake(Snake *snake)
     timer.tv_nsec = 10;*/
     long unsigned int exploredWayNb = 0;
 
-    Tree rootNode = findInitialVectors(snake->volume);
+    int vectorNb = 0;
+    Tree rootNode = findInitialVectors(snake->volume, &vectorNb);
     //Tree rootNode = createAllInitialVectors(snake->volume);
 
     printSnake(*snake);
     printTree(rootNode);
 
-    Tree currentNode = rootNode->currentChild;
-    int buildResult = -1;
-/*
+    if(vectorNb <= 0)
+    {
+        logError("[RESOL] No initial vector !\n");
+        return;
+    }
 
-    TMP WORK
+    Tree currentNode = rootNode->currentChild;
+
     int i = 0;
-    void* args[3] = {NULL, snake->units, snake->volume}
-    pthread_t threads[]
+
+    ThreadArgs* args = malloc(sizeof(ThreadArgs));
+    args->units = snakeCopyUnits(snake->units, snake->length);
+    args->volume = snakeCopyVolume(snake->volume);
+
+    pthread_t threads[vectorNb];
+
+    while(currentNode != NULL && i < vectorNb)
+    {
+        args->rootNode = currentNode;
+        currentNode = currentNode->brother;
+        args->rootNode->brother = NULL;
+        args->rootNode->parent = NULL;
+        pthread_create(&(threads[i]), NULL, resolverSolveNode, (void*)args);
+        logWrite("[RESOL] thread %d started\n", i);
+        i++;
+    }
+
+    Snake* currentSnake;
+    void* retVal = NULL;
+    for(i = 0; i < vectorNb; i++)
+    {
+        pthread_join(threads[i], &retVal);
+        if(retVal != NULL)
+        {
+            logWrite("[RESOL] retVal not NULL for %d\n", i);
+            currentSnake = (Snake*)(retVal);
+            logWrite("[RESOL] currentSnake->size = %d\n", currentSnake->solutions->size);
+            if(currentSnake->solutions->size != 0)
+            {
+                logWrite("[RESOL] %d solutions for %d\n", currentSnake->solutions->size, i);
+                Solution* currentSolution = currentSnake->solutions->head;
+                while(currentSolution != NULL)
+                {
+                    listSolutionInsert(snake->solutions, currentSolution->step);
+                }
+            }
+
+            retVal = NULL;
+        }
+        logWrite("[RESOL] thread %d has terminated\n", i);
+    }
+
+    logWrite("[RESOL] Snake resolved\n");
+    clock_t endTime = clock();
+    if(endTime == (clock_t)(-1))
+    logError("[RESOL] CPU clock time not available\n");
+
+    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
+
+    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
+    elapsedTime);
+    printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
+    logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,
+    elapsedTime);
+}
+
+void* resolverSolveNode(void* args)
+{
+    ThreadArgs* infos = (ThreadArgs*)args;
+    int buildResult = -1;
+    int exploredWayNb;
+
+    Snake* snake = snakeCopy(infos->units, infos->volume);
+//    logWrite("[RESOL] Snake copied\n");
+    Tree rootNode = infos->rootNode;
+    Tree currentNode = rootNode;
 
     while(currentNode != NULL)
     {
-        args[0] = currentNode;
-        currentNode->parent = NULL;
-        currentNode->brother = NULL;
-        currentNode = currentNode->brother;
-        args[0]->brother = NULL;
-    }
-    */
-
-    while (currentNode != rootNode)
-    {
+        logWrite("Current snakeUnit : %d", snake->currentUnit);
         if(currentNode->hasPlayed == 0)
         {
             // Play the currentNode
+            pthread_mutex_lock(&buildMutex);
             buildResult = buildChildren(currentNode, snake);
+            pthread_mutex_unlock(&buildMutex);
             if(buildResult == 1) // Build is OK
                 currentNode = currentNode->currentChild;
             else if(buildResult == 2) // Snake edge -> solution found
             {
                 snakeAddStep(snake, &(currentNode->currentChild->step));
                 snakeAddSolution(snake);
-                free(currentNode->currentChild);
+                //free(currentNode->currentChild);
                 currentNode->currentChild = NULL;
                 logWrite ("[RESOL] Resolver found a solution \n");
-                printf ("\n\033[36;01mSolution added\033[00m\n");
+                //printf ("\n\033[36;01mSolution added\033[00m\n");
 
                 snakeRewind(snake);
 
@@ -75,7 +139,7 @@ void resolverSolveSnake(Snake *snake)
             if(currentNode->brother != NULL)
             {
                 currentNode = currentNode->brother;
-                free(currentNode->parent->currentChild);
+                //free(currentNode->parent->currentChild);
                 currentNode->parent->currentChild = currentNode;
             }
             else
@@ -83,8 +147,9 @@ void resolverSolveSnake(Snake *snake)
                 exploredWayNb++;
 
                 currentNode = currentNode->parent;
-                free(currentNode->currentChild);
-                currentNode->currentChild = NULL;
+                //free(currentNode->currentChild);
+                if(currentNode != NULL)
+                    currentNode->currentChild = NULL;
                 snakeRewind(snake);
 
                 //nanosleep(&timer, NULL);
@@ -92,20 +157,8 @@ void resolverSolveSnake(Snake *snake)
         }
     }
 
-    logWrite("[RESOL] Snake resolved\n");
-    clock_t endTime = clock();
-    if(endTime == (clock_t)(-1))
-    logError("[RESOL] CPU clock time not available");
-
-    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
-
-    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
-    elapsedTime);
-    printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
-    logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,
-    elapsedTime);
+    pthread_exit(snake);
 }
-
 
 Tree initTree()
 {
@@ -305,7 +358,7 @@ int buildChildren(Tree currentNode, Snake * snake)
         break;
       }
       currentNode->hasPlayed = 1;
-    return 1;
+      return 1;
   }
   else
   {
@@ -435,7 +488,7 @@ int lineCmp(Step step, Coord coord, Dir dir)
   return(step.coord.x == coord.x && step.coord.y == coord.y && step.coord.z == coord.z && dir == step.dir);
 }
 
-Tree findInitialVectors(Volume volume)
+Tree findInitialVectors(Volume volume, int* vectorNb)
 {
   FloatCoord projectionCenter;
 
@@ -461,6 +514,7 @@ Tree findInitialVectors(Volume volume)
 
   Tree initialNode = initTree();
   addInitialVector(initialNode, 0, 0, 2, UP);
+  (*vectorNb)++;
   Tree tmpNode = initialNode->currentChild;
 
   k = 0;
@@ -567,6 +621,7 @@ Tree findInitialVectors(Volume volume)
             else
             { printf("symmetry not found\n");
               addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
+              (*vectorNb)++;
             }
           }
           else

@@ -3,7 +3,7 @@ CC = gcc
 SUFFIXES	?= .c .o
 .SUFFIXES: $(SUFFIXES) .
 
-CFLAGS = -g -Wall `pkg-config --cflags glfw3 `
+CFLAGS = -g -Wall -D_REENTRANT `pkg-config --cflags glfw3 `
 LDLIBS = `pkg-config --libs --static glfw3 glew ` `pkg-config --libs glu` -lpthread -lm
 
 
@@ -17,8 +17,7 @@ $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) -o $(PROG) $(OBJS) $(LDLIBS)
 
 .c.o:
-	$(CC) $(CFLAGS) -c $*.c 
+	$(CC) $(CFLAGS) -c $*.c
 
 clean:
 	rm *.o && rm snake
-
