@@ -67,6 +67,9 @@ void resolverSolveSnake(Snake *snake)
         i++;
     }
 
+    if(i == vectorNb)
+        logWrite("[RESOL] All threads created !");
+
     Snake* currentSnake;
     for(i = 0; i < vectorNb; i++)
     {
@@ -94,11 +97,11 @@ void resolverSolveSnake(Snake *snake)
     if(endTime == (clock_t)(-1))
     logError("[RESOL] CPU clock time not available\n");
 
-    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
+    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;*/
 
-    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
-    elapsedTime);
-    printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
+    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s)\n",
+    snake->solutions->size);
+    /*printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
     logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,
     elapsedTime);*/
 }
@@ -109,8 +112,8 @@ void* resolverSolveNode(void* args)
     Snake* snake = tmp->snake;
     int buildResult = -1;
     int exploredWayNb;
-    Tree rootNode = tmp->rootNode;
-    Tree currentNode = rootNode;
+
+    Tree currentNode = tmp->rootNode;
 
     while(currentNode != NULL)
     {
@@ -218,19 +221,17 @@ void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir)
 {
   Tree newNode = malloc(sizeof(NodeTree));
 
-  Step newVector;
-
-  newVector.coord.x = x;
-  newVector.coord.y = y;
-  newVector.coord.z = z;
-  newVector.dir = newDir;
+  newNode->step.coord.x = x;
+  newNode->step.coord.y = y;
+  newNode->step.coord.z = z;
+  newNode->step.dir = newDir;
 
   if (newNode == NULL)
-  { printf("error of memory allocation\n");
-    exit(-1);
+  {
+      printf("error of memory allocation\n");
+      exit(-1);
   }
 
-  copyStep(&(newNode->step), newVector) ;
   newNode->brother = rootNode->currentChild ;
   newNode->currentChild = NULL;
   newNode->parent = rootNode;
@@ -291,7 +292,6 @@ int buildChildren(Tree currentNode, Snake * snake)
       {
         case EDGE:
             currentNode->hasPlayed = 1;
-            currentNode->currentChild = NULL;
             newChild = malloc(sizeof(NodeTree));
             newChild->parent = currentNode;
             newChild->brother = NULL;
@@ -697,6 +697,9 @@ Coord calcCoord(Coord coord,Dir dir){
       break;
     default :
       printf("Error in direction value\n");
+      nCoord.x = 0;
+      nCoord.y = 0;
+      nCoord.z = 0;
       break;
   }
   return nCoord;
