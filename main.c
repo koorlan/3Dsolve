@@ -37,6 +37,7 @@
 #include "log.h"
 #include "snake.h"
 #include "resolver.h"
+#include "player.h"
 
 int main ( int argc, char ** argv )
 {
@@ -67,8 +68,6 @@ int main ( int argc, char ** argv )
 	}
 	context->snake = snake;
 
-	resolverSolveSnake(snake);
-
 	struct timespec time1;
 	struct timespec time2;
 	time1.tv_sec = 0;
@@ -76,12 +75,56 @@ int main ( int argc, char ** argv )
 
 	contextInit ( context );
 
+	resolverSolveSnake(snake);
+
 	while (context->running)
 	{
 		getInput(context);
 
 		nanosleep(&time1, &time2);
 	}
+
+//	snakePrintSolutions(snake);
+
+	/*char *buffer = malloc(5*sizeof(char));
+
+	if (snake->solutions->head!=NULL)
+	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
+		tmpSol = snake->solutions;
+		{
+			i=0;
+			while(i < snake->length)
+			{
+				switch (tmpSol->head->step[i].dir)
+				{
+					case UP:
+						strcpy(buffer,"UP");
+						break;
+					case DOWN:
+						strcpy(buffer,"DOWN");
+						break;
+					case LEFT:
+						strcpy(buffer,"LEFT");
+						break;
+					case RIGHT:
+						strcpy(buffer,"RIGHT");
+						break;
+					case FRONT:
+						strcpy(buffer,"FRONT");
+						break;
+					case BACK:
+						strcpy(buffer,"BACK");
+						break;
+					case DNONE:
+					default :
+						printf("Error in solutions string\n");
+						exit(-1);
+
+				}
+				i++;
+			}
+		}
+	}*/
 
 	contextDestroy ( context );
 

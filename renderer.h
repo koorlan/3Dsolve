@@ -24,6 +24,7 @@
 #include "log.h"
 #include "object.h"
 #include "snake.h"
+#include "player.h"
 
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f
@@ -31,5 +32,7 @@
 #define abs(X) ((X)<0?-(X):(X))
 
 void* renderer ( void *arg );
+void dir2vec ( Dir dir, vec3 vec );
+void flatten ( vec3* cubes, int cubesNb, Unit* layout  );
 
 #endif //RENDERERS_H

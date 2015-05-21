@@ -3,6 +3,8 @@
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
+	resize_w = width;
+	resize_h = height;
 }
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
@@ -15,13 +17,13 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-	{
 		mouse_flags |= M_RIGHT;
-	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
-	{
 		mouse_flags ^= M_RIGHT;
-	}
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		mouse_flags |= M_LEFT;
+//	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+//		mouse_flags ^= M_LEFT;
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
@@ -77,8 +79,17 @@ int getInput ( Context* context )
 	last_xpos = gxpos;
 	last_ypos = gypos;
 	key_flags = M_NONE;
+	resize_h = -1;
+	resize_w = -1;
 	glfwPollEvents ();
 	
+	if (resize_h!=-1 || resize_w!=-1)
+	{
+		context->screen_width = resize_w;
+		context->screen_height = resize_h;
+		context->ratio = ((float)resize_w)/(float)resize_h;
+	}
+
 	if ((key_flags&K_UP)==K_UP)
 	{
 	}
@@ -95,6 +106,15 @@ int getInput ( Context* context )
 		context->snake->currentUnit =
 			(context->snake->currentUnit>=context->snake->length-2?context->snake->length-1:context->snake->currentUnit+1);
 	}
+
+
+	if ((mouse_flags&M_LEFT)==M_LEFT)
+	{
+		context->drawpick = 1;
+		mouse_flags ^= M_LEFT;
+		//printf("accx=%f  accy=%f\n", accx, accy);
+	}
+
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
 	{
@@ -181,7 +201,7 @@ Context* contextCreate ()
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+	glfwSwapInterval(1);
 
 	glewExperimental = GL_TRUE;
 	glewInit ();
@@ -206,15 +226,26 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT_AND_BACK); 
+	//glFrontFace(GL_CW);  
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLuint vs = shaderLoad ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
-	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
+	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
+	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
 	shaderCompile(fs);
-	context->shader_program = shaderCreateProgram(vs, fs);
-	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
-	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
+	context->snake_program = shaderCreateProgram(vs, fs);
+
+	vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
+	fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(vs);
+	shaderCompile(fs);
+	context->picking_program = shaderCreateProgram(vs, fs);
+
+	context->cube_mesh = objectLoad ( "stc/cube.stc" );
+	context->square_mesh = objectLoad ( "stc/square.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
@@ -226,7 +257,7 @@ void contextInit ( Context* context )
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
@@ -236,7 +267,7 @@ void contextInit ( Context* context )
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;

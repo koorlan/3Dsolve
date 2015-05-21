@@ -13,8 +13,7 @@ const int cornerTruthTable[6][6] =
 void resolverSolveSnake(Snake *snake)
 {
     // Let's resolve <snake>
-    logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",
-    snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
+    logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
     clock_t startTime = clock();
     /*struct timespec timer;
@@ -22,11 +21,14 @@ void resolverSolveSnake(Snake *snake)
     timer.tv_nsec = 10;*/
     long unsigned int exploredWayNb = 0;
 
-    Tree rootNode = findInitialVectors(snake->volume);
     //Tree rootNode = createAllInitialVectors(snake->volume);
 
+    int initialVectorNb = 0;
+    Tree rootNode = findInitialVectors(snake, &initialVectorNb);
+
+    logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
+
     printSnake(*snake);
-    printTree(rootNode);
 
     Tree currentNode = rootNode->currentChild;
     int buildResult = -1;
@@ -46,8 +48,6 @@ void resolverSolveSnake(Snake *snake)
                 free(currentNode->currentChild);
                 currentNode->currentChild = NULL;
                 logWrite ("[RESOL] Resolver found a solution \n");
-                printf ("\n\033[36;01mSolution added\033[00m\n");
-
                 snakeRewind(snake);
 
                 exploredWayNb++;
@@ -248,7 +248,7 @@ int buildChildren(Tree currentNode, Snake * snake)
             if(cornerTruthTable[currentNode->step.dir][i])
             {
                 newChild = malloc(sizeof(NodeTree));
-              Dir tempDir;
+              /*Dir tempDir;
               switch(i)
               {
                 case 0:
@@ -269,14 +269,14 @@ int buildChildren(Tree currentNode, Snake * snake)
                 case 5:
                   tempDir = BACK ;
                   break;
-              }
+              }*/
 
               newChild->parent = currentNode;
               newChild->brother = currentNode->currentChild;
               newChild->hasPlayed = 0;
               newChild->currentChild = NULL;
 
-              newChild->step.dir = tempDir;
+              newChild->step.dir = i;
               newChild->step.coord.x = nCoord.x;
               newChild->step.coord.y = nCoord.y;
               newChild->step.coord.z = nCoord.z;
@@ -363,52 +363,66 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
     switch (i)
     {
       case 0 :
-        cpyLine(&symmetryAxis, verticalAxis);
-        typeOfAxis = "vertical";
+          if (verticalAxis.a == -1)
+          {
+            typeOfAxis = "None";
+            break;
+          }
+          else
+          {
+            cpyLine(&symmetryAxis, verticalAxis);
+            typeOfAxis = "vertical";
+          }
         break;
       case 1 :
-        cpyLine(&symmetryAxis, horizontalAxis);
-        typeOfAxis = "horizontal";
-        break;
+          if (horizontalAxis.a == -1)
+          {
+            typeOfAxis = "None";
+            break;
+          }
+          else
+          { cpyLine(&symmetryAxis, horizontalAxis);
+            typeOfAxis = "horizontal";
+          }
+          break;
       case 2 :
-        cpyLine(&symmetryAxis, diagonalAxis);
-        typeOfAxis = "diagonal";
+        if (diagonalAxis.a == -1)
+          {
+            typeOfAxis = "None";
+            break;
+          }
+          else
+          {  cpyLine(&symmetryAxis, diagonalAxis);
+            typeOfAxis = "diagonal";
+          }
         break;
       case 3 :
-        cpyLine(&symmetryAxis, slashAxis);
-        typeOfAxis = "slash";
+          if (slashAxis.a == -1)
+          {
+            typeOfAxis = "None";
+            break;
+          }
+          else
+          {
+            cpyLine(&symmetryAxis, slashAxis);
+            typeOfAxis = "slash";
+          }
         break;
 
     }
-    float n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
 
-    int cm = symmetryAxis.a*initialStep.coord.x + symmetryAxis.b*initialStep.coord.y;
-    int xm = initialStep.coord.x + 2*symmetryAxis.a*(symmetryAxis.c - cm)/n;
-    int ym = initialStep.coord.y + 2*symmetryAxis.b*(symmetryAxis.c - cm)/n;
-
-    if(nCoord.x == xm && nCoord.y == ym && oppositeDir(initialStep.dir, nDir, typeOfAxis))
+    if(strcmp(typeOfAxis, "None")!=0)
     {
-      printf ("\n\033[31;01mSymmetry found here\033[00m\n");
-      printf("%d %d %d ", nCoord.x, nCoord.y, nCoord.z);
-      switch(nDir)
+      float n = symmetryAxis.a*symmetryAxis.a + symmetryAxis.b*symmetryAxis.b;
+
+      int cm = symmetryAxis.a*initialStep.coord.x + symmetryAxis.b*initialStep.coord.y;
+      int xm = initialStep.coord.x + 2*symmetryAxis.a*(symmetryAxis.c - cm)/n;
+      int ym = initialStep.coord.y + 2*symmetryAxis.b*(symmetryAxis.c - cm)/n;
+
+      if(nCoord.x == xm && nCoord.y == ym && oppositeDir(initialStep.dir, nDir, typeOfAxis))
       {
-        case UP :
-          printf("UP\n");
-          break;
-        case DOWN :
-          printf("DOWN\n");
-          break;
-        case LEFT :
-          printf("LEFT\n");
-          break;
-        case RIGHT :
-          printf("RIGHT\n");
-          break;
-        default :
-          printf("error\n");
-          break;
+        return 1;
       }
-      return 1;
     }
   }
   return 0;
@@ -419,8 +433,10 @@ int lineCmp(Step step, Coord coord, Dir dir)
   return(step.coord.x == coord.x && step.coord.y == coord.y && step.coord.z == coord.z && dir == step.dir);
 }
 
-Tree findInitialVectors(Volume volume)
+
+Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 {
+
   FloatCoord projectionCenter;
 
   Line verticalAxis;
@@ -428,91 +444,109 @@ Tree findInitialVectors(Volume volume)
   Line diagonalAxis;
   Line slashAxis;
 
-  int i, j, k, dirIndex, flag;
+  verticalAxis.a = -1;
+  horizontalAxis.a = -1;
+  diagonalAxis.a = -1;
+  slashAxis.a = -1;
 
-  //Tree initialNode = malloc(sizeof(NodeTree));
+  int i, j, k, dirIndex, flag;
 
   Coord nCoord;
 
   FloatCoord cubeCenter;
-  cubeCenter.x = (float)(volume.max.x-1)/2;
-  cubeCenter.y = (float)(volume.max.y-1)/2;
-  cubeCenter.z = (float)(volume.max.z-1)/2;
+  cubeCenter.x = (float)(snake->volume.max.x-1)/2;
+  cubeCenter.y = (float)(snake->volume.max.y-1)/2;
+  cubeCenter.z = (float)(snake->volume.max.z-1)/2;
 
   printf("cube center %lf %lf %lf\n", cubeCenter.x, cubeCenter.y, cubeCenter.z);
 
-  //Tree tmpNode = malloc(sizeof(NodeTree));
-
   Tree initialNode = initTree();
   addInitialVector(initialNode, 0, 0, 2, UP);
+  (*initialVectorNb)++;
   Tree tmpNode = initialNode->currentChild;
 
   k = 0;
   flag = 0;
 
   //select each face of the cube, parallel to the plan (0,x,y)
-  while(volume.max.z -1 - k > 0)
+  while(snake->volume.max.z -1 - k >= 0)
 
   {
     //projected othogonal of the cube center on the considered face
     projectionCenter.x = cubeCenter.x;
     projectionCenter.y = cubeCenter.y;
-    projectionCenter.z = volume.max.z -1 - k;
+    projectionCenter.z = snake->volume.max.z -1 - k;
 
-    //initialize axes of symmetry
-    verticalAxis.pointA.x = projectionCenter.x;
-    verticalAxis.pointA.y = projectionCenter.y-1;
-    verticalAxis.pointA.z = projectionCenter.z;
-    verticalAxis.pointB.x = projectionCenter.x;
-    verticalAxis.pointB.y = projectionCenter.y+1;
-    verticalAxis.pointB.z = projectionCenter.z;
-
-    horizontalAxis.pointA.x = projectionCenter.x-1;
-    horizontalAxis.pointA.y = projectionCenter.y;
-    horizontalAxis.pointA.z = projectionCenter.z;
-    horizontalAxis.pointB.x = projectionCenter.x+1;
-    horizontalAxis.pointB.y = projectionCenter.y;
-    horizontalAxis.pointB.z = projectionCenter.z;
-
-    diagonalAxis.pointA.x = projectionCenter.x-1;
-    diagonalAxis.pointA.y = projectionCenter.y+1;
-    diagonalAxis.pointA.z = projectionCenter.z;
-    diagonalAxis.pointB.x = projectionCenter.x+1;
-    diagonalAxis.pointB.y = projectionCenter.y-1;
-    diagonalAxis.pointB.z = projectionCenter.z;
-
-    slashAxis.pointA.x = projectionCenter.x+1;
-    slashAxis.pointA.y = projectionCenter.y+1;
-    slashAxis.pointA.z = projectionCenter.z;
-    slashAxis.pointB.x = projectionCenter.x-1;
-    slashAxis.pointB.y = projectionCenter.y-1;
-    slashAxis.pointB.z = projectionCenter.z;
-
-
-    //calculation of the linear equations
-    linearEquation(&verticalAxis);
-    linearEquation(&horizontalAxis);
-    linearEquation(&diagonalAxis);
-    linearEquation(&slashAxis);
-
-    printf ("\n\033[38;01mVertical axis\033[00m\n");
-    printLine(verticalAxis);
-    printf ("\n\033[38;01mHorizontal axis\033[00m\n");
-    printLine(horizontalAxis);
-    printf ("\n\033[38;01mDiagonal axis\033[00m\n");
-    printLine(diagonalAxis);
-    printf ("\n\033[38;01mSlash axis\033[00m\n");
-    printLine(slashAxis);
-
-    for(i=0; i<=volume.max.x/2; i++)
+    if(snake->symetries[0] == 1)
     {
-      for(j=0; j<=volume.max.y/2; j++)
+      //initialize axe of symmetry
+      verticalAxis.pointA.x = projectionCenter.x;
+      verticalAxis.pointA.y = projectionCenter.y-1;
+      verticalAxis.pointA.z = projectionCenter.z;
+      verticalAxis.pointB.x = projectionCenter.x;
+      verticalAxis.pointB.y = projectionCenter.y+1;
+      verticalAxis.pointB.z = projectionCenter.z;
+
+      //calculation of the linear equations
+      linearEquation(&verticalAxis);
+
+      printf ("\n\033[38;01mVertical axis\033[00m\n");
+    }
+
+    if(snake->symetries[1] == 1)
+    {
+      horizontalAxis.pointA.x = projectionCenter.x-1;
+      horizontalAxis.pointA.y = projectionCenter.y;
+      horizontalAxis.pointA.z = projectionCenter.z;
+      horizontalAxis.pointB.x = projectionCenter.x+1;
+      horizontalAxis.pointB.y = projectionCenter.y;
+      horizontalAxis.pointB.z = projectionCenter.z;
+
+      linearEquation(&horizontalAxis);
+
+      printf ("\n\033[38;01mHorizontal axis\033[00m\n");
+    }
+
+    if(snake->symetries[2] == 1)
+    {
+      diagonalAxis.pointA.x = projectionCenter.x-1;
+      diagonalAxis.pointA.y = projectionCenter.y+1;
+      diagonalAxis.pointA.z = projectionCenter.z;
+      diagonalAxis.pointB.x = projectionCenter.x+1;
+      diagonalAxis.pointB.y = projectionCenter.y-1;
+      diagonalAxis.pointB.z = projectionCenter.z;
+
+      linearEquation(&diagonalAxis);
+
+      printf ("\n\033[38;01mDiagonal axis\033[00m\n");
+    }
+
+    if(snake->symetries[3] == 1)
+    {
+      slashAxis.pointA.x = projectionCenter.x+1;
+      slashAxis.pointA.y = projectionCenter.y+1;
+      slashAxis.pointA.z = projectionCenter.z;
+      slashAxis.pointB.x = projectionCenter.x-1;
+      slashAxis.pointB.y = projectionCenter.y-1;
+      slashAxis.pointB.z = projectionCenter.z;
+
+      linearEquation(&slashAxis);
+
+      printf ("\n\033[38;01mSlash axis\033[00m\n");
+
+    }
+
+
+    for(i=0; i<snake->volume.max.x; i++)
+    {
+      for(j=0; j<snake->volume.max.y; j++)
       {
         tmpNode=initialNode->currentChild;
         nCoord.x = i;
         nCoord.y = j;
         nCoord.z = projectionCenter.z;
-
+        if(snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
+        {
         for (dirIndex = 0; dirIndex < 4; dirIndex++)
         {
           tmpNode=initialNode->currentChild;
@@ -544,44 +578,22 @@ Tree findInitialVectors(Volume volume)
             }
             if(flag)
             {
-              printf("symmetry found\n");
+              logWrite("[RESOL] Symmetry found\n");
               flag = 0;
-
             }
             else
-            { printf("symmetry not found\n");
-              addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
-            }
-          }
-          else
-          { printf ("\n\033[31;01mUnvalid coord\033[00m\n");
-            printf("%d %d %d ", nCoord.x, nCoord.y, nCoord.z);
-            switch(tempDir)
             {
-                case UP :
-                  printf("UP\n");
-                  break;
-                case DOWN :
-                  printf("DOWN\n");
-                  break;
-                case LEFT :
-                  printf("LEFT\n");
-                  break;
-                case RIGHT :
-                  printf("RIGHT\n");
-                  break;
-                default :
-                  printf("error\n");
-                 break;
+              logWrite("[RESOL] Symmetry not found\n");
+              addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
+              (*initialVectorNb)++;
             }
           }
         }
       }
+      }
     }
     k++;
-    //k=12;
   }
-  //printTree(initialNode);
   return initialNode;
 
 }

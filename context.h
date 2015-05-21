@@ -51,6 +51,8 @@ float last_xpos;
 float last_ypos;
 float gxpos;
 float gypos;
+int resize_w;
+int resize_h;
 
 
 typedef struct context
@@ -60,14 +62,17 @@ typedef struct context
 	int screen_height;
 	int running;
 	pthread_t render_thread;
-	GLuint shader_program;
+	GLuint volume_program;
+	GLuint snake_program;
+	GLuint picking_program;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
-	Object* dcube_mesh;
-	Object* lcube_mesh;
+	Object* cube_mesh;
+	Object* square_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;
+	int drawpick;
 } Context;
 
 

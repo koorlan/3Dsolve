@@ -117,7 +117,7 @@ Tree initTree();
 
 /**
  * @brief Affiche un snake.
- * 
+ *
  * Affiche dans la console les champs "units" qui composent le snake.
  * @param snake : le serpent à afficher
  */
@@ -230,7 +230,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
  * @param  volume Le volume sur lequel effectuer le calcul
  * @return        L'arbre contenant les vecteurs initiaux
  */
-Tree findInitialVectors(Volume volume);
+Tree findInitialVectors(Snake *snake, int* initialVectorNb);
 
 /**
  * @brief Calcul des coordonnées en fonction d'une direction.

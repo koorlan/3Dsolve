@@ -153,6 +153,7 @@ typedef struct Snake
 	int currentUnit;
 	ListSolution* solutions;
 	Volume volume;
+	int symetries[4]; // Indique les différents axes de symétrie relatifs au snake
 } Snake;
 
 /**
