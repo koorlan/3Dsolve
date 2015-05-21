@@ -106,8 +106,8 @@ typedef NodeTree * Tree;
 typedef struct ThreadArgs
 {
     Tree rootNode;
-    Unit* units;
-    Volume volume;
+    Snake* snake;
+    pthread_mutex_t mutex;
 } ThreadArgs;
 
 /**

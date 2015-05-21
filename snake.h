@@ -164,11 +164,7 @@ typedef struct Snake
  */
 Snake* snakeInit(char* templatePath);
 
-Snake* snakeCopy(Unit* units, Volume volume);
-
-Unit* snakeCopyUnits(Unit* units, int unitsNb);
-
-Volume snakeCopyVolume(Volume volume);
+void snakeCopy(Snake* destination, Snake* source);
 
 /**
  * @brief Supprime snake de la mémoire

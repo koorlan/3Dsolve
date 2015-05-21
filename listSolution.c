@@ -10,19 +10,18 @@ ListSolution* listSolutionCreate()
 
 void listSolutionDestroy(ListSolution* listSolution)
 {
-  Solution *curr,
-           *tmp ;
+    Solution *curr, *tmp;
 
-  while ( listSolution->head != NULL)
-  {
     curr = listSolution->head;
-    tmp = curr;
-    curr = curr->next;
-    free(tmp);
-    listSolution->head = curr;
-  }
+    while(listSolution->size != 0)
+    {
+        tmp = curr;
+        curr = curr->next;
+        free(tmp);
+        listSolution->size = listSolution->size - 1;
+    }
 
-  free(listSolution);
+    free(listSolution);
 
 }
 
