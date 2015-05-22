@@ -33,6 +33,5 @@
 
 void* renderer ( void *arg );
 void dir2vec ( Dir dir, vec3 vec );
-void flatten ( vec3* cubes, int cubesNb, Unit* layout  );
 
 #endif //RENDERERS_H
