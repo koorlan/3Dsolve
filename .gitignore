@@ -42,3 +42,11 @@ MyStuff/*
 Doxyfile
 html/*
 latex/*
+Rapport/*.aux
+Rapport/*.idx
+Rapport/*.ilg
+Rapport/*.ind
+Rapport/*.lof
+Rapport/*.lol
+Rapport/*.tex.backup
+Rapport/*.toc

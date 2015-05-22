@@ -20,7 +20,7 @@
  * Korlan Colas <korlan.colas@insa-cvl.fr>, Anthony Gourd <anthony.gourd@insa-cvl.fr>
  * @date Juin 2015
  *
- * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ * Projet tutoré par Patrice Clemente <patrice.clemente@insa-cvl.fr>
  *
  * INSA Centre Val de Loire : Année 2014-2015
  *

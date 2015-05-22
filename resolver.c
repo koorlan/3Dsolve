@@ -83,8 +83,8 @@ void resolverSolveSnake(Snake *snake)
 
     long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
 
-  //  printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
-//    elapsedTime);
+    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
+    elapsedTime);
     printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
     logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,
     elapsedTime);
@@ -449,7 +449,9 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
   diagonalAxis.a = -1;
   slashAxis.a = -1;
 
-  int i, j, k, dirIndex, flag;
+  int i, j, k, dirIndex, flag, dx, dy;
+  dx = 1;
+  dy = 1;
 
   Coord nCoord;
 
@@ -467,6 +469,12 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 
   k = 0;
   flag = 0;
+
+  if(snake->symetries[0] == 1)
+    dx = 2;
+
+    if(snake->symetries[1] == 1)
+        dy = 2;
 
   //select each face of the cube, parallel to the plan (0,x,y)
   while(snake->volume.max.z -1 - k >= 0)
@@ -537,9 +545,9 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
     }
 
 
-    for(i=0; i<snake->volume.max.x; i++)
+    for(i=0; i<=snake->volume.max.x / dx; i++)
     {
-      for(j=0; j<snake->volume.max.y; j++)
+      for(j=0; j<=snake->volume.max.y / dy; j++)
       {
         tmpNode=initialNode->currentChild;
         nCoord.x = i;
