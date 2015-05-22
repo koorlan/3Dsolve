@@ -24,24 +24,18 @@ void* renderer ( void *arg )
 	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
-/*
-	vec3 vol_offset;
-	vol_offset[0] = (context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
-	vol_offset[1] = (context->snake->volume.max.y%2==0 ? context->snake->volume.max.y /2 - 0.5f : (context->snake->volume.max.y -1 )/2);
-	vol_offset[2] = (context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
-*/
 
-	context->camera->distance = 4.f;
-	int selected = -1;
 	int i;
 	int cubesNb = context->snake->length;
 
-	vec3 * cubePos = malloc ( cubesNb * 3 * sizeof(float) );
-	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
-	flatten ( cubePos, cubesNb, context->snake->units );
-	flatten ( flatCubePos, cubesNb, context->snake->units );
-
 	gplayer = playerInit ( context->snake );
+	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
+	for (i=0;i<cubesNb;i++)
+	{
+		flatCubePos[i][0] = (float) gplayer->steps[i].coord.x;
+		flatCubePos[i][1] = (float) gplayer->steps[i].coord.y;
+		flatCubePos[i][2] = (float) gplayer->steps[i].coord.z;
+	}
 
 	float last_time=127.f;
 	struct timespec time1;
@@ -66,11 +60,18 @@ void* renderer ( void *arg )
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
 
+		//crap
+		if (context->flatten == 1)
+		{
+			playerFlatten ( gplayer, context->snake, 0 );
+			context->flatten = 0;
+		}
+
 		//===========picking==========
 
 		int segEnd = cubesNb;
-		if (selected!=-1 && selected!=cubesNb)
-			for ( i=selected+1; i < cubesNb; i++ )
+		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -88,6 +89,8 @@ void* renderer ( void *arg )
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 			glBindVertexArray (context->cube_mesh->vao_id);
+
+
 
 			int objID = 0;
 			for ( i=0; i <= segEnd; i++ )
@@ -107,17 +110,17 @@ void* renderer ( void *arg )
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
 					GL_RGBA, GL_UNSIGNED_BYTE, data);
-			if (data[0] == selected)
-				playerRotate(gplayer, selected, context->snake);
-			selected = (data[0]==255?-1:data[0]);
-			//printf ("cube %d selected\n", selected);
+			//if (data[0] == gplayer->selected)
+			//	playerRotate(gplayer, gplayer->selected, context->snake);
+			gplayer->selected = (data[0]==255?-1:data[0]);
+			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
 			context->drawpick = 0;
 
 		}
 
 		//==========view cubes==========
-		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+		glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram (context->snake_program);
 		mat4x4_look_at(viewMat, context->camera->eye,
@@ -128,8 +131,8 @@ void* renderer ( void *arg )
 		glBindVertexArray (context->cube_mesh->vao_id);
 
 		segEnd = cubesNb;
-		if (selected!=-1 && selected!=cubesNb)
-			for ( i=selected+1; i < cubesNb; i++ )
+		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -144,7 +147,7 @@ void* renderer ( void *arg )
 
 			mat4x4_identity ( WMat );
 			mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
-			if (i==selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
+			if (i==gplayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
 			else mat4x4_scale3d(WMat, WMat, 0.97f);
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
@@ -176,7 +179,7 @@ void* renderer ( void *arg )
 			mat4x4_scale3d(WMat, WMat, 0.05f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
-			mat4x4_translate_in_place( WMat, cubePos[i][0], cubePos[i][2], 0);
+			mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
@@ -240,28 +243,4 @@ void dir2vec ( Dir dir, vec3 vec )
 			break;
 	}
 
-}
-
-void flatten ( vec3* cubes, int cubesNb, Unit* layout )
-{
-	int dim;
-
-	Dir nextDir = RIGHT;
-
-	int i;
-	for ( i = 0; i < cubesNb; i++ )
-	{
-		vec3 compDir;
-		dir2vec ( nextDir, compDir );
-		if ( i == 0 )
-			for ( dim=0; dim<3; dim++ ) cubes[i][dim] = 0.f;
-		else
-			for ( dim=0; dim<3; dim++ ) cubes[i][dim] = cubes[i-1][dim] + compDir[dim];
-
-		if ( layout[i] == CORNER)
-		{
-			if ( nextDir == BACK ) nextDir = RIGHT;
-			else nextDir = BACK;
-		}
-	}
 }

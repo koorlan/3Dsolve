@@ -23,9 +23,15 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 		mouse_flags ^= M_RIGHT;
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
 		mouse_flags |= M_LEFT;
-//	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-//		mouse_flags ^= M_LEFT;
+		mouse_flags |= M_LEFTONCE;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		mouse_flags ^= M_LEFT;
+		mouse_flags |= M_RLEFTONCE;
+	}
 }
 
 void cursorCallback(GLFWwindow* window, double xpos, double ypos)
@@ -77,6 +83,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 int getInput ( Context* context )
 {
+	static int magnet;
+
 	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
@@ -94,6 +102,7 @@ int getInput ( Context* context )
 
 	if ((key_flags&K_UP)==K_UP)
 	{
+		context->flatten = 1;
 	}
 	else if ((key_flags&K_DN)==K_DN)
 	{
@@ -109,12 +118,33 @@ int getInput ( Context* context )
 			(context->snake->currentUnit>=context->snake->length-2?context->snake->length-1:context->snake->currentUnit+1);
 	}
 
+	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
+	{
+		magnet = 0;
+		mouse_flags ^= M_RLEFTONCE;
+	}
 
 	if ((mouse_flags&M_LEFT)==M_LEFT)
 	{
-		context->drawpick = 1;
-		mouse_flags ^= M_LEFT;
-		//printf("accx=%f  accy=%f\n", accx, accy);
+		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
+		{
+			context->drawpick = 1;
+			mouse_flags ^= M_LEFTONCE;
+		}
+		float accx = (last_xpos-gxpos)*0.01f;
+		float accy = (last_ypos-gypos)*0.01f;
+		if ( accx!=0.f || accy!=0.f )
+		{
+			//printf("accx=%f  accy=%f\n", accx, accy);
+			magnet++;
+			if ( magnet > 20 )
+			{
+				int way = (accx>0?1:0);
+				if (gplayer->selected != -1)
+					playerRotate(gplayer, gplayer->selected, context->snake, way);
+				magnet = 0;
+			}
+		}
 	}
 
 
@@ -144,9 +174,9 @@ int getInput ( Context* context )
 		mouse_flags = M_NONE;
 	}
 
-	context->camera->eye[0] = context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->distance * sin(context->camera->angle[1]);
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance * sin(context->camera->angle[1]);
 
 	return 0;
 }
@@ -231,6 +261,7 @@ void contextInit ( Context* context )
 
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
 	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
@@ -271,23 +302,31 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
 
+	vec3 vol_offset;
+	vol_offset[0]=(context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
+	vol_offset[1]=(context->snake->volume.max.y%2==0 ? context->snake->volume.max.y /2 - 0.5f : (context->snake->volume.max.y -1 )/2);
+	vol_offset[2]=(context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
+
 	Camera * camera = cameraCreate();
-	camera->eye[0] = 7.f;
+	camera->eye[0] = 0.f;
 	camera->eye[1] = 0.f;
 	camera->eye[2] = 0.f;
-	camera->target[0] = 0.f;
-	camera->target[1] = 0.f;
-	camera->target[2] = 0.f;
+	camera->target[0] = vol_offset[0];
+	camera->target[1] = vol_offset[1];
+	camera->target[2] = vol_offset[2];
 	camera->up[0] = 0.f;
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.5f;
+	camera->angle[1] = 0.8f;
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
 
+	context->drawpick = 0;
+	context->flatten = 0;
 	//bhv_flags |= BHV_ROTATE;
+	
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );

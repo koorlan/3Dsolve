@@ -36,7 +36,6 @@ FTGLfont *myfont;
 
 void* renderer ( void *arg );
 void dir2vec ( Dir dir, vec3 vec );
-void flatten ( vec3* cubes, int cubesNb, Unit* layout  );
 void render_text(const char *text, float x, float y, float sx, float sy);
 
 #endif //RENDERERS_H
