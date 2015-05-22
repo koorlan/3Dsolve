@@ -16,9 +16,17 @@ void resolverSolveSnake(Snake *snake)
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
     clock_t startTime = clock();
+    /*struct timespec timer;
+    timer.tv_sec = 0;
+    timer.tv_nsec = 10;*/
     long unsigned int exploredWayNb = 0;
 
-    Tree rootNode = findInitialVectors(snake);
+    //Tree rootNode = createAllInitialVectors(snake->volume);
+
+    int initialVectorNb = 0;
+    Tree rootNode = findInitialVectors(snake, &initialVectorNb);
+
+    logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
 
     printSnake(*snake);
 
@@ -62,6 +70,8 @@ void resolverSolveSnake(Snake *snake)
                 free(currentNode->currentChild);
                 currentNode->currentChild = NULL;
                 snakeRewind(snake);
+
+                //nanosleep(&timer, NULL);
             }
         }
     }
@@ -238,7 +248,7 @@ int buildChildren(Tree currentNode, Snake * snake)
             if(cornerTruthTable[currentNode->step.dir][i])
             {
                 newChild = malloc(sizeof(NodeTree));
-              Dir tempDir;
+              /*Dir tempDir;
               switch(i)
               {
                 case 0:
@@ -259,14 +269,14 @@ int buildChildren(Tree currentNode, Snake * snake)
                 case 5:
                   tempDir = BACK ;
                   break;
-              }
+              }*/
 
               newChild->parent = currentNode;
               newChild->brother = currentNode->currentChild;
               newChild->hasPlayed = 0;
               newChild->currentChild = NULL;
 
-              newChild->step.dir = tempDir;
+              newChild->step.dir = i;
               newChild->step.coord.x = nCoord.x;
               newChild->step.coord.y = nCoord.y;
               newChild->step.coord.z = nCoord.z;
@@ -354,7 +364,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
     {
       case 0 :
           if (verticalAxis.a == -1)
-          { 
+          {
             typeOfAxis = "None";
             break;
           }
@@ -370,7 +380,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
             typeOfAxis = "None";
             break;
           }
-          else 
+          else
           { cpyLine(&symmetryAxis, horizontalAxis);
             typeOfAxis = "horizontal";
           }
@@ -392,7 +402,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
             typeOfAxis = "None";
             break;
           }
-          else 
+          else
           {
             cpyLine(&symmetryAxis, slashAxis);
             typeOfAxis = "slash";
@@ -424,7 +434,7 @@ int lineCmp(Step step, Coord coord, Dir dir)
 }
 
 
-Tree findInitialVectors(Snake *snake)
+Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 {
 
   FloatCoord projectionCenter;
@@ -452,6 +462,7 @@ Tree findInitialVectors(Snake *snake)
 
   Tree initialNode = initTree();
   addInitialVector(initialNode, 0, 0, 2, UP);
+  (*initialVectorNb)++;
   Tree tmpNode = initialNode->currentChild;
 
   k = 0;
@@ -467,8 +478,8 @@ Tree findInitialVectors(Snake *snake)
     projectionCenter.z = snake->volume.max.z -1 - k;
 
     if(snake->symetries[0] == 1)
-    { 
-      //initialize axe of symmetry 
+    {
+      //initialize axe of symmetry
       verticalAxis.pointA.x = projectionCenter.x;
       verticalAxis.pointA.y = projectionCenter.y-1;
       verticalAxis.pointA.z = projectionCenter.z;
@@ -483,7 +494,7 @@ Tree findInitialVectors(Snake *snake)
     }
 
     if(snake->symetries[1] == 1)
-    {  
+    {
       horizontalAxis.pointA.x = projectionCenter.x-1;
       horizontalAxis.pointA.y = projectionCenter.y;
       horizontalAxis.pointA.z = projectionCenter.z;
@@ -497,7 +508,7 @@ Tree findInitialVectors(Snake *snake)
     }
 
     if(snake->symetries[2] == 1)
-    {  
+    {
       diagonalAxis.pointA.x = projectionCenter.x-1;
       diagonalAxis.pointA.y = projectionCenter.y+1;
       diagonalAxis.pointA.z = projectionCenter.z;
@@ -511,7 +522,7 @@ Tree findInitialVectors(Snake *snake)
     }
 
     if(snake->symetries[3] == 1)
-    {  
+    {
       slashAxis.pointA.x = projectionCenter.x+1;
       slashAxis.pointA.y = projectionCenter.y+1;
       slashAxis.pointA.z = projectionCenter.z;
@@ -566,14 +577,15 @@ Tree findInitialVectors(Snake *snake)
               tmpNode=tmpNode->brother;
             }
             if(flag)
-            {    
+            {
               logWrite("[RESOL] Symmetry found\n");
               flag = 0;
             }
             else
-            { 
+            {
               logWrite("[RESOL] Symmetry not found\n");
               addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
+              (*initialVectorNb)++;
             }
           }
         }
@@ -634,4 +646,24 @@ int validCoord(Coord coord, Coord max)
 int validCoordSym(Coord coord, FloatCoord max)
 {
   return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
+}
+
+Tree createAllInitialVectors(Volume volume)
+{
+    Tree root = initTree();
+    int x, y, z, dir;
+    for(x=0; x < volume.max.x; x++)
+    {
+        for(y=0; y < volume.max.y; y++)
+        {
+            for(z=0; z < volume.max.z; z++)
+            {
+                for(dir=0; dir < 6; dir++)
+                {
+                    addInitialVector(root, x, y, z, dir);
+                }
+            }
+        }
+    }
+    return root;
 }

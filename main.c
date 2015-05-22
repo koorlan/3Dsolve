@@ -1,3 +1,32 @@
+/**
+ * @mainpage
+ *
+ * Ce programme résoud, de manière calculatoire, des "Snake Cube". La méthode
+ * de recherche de solution est itérative et utilise un arbre n-aire.
+ *
+ * Le principe est le suivant :
+ * 	1. Un algorithme de recherche de symétrie élime les point de départ
+ * 	symétique afin de réduire au maximum le temps de calcule.
+ * 	2. Un autre algorithme essaie tous les chemins (combinaison de placement
+ * 	des éléments du snake) qu'il est possible de généré depuis les points
+ * 	trouvé à l'étape 1.
+ * 	3. Les chemins qui aboutissent (qui permettent de placer tous les éléments
+ * 	du snake de manière valide) sont des solutions.
+ * 	4. Les solutions sont ensuite présentées à l'utilisateur dans une scène de
+ * 	rendu en 3 dimentions. L'utilisateur peut regarder pas-à-pas la résolution
+ * 	du casse-tête.
+ *
+ * @authors Lisa Aubry <lisa.aubry@insa-cvl.fr>, Alban Chazot <alban.chazot@insa-cvl.fr>,
+ * Korlan Colas <korlan.colas@insa-cvl.fr>, Anthony Gourd <anthony.gourd@insa-cvl.fr>
+ * @date Juin 2015
+ *
+ * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ *
+ * INSA Centre Val de Loire : Année 2014-2015
+ *
+ * Promotion 2017
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -12,7 +41,6 @@
 
 int main ( int argc, char ** argv )
 {
-	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 	if(!logStart())
 	{
 		logError ("[MAIN.] Could not start log\n");
@@ -56,8 +84,6 @@ int main ( int argc, char ** argv )
 		nanosleep(&time1, &time2);
 	}
 
-
-
 //	snakePrintSolutions(snake);
 
 	/*char *buffer = malloc(5*sizeof(char));
@@ -99,7 +125,6 @@ int main ( int argc, char ** argv )
 			}
 		}
 	}*/
-
 
 	contextDestroy ( context );
 

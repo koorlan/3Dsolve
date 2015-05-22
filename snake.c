@@ -73,13 +73,14 @@ Snake* snakeInit(char* templatePath)
 	}
 
 	// Loading symetry axis informations
-	if(fscanf(file, "\n[Symetry]\n%d;%d;%d;%d", &(snake->symetries[0]), &(snake->symetries[1]), &(snake->symetries[2]), &(snake->symetries[3]) )!= 4)
+	if(fscanf(file, "\n[Symetry]\n%d;%d;%d;%d",
+	&(snake->symetries[0]), &(snake->symetries[1]),
+	&(snake->symetries[2]), &(snake->symetries[3]) ) != 4)
 	{
 		logError("[SNINI] Error on reading symetry axis info\n");
 		snakeDestroy(snake);
 		return NULL;
 	} 
-
 
 	fclose(file);
 
