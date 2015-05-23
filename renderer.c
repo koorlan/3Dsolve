@@ -71,11 +71,11 @@ void* renderer ( void *arg )
 
 		int segEnd = cubesNb;
 		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ ) 
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
-					break; 
+					break;
 				}
 
 		if ( context->drawpick == 1 )
@@ -105,7 +105,7 @@ void* renderer ( void *arg )
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 			glFlush();
-			glFinish(); 
+			glFinish();
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
@@ -129,14 +129,14 @@ void* renderer ( void *arg )
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 		glBindVertexArray (context->cube_mesh->vao_id);
-		
+
 		segEnd = cubesNb;
 		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ ) 
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
-					break; 
+					break;
 				}
 
 		for ( i=0; i < cubesNb; i++ )
@@ -187,6 +187,23 @@ void* renderer ( void *arg )
 			glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
 		}
 
+			glViewport (0, 0, context->screen_width, context->screen_height);
+			glUseProgram (0);
+			glLoadIdentity();
+			//glScalef(0.02f,0.02f,0.02f);
+			//glRotatef(90.f,1.f,1.f,1.f);
+			//glTranslatef(-1.f,-1.f,0.f);
+			//glRasterPos2f( -1.0, -1.0f);
+			float ratio = context->screen_width/context->screen_height;
+			glOrtho(-1.f*(context->screen_width/2),1.f*(context->screen_width/2),-1*ratio*(context->screen_height/2),1.f*ratio*(context->screen_height/2),1.f,-1.f);
+			glTranslatef(200.f*abs(cos(1.f*glfwGetTime())),200.f*abs(cos(1.f*glfwGetTime())),0.f);
+			glRotatef(360.f*abs(cos(1.f*glfwGetTime())),0.f,0.f,1.f);
+			glColor4f (0.2f+abs(cos(20*glfwGetTime())), 0.2f+abs(cos(10*glfwGetTime())), 0.2f+abs(cos(15*glfwGetTime())), 0.2f+abs(cos(5*glfwGetTime())));
+			//glRotatef(90.f,1.f,1.f,1.f);
+			//tglSetFontFaceSize(myfont, 1, 72);
+	    	ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
+	    	//glScalef(1.f/0.02f,1.f/0.02f,1.f/0.02f);
+
 		glfwSwapBuffers (context->window);
 	}
 
@@ -225,18 +242,5 @@ void dir2vec ( Dir dir, vec3 vec )
 		default:
 			break;
 	}
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

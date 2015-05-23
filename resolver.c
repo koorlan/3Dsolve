@@ -449,7 +449,9 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
   diagonalAxis.a = -1;
   slashAxis.a = -1;
 
-  int i, j, k, dirIndex, flag;
+  int i, j, k, dirIndex, flag, dx, dy;
+  dx = 1;
+  dy = 1;
 
   Coord nCoord;
 
@@ -467,6 +469,12 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 
   k = 0;
   flag = 0;
+
+  if(snake->symetries[0] == 1)
+    dx = 2;
+
+    if(snake->symetries[1] == 1)
+        dy = 2;
 
   //select each face of the cube, parallel to the plan (0,x,y)
   while(snake->volume.max.z -1 - k >= 0)
@@ -537,9 +545,9 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
     }
 
 
-    for(i=0; i<snake->volume.max.x; i++)
+    for(i=0; i<=snake->volume.max.x / dx; i++)
     {
-      for(j=0; j<snake->volume.max.y; j++)
+      for(j=0; j<=snake->volume.max.y / dy; j++)
       {
         tmpNode=initialNode->currentChild;
         nCoord.x = i;

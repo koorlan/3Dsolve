@@ -1,5 +1,7 @@
 #include "context.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
@@ -90,7 +92,7 @@ int getInput ( Context* context )
 	resize_h = -1;
 	resize_w = -1;
 	glfwPollEvents ();
-	
+
 	if (resize_h!=-1 || resize_w!=-1)
 	{
 		context->screen_width = resize_w;
@@ -160,7 +162,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
 		context->camera->distance-=0.4f;
@@ -256,9 +258,7 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT_AND_BACK); 
-	//glFrontFace(GL_CW);  
+
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -281,7 +281,6 @@ void contextInit ( Context* context )
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
-
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
 	glGenTextures(1, &textureID);
@@ -326,7 +325,8 @@ void contextInit ( Context* context )
 
 	context->drawpick = 0;
 	context->flatten = 0;
-	//bhv_flags |= BHV_ROTATE;	
+	//bhv_flags |= BHV_ROTATE;
+	
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );

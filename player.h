@@ -10,7 +10,8 @@
 #include "snake.h"
 
 
-typedef struct player {
+typedef struct player
+{
 	Step* steps;
 	int selected;
 } Player;
@@ -18,7 +19,7 @@ typedef struct player {
 Player* gplayer;
 
 Player* playerInit ( Snake* snake );
-void playerFlatten ( Player* player, Snake* snake, int fromIndex ); 
+void playerFlatten ( Player* player, Snake* snake, int fromIndex );
 void playerRotate ( Player* player, int stepIndex, Snake* snake, int way );
 void playerDestroy ( Player* player );
 

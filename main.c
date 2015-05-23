@@ -20,7 +20,7 @@
  * Korlan Colas <korlan.colas@insa-cvl.fr>, Anthony Gourd <anthony.gourd@insa-cvl.fr>
  * @date Juin 2015
  *
- * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ * Projet tutoré par Patrice Clemente <patrice.clemente@insa-cvl.fr>
  *
  * INSA Centre Val de Loire : Année 2014-2015
  *
@@ -30,7 +30,27 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <unistd.h>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#ifdef _WIN32
+   //define something for Windows (32-bit and 64-bit, this part is common)
+	#include <windows.h>
+   #ifdef _WIN64
+      //define something for Windows (64-bit only)
+   #endif
+#elif __APPLE__
+    #include "TargetConditionals.h"
+    #if TARGET_OS_MAC
+        // Other kinds of Mac OS
+		#endif
+#elif __linux
+    #include <unistd.h>
+#else
+		#error "Unspported Plateform"
+#endif
+
 #include <time.h>
 
 #include "context.h"
@@ -38,9 +58,14 @@
 #include "snake.h"
 #include "resolver.h"
 #include "player.h"
+#include "fonts.h"
 
 int main ( int argc, char ** argv )
 {
+	myfont = LoadFont("fonts/Libertine.ttf");
+
+	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
+
 	if(!logStart())
 	{
 		logError ("[MAIN.] Could not start log\n");

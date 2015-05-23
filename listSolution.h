@@ -7,7 +7,7 @@
  *
  * 3DSolve : un logiciel de résolution du casse-tête connu sous
  * le nom de Snake-Cube.
- * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ * Projet tutoré par Patrice Clemente <patrice.clemente@insa-cvl.fr>
  *
  * INSA Centre Val de Loire : Année 2014-2015
  * Promotion 2017

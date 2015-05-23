@@ -7,7 +7,7 @@
  *
  * 3DSolve : un logiciel de résolution du casse-tête connu sous
  * le nom de Snake-Cube.
- * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ * Projet tutoré par Patrice Clemente <patrice.clemente@insa-cvl.fr>
  *
  * INSA Centre Val de Loire : Année 2014-2015
  * Promotion 2017
@@ -16,7 +16,23 @@
 #ifndef RESOLVER_H
 #define RESOLVER_H
 
-#include <unistd.h>
+#ifdef _WIN32
+   //define something for Windows (32-bit and 64-bit, this part is common)
+	#include <windows.h>
+   #ifdef _WIN64
+      //define something for Windows (64-bit only)
+   #endif
+#elif __APPLE__
+    #include "TargetConditionals.h"
+    #if TARGET_OS_MAC
+        // Other kinds of Mac OS
+    #endif
+#elif __linux
+    #include <unistd.h>
+#else
+		#error "Unspported Plateform"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
