@@ -275,7 +275,7 @@ void contextInit ( Context* context )
 	shaderCompile(fs);
 	context->picking_program = shaderCreateProgram(vs, fs);
 
-	context->cube_mesh = objectLoad ( "stc/cube.stc" );
+	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
 	context->square_mesh = objectLoad ( "stc/square.stc" );
 
 	unsigned char* buffer;
@@ -283,7 +283,7 @@ void contextInit ( Context* context )
 	GLuint textureID;
 
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/lightwood.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -293,7 +293,7 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/darkwood.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
