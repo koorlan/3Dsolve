@@ -29,10 +29,10 @@
 #include "snake.h"
 #include "resolver.h"
 #include "fonts.h"
+#include "menu.h"
 
 int main ( int argc, char ** argv )
 {
-	myfont = LoadFont("fonts/Libertine.ttf");
 
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 	if(!logStart())
@@ -60,6 +60,47 @@ int main ( int argc, char ** argv )
 		logError ("[MAIN.] Could not create context\n");
 		return EXIT_FAILURE;
 	}
+
+	//Menu test;
+	int i ;
+	mymenu = NULL;
+	initMenu(&mymenu);
+	setMenuMargin(mymenu,(float []) {200.f, 50.f, 0.f, 0.f} );
+	mymenu->margin[0] = 50.f;
+	mymenu->margin[1] = 50.f;
+	mymenu->margin[2] = 0.f;
+	mymenu->margin[3] = 0.f;
+
+	Item *tmpitem;
+	for ( i = 0;  i < 10; i++) {
+		initItem(&(tmpitem));
+		setItemType(tmpitem, ITEM);
+		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+		setItemMargin(tmpitem,(float[]){5.f,20.f,0.f,0.f,0.f});
+		setItemDescriptor(tmpitem,(struct Descriptor)
+			{	.name="Default Text",
+				.font=LoadFont("fonts/Libertine.ttf"),
+				.fontSize = 20,
+				.color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
+				.action= OPEN});
+		addItemToMenu(mymenu,tmpitem);
+	}
+
+	setItemDescriptor(mymenu->item[3],(struct Descriptor)
+		{	.name="Custom Text",
+			.font=LoadFont("fonts/Quaaludes-Regular.ttf"),
+			.fontSize = 55,
+			.color=(struct Color){.r=1.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+			.action= OPEN});
+
+
+	calcMenu(mymenu);
+
+	logError ("MENU BBOX %f %f %f %f \n", mymenu->bbox[0], mymenu->bbox[1], mymenu->bbox[2], mymenu->bbox[3]);
+
+	//End test menu
+
+
 	context->snake = snake;
 
 	resolverSolveSnake(snake);

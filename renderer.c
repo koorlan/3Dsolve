@@ -123,9 +123,9 @@ void* renderer ( void *arg )
 		{
 
 			if (i%2==0)
-				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-			else
 				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			else
+				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_translate( WMat, step[i].coord.x-vol_offset[0], step[i].coord.y-vol_offset[1], step[i].coord.z-vol_offset[2] );
 
@@ -161,8 +161,8 @@ void* renderer ( void *arg )
 		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
 		{
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, r_angle);
@@ -186,26 +186,48 @@ void* renderer ( void *arg )
 			}
 
 		}
-		
-		glViewport (0, 0, context->screen_width, context->screen_height);
+
+
 		glUseProgram (0);
 		glLoadIdentity();
-		//glScalef(0.02f,0.02f,0.02f);
-		//glRotatef(90.f,1.f,1.f,1.f);
-		//glTranslatef(-1.f,-1.f,0.f);
-		//glRasterPos2f( -1.0, -1.0f);
-		float ratio = context->screen_width/context->screen_height;
-		glOrtho(-1.f*(context->screen_width/2),1.f*(context->screen_width/2),-1*ratio*(context->screen_height/2),1.f*ratio*(context->screen_height/2),1.f,-1.f);
-		glTranslatef(200.f*abs(cos(1.f*glfwGetTime())),200.f*abs(cos(1.f*glfwGetTime())),0.f);
-		glRotatef(360.f*abs(cos(1.f*glfwGetTime())),0.f,0.f,1.f);
-		glColor4f (0.2f+abs(cos(20*glfwGetTime())), 0.2f+abs(cos(10*glfwGetTime())), 0.2f+abs(cos(15*glfwGetTime())), 0.2f+abs(cos(5*glfwGetTime())));
-		//glRotatef(90.f,1.f,1.f,1.f);
-		//tglSetFontFaceSize(myfont, 1, 72);
-    	ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
-    	//glScalef(1.f/0.02f,1.f/0.02f,1.f/0.02f);
+		//Render text over menu template
+		glViewport (0, 0, context->screen_width, context->screen_height);
+		glOrtho(0,context->screen_width,0,context->screen_height,0,1);		//Render menu template
+		glColor4f(1.f/255.f,130.f/255.f,255.f/255.f,0.3+0.3*(1.f-sin(glfwGetTime())));
+		glBegin(GL_QUADS);
+	   	glVertex3f( (mymenu->margin[0]) + mymenu->bbox[0], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[1],0.f);
+	   	glVertex3f( (mymenu->margin[0]) + mymenu->bbox[0], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[3],0.f);
+	   	glVertex3f( (mymenu->margin[0]) + mymenu->bbox[2], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[3],0.f);
+	   	glVertex3f( (mymenu->margin[0]) + mymenu->bbox[2], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[1],0.f);
+		glEnd();
+		//glColor4f(0.0f,0.0f,1.0f,0.4f);
+		//glBegin(GL_QUADS);
+		//glVertex3f(mymenu->bbox[0],mymenu->bbox[1],0.f);
+		//glVertex3f(mymenu->bbox[0],mymenu->bbox[3],0.f);
+		//glVertex3f(mymenu->bbox[2],mymenu->bbox[3],0.f);
+		//glVertex3f(mymenu->bbox[2],mymenu->bbox[1],0.f);
+		//glEnd();
+
+		float acc = 0.f;
+
+		for ( i = 0;  i < mymenu->size; i++) {
+			glLoadIdentity();
+			glOrtho(0,context->screen_width,0,context->screen_height,0,1);		//Render menu template
+
+			//glRotatef(360.f*abs(cos(1.f*glfwGetTime())),0.f,0.f,1.f);
+			glColor4f (mymenu->item[i]->descriptor.color.r, mymenu->item[i]->descriptor.color.g,mymenu->item[i]->descriptor.color.b,0.3+0.3*(1.f-sin(glfwGetTime())));
+
+			glTranslatef((mymenu->margin[0]) + mymenu->bbox[0] + mymenu->item[i]->descriptor.bbox[0] + mymenu->item[i]->margin[0],(context->screen_height-mymenu->margin[1]) - acc  - mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->margin[1]  ,0.f);
+			acc += mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->descriptor.bbox[1]  + mymenu->item[i]->margin[1];
+			ftglSetFontCharMap(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.fontSize);
+			ftglRenderFont(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.name, FTGL_RENDER_ALL);
+			//buildMenu(mymenu,context->screen_width,context->screen_height);
+		}
+		//calcMenu(mymenu);
+
+  	//ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
+
 		glfwSwapBuffers (context->window);
-
-
 	}
 
 	logWrite ("[RENDR] Renderer stopped\n");
