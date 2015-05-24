@@ -1,21 +1,17 @@
 #include "renderer.h"
 
-
-
 void* renderer ( void *arg )
 {
+
 	logWrite ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
 
-	glfwMakeContextCurrent (context->window);
+	glfwMakeContextCurrent ( context->window );
 	glEnable (GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
 	glDepthFunc (GL_LEQUAL);
 
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
-
-	int i;
 
 	mat4x4 WMat;
 	mat4x4 PVMat;
@@ -26,137 +22,152 @@ void* renderer ( void *arg )
 	GLuint wID = glGetUniformLocation(context->snake_program, "W");
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
 	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
+	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
-	vec3 vol_offset;
-	vol_offset[0] = (context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
-	vol_offset[1] = (context->snake->volume.max.y%2==0 ? context->snake->volume.max.y /2 - 0.5f : (context->snake->volume.max.y -1 )/2);
-	vol_offset[2] = (context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
 
-	context->camera->distance = 4.f;
-	int selected = -1;
+	int i;
+	int cubesNb = context->snake->length;
+
+	gplayer = playerInit ( context->snake );
+	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
+	for (i=0;i<cubesNb;i++)
+	{
+		flatCubePos[i][0] = (float) gplayer->steps[i].coord.x;
+		flatCubePos[i][1] = (float) gplayer->steps[i].coord.y;
+		flatCubePos[i][2] = (float) gplayer->steps[i].coord.z;
+	}
+
+	float last_time=127.f;
+	struct timespec time1;
+	struct timespec time2;
 
 	while (context->running)
 	{
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
 
+		float cur_time = glfwGetTime ();
+		float fps = 1/((cur_time-last_time));
+		if (fps>60.0f)
+		{
+			time1.tv_sec = 0;
+			time1.tv_nsec = 1000;
+			nanosleep (&time1, &time2);
+			continue;
+		}
+		else last_time = cur_time;
+		//printf ("%f\n", fps); display fps
 
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
 
-		if (context->drawpick==1)
+		//crap
+		if (context->flatten == 1)
 		{
-			glClearColor( 1.f, 1.f, 1.f, 1.f );
+			playerFlatten ( gplayer, context->snake, 0 );
+			context->flatten = 0;
+		}
+
+		//===========picking==========
+
+		int segEnd = cubesNb;
+		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+				if ( context->snake->units[i] == CORNER)
+				{
+					segEnd = i;
+					break;
+				}
+
+		if ( context->drawpick == 1 )
+		{
+			glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			int objID = 0;
-
 			glUseProgram (context->picking_program);
-
-			mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
+			mat4x4_look_at(viewMat, context->camera->eye,
+					context->camera->target, context->camera->up);
 			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
-
-			#ifdef __APPLE__
-			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
-			#else
 			glBindVertexArray (context->cube_mesh->vao_id);
-			#endif
 
-			Step* step = context->snake->solutions->head->step;
 
-			for ( i=0; i <= context->snake->currentUnit; i++ )
+
+			int objID = 0;
+			for ( i=0; i <= segEnd; i++ )
 			{
-				if (i%2==0)
-					glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-				else
-					glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-
 				glUniform3f(pickcolorID, ((float)objID)/255.f, 0.f, 0.f);
 				objID++;
 
-				mat4x4_translate( WMat, step[i].coord.x-vol_offset[0], step[i].coord.y-vol_offset[1], step[i].coord.z-vol_offset[2] );
+				mat4x4_identity ( WMat );
+				mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
-				if (i==context->snake->currentUnit)
-					mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
-				else if (i==selected)
-					mat4x4_scale3d(WMat, WMat, 0.8f);
-				else
-					mat4x4_scale3d(WMat, WMat, 0.9f);
-
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
-
 			glFlush();
 			glFinish();
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
-			glReadPixels(gxpos, context->screen_height-gypos, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			selected = (data[0]==255?selected:data[0]);
-			printf ("cube %d selected\n", selected);
+			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
+					GL_RGBA, GL_UNSIGNED_BYTE, data);
+			//if (data[0] == gplayer->selected)
+			//	playerRotate(gplayer, gplayer->selected, context->snake);
+			gplayer->selected = (data[0]==255?-1:data[0]);
+			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
 			context->drawpick = 0;
+
 		}
 
-		glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+		//==========view cubes==========
+		glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		glUseProgram (context->snake_program);
-
-		mat4x4_look_at(viewMat, context->camera->eye, context->camera->target, context->camera->up);
+		mat4x4_look_at(viewMat, context->camera->eye,
+				context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-
-		glUniform1f(timeID, glfwGetTime());
-
-		#ifdef __APPLE__
-		glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
-		#else
 		glBindVertexArray (context->cube_mesh->vao_id);
-		#endif
 
-		Step* step = context->snake->solutions->head->step;
+		segEnd = cubesNb;
+		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
+			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+				if ( context->snake->units[i] == CORNER)
+				{
+					segEnd = i;
+					break;
+				}
 
-		for ( i=0; i <= context->snake->currentUnit; i++ )
+		for ( i=0; i < cubesNb; i++ )
 		{
 
-			if (i%2==0)
-				glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-			else
-				glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
-			mat4x4_translate( WMat, step[i].coord.x-vol_offset[0], step[i].coord.y-vol_offset[1], step[i].coord.z-vol_offset[2] );
+			glUniform1f(timeID, glfwGetTime());
+			glUniform1f(alphaID, (i > segEnd?0.2f:1.0f));
 
-			if (i==context->snake->currentUnit)
-				mat4x4_scale3d(WMat, WMat, (0.85f+ 0.3f*abs(cos(4*glfwGetTime()))) );
-			else if (i==selected)
-				mat4x4_scale3d(WMat, WMat, 0.8f);
-			else
-				mat4x4_scale3d(WMat, WMat, 0.9f);
+			mat4x4_identity ( WMat );
+			mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
+			if (i==gplayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
+			else mat4x4_scale3d(WMat, WMat, 0.97f);
+			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
-			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			//pair/impair = blanc/noir
+			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+			else glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+
 		}
 
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
-		mat4x4_identity(WMat);
-		mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-		mat4x4_scale3d(WMat, WMat, 0.05f);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-
-		#ifdef __APPLE__
-		glBindVertexArrayAPPLE (context->square_mesh->vao_id);
-		#else
 		glBindVertexArray (context->square_mesh->vao_id);
-		#endif
+		glUniform1f(alphaID, 1.0f);
 
-		int xdir = 0;
-		int ydir = 1;
-		float xoffset = -(context->snake->length*0.333333f);
+		float xoffset = -(context->snake->length*0.3333333f);
 		float yoffset = -0.75f * 20.f;
 		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
@@ -164,29 +175,18 @@ void* renderer ( void *arg )
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
+			mat4x4_identity(WMat);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
+			mat4x4_scale3d(WMat, WMat, 0.05f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-			mat4x4_rotate_Z(WMat, WMat, r_angle);
+			mat4x4_rotate_Z(WMat, WMat, -r_angle);
+			mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
 			if (i==context->snake->currentUnit)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
-			//pushmatrix
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			if (i==context->snake->currentUnit)
-				mat4x4_scale3d(WMat, WMat, (1/(0.9f*abs(cos(4*glfwGetTime())))) );
-			mat4x4_translate_in_place( WMat, xdir, ydir, 0);
-			mat4x4_rotate_Z(WMat, WMat, -r_angle);
-			mat4x4_translate_in_place( WMat, -xoffset, -yoffset, 0);
 
 			glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
-
-
-			if (context->snake->units[i]==CORNER)
-			{
-				xdir = (xdir==0?1:0);
-				ydir = (ydir==0?1:0);
-			}
-
 		}
-
 
 		glUseProgram (0);
 		glLoadIdentity();
@@ -227,6 +227,7 @@ void* renderer ( void *arg )
 
   	//ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
 
+
 		glfwSwapBuffers (context->window);
 	}
 
@@ -234,3 +235,36 @@ void* renderer ( void *arg )
 
 	return NULL;
 };
+
+
+void dir2vec ( Dir dir, vec3 vec )
+{
+	int dim;
+	for (dim=0; dim<3; dim++) vec[dim] = 0.f;
+
+	switch ( dir )
+	{
+		case UP:
+			vec[1] = 1.f;
+			break;
+		case DOWN:
+			vec[1] = -1.f;
+			break;
+		case LEFT:
+			vec[0] = -1.f;
+			break;
+		case RIGHT:
+			vec[0] = 1.f;
+			break;
+		case FRONT:
+			vec[2] = 1.f;
+			break;
+		case BACK:
+			vec[2] = -1.f;
+			break;
+		case DNONE:
+		default:
+			break;
+	}
+
+}

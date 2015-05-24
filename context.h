@@ -32,6 +32,8 @@
 #define DRESY 600
 #define M_RIGHT		0b00000001
 #define M_LEFT		0b00000010
+#define M_LEFTONCE	0b00100000
+#define M_RLEFTONCE	0b01000000
 #define M_MOVE		0b00000100
 #define M_ROLLF		0b00001000
 #define M_ROLLB		0b00010000
@@ -42,6 +44,7 @@
 #define K_DN	0b00000010
 #define K_LF	0b00000100
 #define K_RT	0b00001000
+#define K_RST	0b00010000
 
 #define BHV_ROTATE	0b00000001
 
@@ -74,6 +77,7 @@ typedef struct context
 	float ratio;
 	Snake* snake;
 	int drawpick;
+	int flatten;
 } Context;
 
 

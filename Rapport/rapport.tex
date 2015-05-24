@@ -1,0 +1,107 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel} 
+\usepackage{lmodern}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{listings}
+
+\lstset
+{
+escapeinside={(*}{*)},
+language=C,
+basicstyle=\footnotesize,
+numbers=left,
+numberstyle=\normalsize,
+numbersep=7pt,
+captionpos=b
+}
+
+\title{Rapport de développement de l'application `SolidSnake'}
+\author{Lisa Aubry Alban Chazot Korlan Colas Anthony Gourd}
+\date{\today}
+
+\pdfinfo{
+  /Title    (Rapport de développement de l'application ``SolidSnake'')
+  /Author   (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
+  /Creator  (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
+  /Producer (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
+  /Subject  (Application ``SolidSnake''; résolution du algorithmique du casse-tête ``Snake Cube'')
+  /Keywords ()
+}
+
+\makeindex
+\begin{document}
+
+\begin{titlepage}
+  \begin{center}
+
+    % Upper part of the page. The '~' is needed because \\
+    % only works if a paragraph has started.
+    \includegraphics[scale=1]{img/insacvl.jpg}~\\[1.5cm]
+
+    \textsc{\LARGE INSA - CVL}\\[2cm]
+
+    \textsc{\Large Rapport de développement}\\[1.5cm]
+
+    % Title
+    { \huge \bfseries Projet application\\[0.4cm] }
+    \today
+    
+    \vfill
+
+    % Author and supervisor
+    Auteurs :\textsc{Aubry} Lisa, \textsc{Chazot} Alban, \textsc{Colas} Korlan, \textsc{Gourd} Anthony - Promotion 2017\\
+    \emph{Tuteur :} P.\textsc{Clemente}\\
+  \end{center}
+\end{titlepage}
+
+\begin{abstract}
+Compte rendu portant sur le projet application effectué lors de la première année de formation à la Sécurité et aux Technologie de l'Informatique (STI) à l'INSA Centre Val de Loire
+\end{abstract}
+
+\tableofcontents
+
+\chapter*{Introduction}
+\input{introduction}
+
+\part{Analyse du sujet}
+\chapter{Présentation du casse-tête}
+\input{chapter1}
+\chapter{Description des objectifs}
+\input{chapter2}
+
+\part{Résolution du casse-tête}
+\chapter{Principe de la résolution}
+\input{chapter3}
+\chapter{Algorithme de résolution}
+\input{chapter4}
+
+\part{Organisation}
+\chapter{Organisation humaine}
+\input{chapter5}
+\chapter{Architecture logiciel}
+\input{chapter6}
+
+\part{Développement}
+\chapter{Core}
+\input{chapter7}
+\chapter{Graphique}
+\input{chapter8}
+\chapter{Portabilité}
+\input{chapter9}
+
+\part{Résultat}
+\chapter{Réalisations}
+\input{chapter10}
+\chapter{Tests}
+\input{chapter11}
+
+\listoffigures
+\lstlistoflistings
+
+\printindex
+\end{document}
