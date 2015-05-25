@@ -27,6 +27,8 @@ typedef struct object
 	int method;
 	int nb_faces;
 	GLuint vao_id;
+	GLuint vbo_points_id;
+	GLuint vbo_uvs_id;
 	GLubyte * indices;
 } Object;
 

@@ -329,3 +329,40 @@ int increaseMenu(Menu *menu){
     return -1;
   return 1;
 }
+
+
+int testMenuMesh(Menu *menu,int width, int height){
+
+  float mW = (menu->bbox[2]+menu->margin[0]) - (menu->bbox[0] - menu->margin[1]) ;
+  float mH = (menu->bbox[3]+menu->margin[0]) - (menu->bbox[1] - menu->margin[1]) ;
+  float * points = (float *) malloc (6 * 3 * sizeof(float));
+  float * uvs = malloc (6 * 2 * sizeof(float));
+  points = (float []) {
+    mW/width,-mH/height,0.f,
+    -mW/width,-mH/height,0.f,
+    mW/width,mH/height,0.f,
+
+    mW/width,mH/height,0.f,
+    -mW/width,-mH/height,0.f,
+    -mW/width,mH/height,0.f
+  };
+
+
+  uvs = (float []) {
+    0.f,0.0f,
+    0.0f,0.f,
+    0.f,0.f,
+
+    0.f,0.f,
+    0.f,0.f,
+    0.f,0.f
+  };
+
+  glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_points_id);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, (3*6) * sizeof (float), points);
+
+  glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_uvs_id);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, (2*6) * sizeof (float), uvs);
+
+  return 1;
+}

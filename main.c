@@ -125,6 +125,9 @@ int main ( int argc, char ** argv )
 	//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
 	//test relative fontSize
 	calcMenu(mymenu);
+	mymenu->mesh = objectLoad("stc/square.stc");
+	testMenuMesh(mymenu,context->screen_width,context->screen_height);
+
 	//End test menu
 
 

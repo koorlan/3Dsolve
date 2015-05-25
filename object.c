@@ -138,12 +138,14 @@ Object * objectLoad(const char * file)
 		glGenBuffers (1, &points_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
 		glBufferData (GL_ARRAY_BUFFER, (3*npoints) * sizeof (float), points, GL_STATIC_DRAW);
+		object->vbo_points_id = points_vbo;
 		logWrite ("[OBJCT] VBO %d created for vertices\n", points_vbo);
 
 		GLuint uvs_vbo = 0;
 		glGenBuffers (1, &uvs_vbo);
 		glBindBuffer (GL_ARRAY_BUFFER, uvs_vbo);
 		glBufferData (GL_ARRAY_BUFFER, (2*uv_nb) * sizeof (float), uvs, GL_STATIC_DRAW);
+		object->vbo_uvs_id = uvs_vbo;
 		logWrite ("[OBJCT] VBO %d created for uvs\n", uvs_vbo);
 
 		GLuint vao = 0;

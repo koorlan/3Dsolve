@@ -105,7 +105,8 @@ int getInput ( Context* context )
 		pthread_mutex_lock(mymenu->mutex);
 		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
 		calcMenu(mymenu);
-		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
+		testMenuMesh(mymenu,context->screen_width	, context->screen_height);
+		//reshapeMenu(mymenu, context->screen_width	, context->screen_height);
 		pthread_mutex_unlock(mymenu->mutex);
 
 		resize_h = -1;

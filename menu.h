@@ -9,6 +9,7 @@
 #include "linmath.h"
 
 #include "log.h"
+#include "object.h"
 #include "snake.h"
 #include "fonts.h"
 
@@ -55,6 +56,7 @@ struct Menu{
   float bbox[4];
   int size;
   Item **item;
+  Object *mesh;
   pthread_mutex_t *mutex;
 };
 
@@ -92,5 +94,5 @@ int calcMenu(Menu *menu);
 int reshapeMenu(Menu *menu,int width, int height); //See later
 int reduceMenu(Menu *menu);
 int increaseMenu(Menu *menu);
-
+int testMenuMesh(Menu *menu,int width, int height);
 #endif
