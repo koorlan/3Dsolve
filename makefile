@@ -33,7 +33,7 @@ else
    endif
 endif
 
-OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o fonts.o menu.o  player.o main.o
+OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o fonts.o menu.o  player.o application.o main.o
 
 PROG = snake
 

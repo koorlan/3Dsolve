@@ -13,6 +13,17 @@
  * Promotion 2017
  */
 
+/**
+ * @defgroup Resolver Resolver
+ *
+ * @brief Module gérant la résolution d'un snake cube.
+ *
+ * Ce module permet le calcul de la solution d'un snake. Il calcul les sysmétries
+ * du volume afin d'éliminer un maximum de point de départ puis cherche les différentes
+ * solutions possibles par un parcourt en profondeur du graphe modélisant tous les
+ * chemins possibles.
+ */
+
 #ifndef RESOLVER_H
 #define RESOLVER_H
 
@@ -45,6 +56,7 @@
 #include "time.h"
 
 /**
+ * @ingroup Resolver
  * @struct NodeTree resolver.h
  * @brief Représente un noeud de l'arbre de résolution.
  * @var NodeTree::step
@@ -68,6 +80,7 @@ typedef struct NodeTree
 } NodeTree;
 
 /**
+ * @ingroup Resolver
  * @struc FloatCoord
  * @brief Coordonnée en précision flotante.
  * @var FloatCoord::x
@@ -85,6 +98,7 @@ typedef struct FloatCoord
 }FloatCoord;
 
 /**
+ * @ingroup Resolver
  * @struct Line
  * @brief Définit une ligne (ou axe de symétrie).
  *
@@ -112,6 +126,7 @@ typedef struct Line
 }Line;
 
 /**
+ * @ingroup Resolver
  * @typedef Tree
  * Tree est type définit comme étant un pointer sur NodeTree
  * @see NodeTree
@@ -120,18 +135,21 @@ typedef NodeTree * Tree;
 
 
 /**
+ * @ingroup Resolver
  * @brief Fonction principale dans la résolution du snake.
  * @param snake : le serpent à résoudre
  */
 void resolverSolveSnake(Snake *snake);
 
 /**
+ * @ingroup Resolver
  * @brief Crée une nouvelle racine d'arbre.
  * @return Un pointeur sur la racine crée.
  */
 Tree initTree();
 
 /**
+ * @ingroup Resolver
  * @brief Affiche un snake.
  *
  * Affiche dans la console les champs "units" qui composent le snake.
@@ -140,6 +158,7 @@ Tree initTree();
 void printSnake(Snake snake);
 
 /**
+ * @ingroup Resolver
  * @brief Effectue la copie d'une variable de type structure Step.
  * @param dest : la destination de la copie
  * @param src : la source de la copie
@@ -147,6 +166,7 @@ void printSnake(Snake snake);
 void copyStep (Step * dest, Step src);
 
 /**
+ * @ingroup Resolver
  * @brief Ajoute un noeud dans un arbre.
  *
  * Créer un nouveau noeud et renseigne son champ Step grâce au paramètres envoyés.
@@ -160,6 +180,7 @@ void copyStep (Step * dest, Step src);
 void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir);
 
 /**
+ * @ingroup Resolver
  * @brief Affiche les caractéristique de <currentNode> dans la console.
  *
  * Les caractéristique affichée sont les coordonnées ainsi
@@ -170,6 +191,7 @@ void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir);
 void printCurrentNode(Tree currentNode);
 
 /**
+ * @ingroup Resolver
  * @brief Construit les enfants directs de <currentNode>.
  *
  * Lors du procésus de création des fils, les caractéristiques
@@ -181,6 +203,7 @@ void printCurrentNode(Tree currentNode);
 int buildChildren(Tree currentNode, Snake * snake);
 
 /**
+ * @ingroup Resolver
  * @brief Affiche <rootNode> dans la console.
  *
  * Fonctione de la même manière que printCurrentNode en affichant tous les
@@ -191,6 +214,7 @@ int buildChildren(Tree currentNode, Snake * snake);
 void printTree (Tree rootNode);
 
 /**
+ * @ingroup Resolver
  * @brief Affiche les caractéristique de <line> dans la console.
  *
  * Les caractéristiques affichées sont :
@@ -201,12 +225,14 @@ void printTree (Tree rootNode);
 void printLine (Line line);
 
 /**
+ * @ingroup Resolver
  * @brief Calcul l'équation linéaire de <line>.
  * @param line Ligne dont on veut calculer l'équation linéaire
  */
 void linearEquation (Line *line);
 
 /**
+ * @ingroup Resolver
  * @brief Vérifie si <srcDir> et <destDir> sont opposées par rapport à <typeOfAxis>.
  * @param  srcDir     1er destination à comparer
  * @param  destDir    2eme destination à comparer
@@ -216,6 +242,7 @@ void linearEquation (Line *line);
 int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis);
 
 /**
+ * @ingroup Resolver
  * @brief Copie <src> dans <dest>.
  * @param dest Destination de la copie
  * @param src  Source de la copie
@@ -223,6 +250,7 @@ int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis);
 void cpyLine(Line *dest, Line src);
 
 /**
+ * @ingroup Resolver
  * @brief Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan.
  * @param  initialStep    [description]
  * @param  nCoord         [description]
@@ -236,6 +264,7 @@ void cpyLine(Line *dest, Line src);
 int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis);
 
 /**
+ * @ingroup Resolver
  * @brief Construit une liste de vecteurs initiaux dans un volume donné.
  *
  * - On détermine le centre du volume
@@ -249,6 +278,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
 Tree findInitialVectors(Snake *snake, int* initialVectorNb);
 
 /**
+ * @ingroup Resolver
  * @brief Calcul des coordonnées en fonction d'une direction.
  * @param  coord La coordonnée de départ
  * @param  dir   La direction dans laquelle se déplacer
@@ -257,6 +287,7 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb);
 Coord calcCoord(Coord coord,Dir dir);
 
 /**
+ * @ingroup Resolver
  * @brief Vérifie la validé de <coord>.
  *
  * Des coordonnées sont valides si pour chacune de leurs
@@ -269,6 +300,7 @@ Coord calcCoord(Coord coord,Dir dir);
 int validCoord(Coord coord, Coord max);
 
 /**
+ * @ingroup Resolver
  * @brief Même prinicipe que la fonction valideCoord mais avec des inégalitées larges.
  * @param  coord Les coordonnées à vérifier
  * @param  max   Les coordonnées maximales
@@ -278,6 +310,7 @@ int validCoord(Coord coord, Coord max);
 int validCoordSym(Coord coord, FloatCoord max);
 
 /**
+ * @ingroup Resolver
  * @brief Crée tous les points de départ possible pour un volume donné.
  *
  * Cette fonction permet de pouvoir chercher les solutions à partir de la

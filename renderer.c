@@ -2,7 +2,7 @@
 
 void* renderer ( void *arg )
 {
-	/// [1] OpenGl setup
+	//! [1] OpenGl setup
 	logWrite ("[RENDR] Renderer started\n");
 
 	Context* context = (Context*) arg;
@@ -27,9 +27,9 @@ void* renderer ( void *arg )
 	float last_time=127.f;
 	struct timespec time1;
 	struct timespec time2;
-	/// [1]
+	//! [1]
 
-	/// [2] Player initialization
+	//! [2] Player initialization
 	Player* curPlayer;
 	if (context->playmode == PM_PLAY)
 		curPlayer = gplayer;
@@ -47,14 +47,14 @@ void* renderer ( void *arg )
 		flatCubePos[i][1] = (float) curPlayer->steps[i].coord.y;
 		flatCubePos[i][2] = (float) curPlayer->steps[i].coord.z;
 	}
-	/// [2]
+	//! [2]
 
-	/// [3] Renderer loop
+	//! [3] Renderer loop
 	while (context->running)
 	{
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
 
-		/// [4] FPS limitation control
+		//! [4] FPS limitation control
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
@@ -66,7 +66,7 @@ void* renderer ( void *arg )
 		}
 		else last_time = cur_time;
 		//printf ("%f\n", fps); display fps
-		/// [4]
+		//! [4]
 
 		// Set OpenGl viewport to the entire window
 		glViewport (0, 0, context->screen_width, context->screen_height);
@@ -76,7 +76,7 @@ void* renderer ( void *arg )
 		else
 			curPlayer = gsolver;
 
-		/// [5] Color picking (cube selection)
+		//! [5] Color picking (cube selection)
 		int segEnd = cubesNb;
 		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
 			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
@@ -128,7 +128,7 @@ void* renderer ( void *arg )
 			context->drawpick = 0;
 
 		}
-		/// [5]
+		//! [5]
 
 		//==========view cubes==========
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
@@ -251,7 +251,7 @@ void* renderer ( void *arg )
 
 		glfwSwapBuffers (context->window);
 	}
-	/// [3]
+	//! [3]
 
 	logWrite ("[RENDR] Renderer stopped\n");
 

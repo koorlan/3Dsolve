@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nodetree',['NodeTree',['../struct_node_tree.html',1,'']]]
+  ['floatcoord',['FloatCoord',['../struct_float_coord.html',1,'']]]
 ];

@@ -81,9 +81,9 @@ void resolverSolveSnake(Snake *snake)
     if(endTime == (clock_t)(-1))
     logError("[RESOL] CPU clock time not available");
 
-    long double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
+    double elapsedTime = ((long double)(endTime - startTime)) / CLOCKS_PER_SEC;
 
-    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %llf \033[38;01mseconds\033[00m\n", snake->solutions->size,
+    printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s) in\033[00m\033[31;01m %lf \033[38;01mseconds\033[00m\n", snake->solutions->size,
     elapsedTime);
     printf("\033[31;01m%ld \033[00m\033[38;01mways have been explored\033[00m \n", exploredWayNb);
     logWrite ("[RESOL] Resolver Ended, found %d solutions in %lf seconds\n",snake->solutions->size,

@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
     <ul class="tablist">
       <li><a href="index.html"><span>Page&#160;principale</span></a></li>
       <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -87,7 +88,7 @@ $(document).ready(function(){initNavTree('structcontext.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -154,9 +155,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>ratio</b></td></tr>
 <tr class="memitem:a3d99a9e2fdae8652db4aa612f8d9cd96"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d99a9e2fdae8652db4aa612f8d9cd96"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>drawpick</b></td></tr>
 <tr class="separator:a3d99a9e2fdae8652db4aa612f8d9cd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8195e03e8c1f4be85be53d01326d1e9a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8195e03e8c1f4be85be53d01326d1e9a"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>flatten</b></td></tr>
-<tr class="separator:a8195e03e8c1f4be85be53d01326d1e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa49a4684df5eedf20a5c1589e381b00e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa49a4684df5eedf20a5c1589e381b00e"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>playmode</b></td></tr>
+<tr class="separator:aa49a4684df5eedf20a5c1589e381b00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>La documentation de cette structure a été générée à partir du fichier suivant :<ul>
 <li><a class="el" href="context_8h_source.html">context.h</a></li>
@@ -167,7 +168,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>flatten</b></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structcontext.html">context</a></li>
-    <li class="footer">Généré le Samedi 23 Mai 2015 16:22:51 pour SolidSnake par
+    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

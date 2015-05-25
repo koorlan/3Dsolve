@@ -7,18 +7,26 @@
 
 var indexSectionsWithContent =
 {
-  0: "3abcdfhlmnopstuvxyz",
-  1: "cflnopsv",
-  2: "abcdhlmnpstuvxyz",
-  3: "3"
+  0: "3abcdfghilmnoprstuvxyz",
+  1: "acdfilmnopsv",
+  2: "abcfgiloprsv",
+  3: "abcdghilmnprstuvxyz",
+  4: "t",
+  5: "adiuv",
+  6: "almrs",
+  7: "3"
 };
 
 var indexSectionNames =
 {
   0: "all",
   1: "classes",
-  2: "variables",
-  3: "pages"
+  2: "functions",
+  3: "variables",
+  4: "typedefs",
+  5: "enums",
+  6: "groups",
+  7: "pages"
 };
 
 function convertToId(search)

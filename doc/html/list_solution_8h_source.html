@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
     <ul class="tablist">
       <li><a href="index.html"><span>Page&#160;principale</span></a></li>
       <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -80,7 +81,7 @@ $(document).ready(function(){initNavTree('list_solution_8h_source.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -95,46 +96,49 @@ $(document).ready(function(){initNavTree('list_solution_8h_source.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#ifndef LIST_SOLUTION_H</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define LIST_SOLUTION_H</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_step.html">Step</a> <a class="code" href="struct_step.html">Step</a>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="struct_solution.html">   31</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_solution.html">Solution</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">   33</a></span>&#160;    <a class="code" href="struct_step.html">Step</a>* <a class="code" href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">step</a>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">   34</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_solution.html">Solution</a> *<a class="code" href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">next</a>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;} <a class="code" href="struct_solution.html">Solution</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="struct_list_solution.html">   45</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_list_solution.html">ListSolution</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">   47</a></span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* <a class="code" href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">head</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">   48</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">size</a>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <a class="code" href="struct_list_solution.html">ListSolution</a>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="struct_list_solution.html">ListSolution</a>* listSolutionCreate();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> listSolutionDestroy(<a class="code" href="struct_list_solution.html">ListSolution</a>* listSolution);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> listSolutionInsert(<a class="code" href="struct_list_solution.html">ListSolution</a>* listSolution, <a class="code" href="struct_step.html">Step</a>* steps);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef LIST_SOLUTION_H</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define LIST_SOLUTION_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_step.html">Step</a> <a class="code" href="struct_step.html">Step</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="struct_solution.html">   38</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_solution.html">Solution</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">   40</a></span>&#160;    <a class="code" href="struct_step.html">Step</a>* <a class="code" href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">step</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">   41</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_solution.html">Solution</a> *<a class="code" href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">next</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <a class="code" href="struct_solution.html">Solution</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="struct_list_solution.html">   53</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_list_solution.html">ListSolution</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">   55</a></span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* <a class="code" href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">head</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">   56</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">size</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;} <a class="code" href="struct_list_solution.html">ListSolution</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="struct_list_solution.html">ListSolution</a>* <a class="code" href="group___list_solution.html#ga2a33a1e12cb6a4cdc699c242516b8b42">listSolutionCreate</a>();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___list_solution.html#ga66904260e8081ae4e5bd4f15a51b63b3">listSolutionDestroy</a>(<a class="code" href="struct_list_solution.html">ListSolution</a>* listSolution);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="struct_solution_html_acde7555eca71d1f823fbaf6f6a1f4670"><div class="ttname"><a href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">Solution::next</a></div><div class="ttdeci">struct Solution * next</div><div class="ttdef"><b>Definition:</b> listSolution.h:34</div></div>
-<div class="ttc" id="struct_solution_html_ae5f3bfeb7e3cb5c8bc769d5504ebeeae"><div class="ttname"><a href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">Solution::step</a></div><div class="ttdeci">Step * step</div><div class="ttdef"><b>Definition:</b> listSolution.h:33</div></div>
-<div class="ttc" id="struct_step_html"><div class="ttname"><a href="struct_step.html">Step</a></div><div class="ttdoc">Définit une étape de résolution. </div><div class="ttdef"><b>Definition:</b> snake.h:86</div></div>
-<div class="ttc" id="struct_list_solution_html_aa3d6656320f1a7278c0c2c7fdf07617c"><div class="ttname"><a href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">ListSolution::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> listSolution.h:48</div></div>
-<div class="ttc" id="struct_list_solution_html"><div class="ttname"><a href="struct_list_solution.html">ListSolution</a></div><div class="ttdoc">Définit une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:45</div></div>
-<div class="ttc" id="struct_solution_html"><div class="ttname"><a href="struct_solution.html">Solution</a></div><div class="ttdoc">Définit un élement d&#39;une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:31</div></div>
-<div class="ttc" id="struct_list_solution_html_a434acd167ada209c34621739b6b8c583"><div class="ttname"><a href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">ListSolution::head</a></div><div class="ttdeci">Solution * head</div><div class="ttdef"><b>Definition:</b> listSolution.h:47</div></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___list_solution.html#ga08c28cf377d92da9d9a02ef0f04b0dd0">listSolutionInsert</a>(<a class="code" href="struct_list_solution.html">ListSolution</a>* listSolution, <a class="code" href="struct_step.html">Step</a>* steps);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="group___list_solution_html_ga08c28cf377d92da9d9a02ef0f04b0dd0"><div class="ttname"><a href="group___list_solution.html#ga08c28cf377d92da9d9a02ef0f04b0dd0">listSolutionInsert</a></div><div class="ttdeci">void listSolutionInsert(ListSolution *listSolution, Step *steps)</div><div class="ttdoc">Insère une solution dans une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.c:30</div></div>
+<div class="ttc" id="struct_solution_html_acde7555eca71d1f823fbaf6f6a1f4670"><div class="ttname"><a href="struct_solution.html#acde7555eca71d1f823fbaf6f6a1f4670">Solution::next</a></div><div class="ttdeci">struct Solution * next</div><div class="ttdef"><b>Definition:</b> listSolution.h:41</div></div>
+<div class="ttc" id="struct_solution_html_ae5f3bfeb7e3cb5c8bc769d5504ebeeae"><div class="ttname"><a href="struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae">Solution::step</a></div><div class="ttdeci">Step * step</div><div class="ttdef"><b>Definition:</b> listSolution.h:40</div></div>
+<div class="ttc" id="struct_step_html"><div class="ttname"><a href="struct_step.html">Step</a></div><div class="ttdoc">Définit une étape de résolution. </div><div class="ttdef"><b>Definition:</b> snake.h:96</div></div>
+<div class="ttc" id="struct_list_solution_html_aa3d6656320f1a7278c0c2c7fdf07617c"><div class="ttname"><a href="struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c">ListSolution::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> listSolution.h:56</div></div>
+<div class="ttc" id="group___list_solution_html_ga66904260e8081ae4e5bd4f15a51b63b3"><div class="ttname"><a href="group___list_solution.html#ga66904260e8081ae4e5bd4f15a51b63b3">listSolutionDestroy</a></div><div class="ttdeci">void listSolutionDestroy(ListSolution *listSolution)</div><div class="ttdoc">Détruit proprement un liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.c:11</div></div>
+<div class="ttc" id="struct_list_solution_html"><div class="ttname"><a href="struct_list_solution.html">ListSolution</a></div><div class="ttdoc">Définit une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:53</div></div>
+<div class="ttc" id="struct_solution_html"><div class="ttname"><a href="struct_solution.html">Solution</a></div><div class="ttdoc">Définit un élement d&#39;une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:38</div></div>
+<div class="ttc" id="struct_list_solution_html_a434acd167ada209c34621739b6b8c583"><div class="ttname"><a href="struct_list_solution.html#a434acd167ada209c34621739b6b8c583">ListSolution::head</a></div><div class="ttdeci">Solution * head</div><div class="ttdef"><b>Definition:</b> listSolution.h:55</div></div>
+<div class="ttc" id="group___list_solution_html_ga2a33a1e12cb6a4cdc699c242516b8b42"><div class="ttname"><a href="group___list_solution.html#ga2a33a1e12cb6a4cdc699c242516b8b42">listSolutionCreate</a></div><div class="ttdeci">ListSolution * listSolutionCreate()</div><div class="ttdoc">Crée une liste de solution vide. </div><div class="ttdef"><b>Definition:</b> listSolution.c:3</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>listSolution.h</b></li>
-    <li class="footer">Généré le Samedi 23 Mai 2015 16:22:51 pour SolidSnake par
+    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

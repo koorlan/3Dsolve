@@ -60,18 +60,22 @@
 #include "player.h"
 #include "fonts.h"
 #include "menu.h"
+#include "application.h"
 
 int main ( int argc, char ** argv )
 {
-
-	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
-
+	/// [1] Init log system
 	if(!logStart())
 	{
 		logError ("[MAIN.] Could not start log\n");
 		return EXIT_FAILURE;
 	}
+	/// [1]
 
+	Application* app = applicationCreate();
+	applicationFindSnakes(app);
+
+	/// [2] Load snake from commande line arguments
 	char* filePath = malloc(50);
 	if(argc == 2)
 		strncpy(filePath, argv[1], 50);
@@ -82,9 +86,13 @@ int main ( int argc, char ** argv )
 	free(filePath);
 
 	if(snake == NULL)
-		return -10;
+	{
+		logError("[MAIN.] Snake load failure");
+		return EXIT_FAILURE;
+	}
+	/// [2]
 
-
+	/// [3] Context and menu initialization
 	Context* context = contextCreate ();
 	if ( !context )
 	{
@@ -129,8 +137,10 @@ int main ( int argc, char ** argv )
 	testMenuMesh(mymenu,context->screen_width,context->screen_height);
 
 	//End test menu
+	/// [3]
 
 
+	/// [4] Application running
 	context->snake = snake;
 
 	struct timespec time1;
@@ -139,61 +149,19 @@ int main ( int argc, char ** argv )
 	time1.tv_nsec = 1000000;
 
 	contextInit ( context );
-
 	resolverSolveSnake(snake);
 
 	while (context->running)
 	{
 		getInput(context);
-
 		nanosleep(&time1, &time2);
 	}
+	/// [4]
 
-//	snakePrintSolutions(snake);
-
-	/*char *buffer = malloc(5*sizeof(char));
-
-	if (snake->solutions->head!=NULL)
-	{	ListSolution *tmpSol = malloc(sizeof(ListSolution));
-		tmpSol = snake->solutions;
-		{
-			i=0;
-			while(i < snake->length)
-			{
-				switch (tmpSol->head->step[i].dir)
-				{
-					case UP:
-						strcpy(buffer,"UP");
-						break;
-					case DOWN:
-						strcpy(buffer,"DOWN");
-						break;
-					case LEFT:
-						strcpy(buffer,"LEFT");
-						break;
-					case RIGHT:
-						strcpy(buffer,"RIGHT");
-						break;
-					case FRONT:
-						strcpy(buffer,"FRONT");
-						break;
-					case BACK:
-						strcpy(buffer,"BACK");
-						break;
-					case DNONE:
-					default :
-						printf("Error in solutions string\n");
-						exit(-1);
-
-				}
-				i++;
-			}
-		}
-	}*/
-
+	/// [5] Cleanning
 	contextDestroy ( context );
-
 	snakeDestroy ( snake );
+	/// [5]
 
 	logWrite ("[MAIN.] Terminated\n");
 	return EXIT_SUCCESS;
