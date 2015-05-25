@@ -7,7 +7,7 @@ compiler:
 #before_install:
 
 #Use this to install any prerequisites or dependencies necessary to run your build
-install: apt get install libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
+install: apt-get install libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
 
 #Use this to prepare your build for testing
 #e.g. copy database configurations, environment variables, etc.
