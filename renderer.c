@@ -157,8 +157,10 @@ void* renderer ( void *arg )
 			mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
 						 curPlayer->steps[i].coord.y,
 						 curPlayer->steps[i].coord.z );
-			if (i==curPlayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
-			else mat4x4_scale3d(WMat, WMat, 0.97f);
+				if (curPlayer->selected > -1 && i>=curPlayer->selected && i<=segEnd)
+					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime()+i)))));
+				else mat4x4_scale3d(WMat, WMat, 0.97f);
+
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
 			//pair/impair = blanc/noir
