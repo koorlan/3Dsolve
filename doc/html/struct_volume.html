@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
     <ul class="tablist">
       <li><a href="index.html"><span>Page&#160;principale</span></a></li>
       <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -87,7 +88,7 @@ $(document).ready(function(){initNavTree('struct_volume.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -100,7 +101,7 @@ $(document).ready(function(){initNavTree('struct_volume.html','');});
   <div class="summary">
 <a href="#pub-attribs">Champs de données</a>  </div>
   <div class="headertitle">
-<div class="title">Référence de la structure Volume</div>  </div>
+<div class="title">Référence de la structure Volume<div class="ingroups"><a class="el" href="group___snake.html">Snake</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -114,7 +115,7 @@ Champs de données</h2></td></tr>
 <tr class="memitem:aa83862769f78fffb512bc9283007ef67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_coord.html">Coord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_volume.html#aa83862769f78fffb512bc9283007ef67">max</a></td></tr>
 <tr class="separator:aa83862769f78fffb512bc9283007ef67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96775002e6d2b0c5c4349b77ad4326d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a96775002e6d2b0c5c4349b77ad4326d2"></a>
-VolumeState ***&#160;</td><td class="memItemRight" valign="bottom"><b>state</b></td></tr>
+<a class="el" href="group___snake.html#gafe6214172a8f4085f7b16ce6523dcf7f">VolumeState</a> ***&#160;</td><td class="memItemRight" valign="bottom"><b>state</b></td></tr>
 <tr class="separator:a96775002e6d2b0c5c4349b77ad4326d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
@@ -142,7 +143,7 @@ VolumeState ***&#160;</td><td class="memItemRight" valign="bottom"><b>state</b><
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_volume.html">Volume</a></li>
-    <li class="footer">Généré le Samedi 23 Mai 2015 16:22:51 pour SolidSnake par
+    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

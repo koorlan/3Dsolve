@@ -13,6 +13,12 @@
  * Promotion 2017
  */
 
+/**
+ * @defgroup ListSolution ListSolution
+ *
+ * @brief Gère les liste de solution
+ */
+
 #ifndef LIST_SOLUTION_H
 #define LIST_SOLUTION_H
 
@@ -21,6 +27,7 @@
 typedef struct Step Step;
 
 /**
+ * @ingroup ListSolution
  * @struct Solution
  * @brief Définit un élement d'une liste de solution
  * @var Solution::step
@@ -35,6 +42,7 @@ typedef struct Solution
 } Solution;
 
 /**
+ * @ingroup ListSolution
  * @struct ListSolution
  * @brief Définit une liste de solution
  * @var ListSolution::head
@@ -49,18 +57,21 @@ typedef struct ListSolution
 } ListSolution;
 
 /**
+ * @ingroup ListSolution
  * @brief Crée une liste de solution vide.
  * @return Un pointeur vers la liste créée
  */
 ListSolution* listSolutionCreate();
 
 /**
+ * @ingroup ListSolution
  * @brief Détruit proprement un liste de solution
  * @param listSolution la liste à détruire.
  */
 void listSolutionDestroy(ListSolution* listSolution);
 
 /**
+ * @ingroup ListSolution
  * @brief Insère une solution dans une liste de solution.
  *
  * Cette fonction se charge de créer une nouvelle variable de type Solution

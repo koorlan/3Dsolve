@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['y',['y',['../struct_float_coord.html#a2fb1c5cf58867b5bbc9a1b145a86f3a0',1,'FloatCoord::y()'],['../struct_coord.html#a2fb1c5cf58867b5bbc9a1b145a86f3a0',1,'Coord::y()']]]
+  ['unit',['Unit',['../group___snake.html#gabceb2331ad056e3c5ad27894199a49ed',1,'snake.h']]],
+  ['units',['units',['../struct_snake.html#a2ff02817760e56a95b3b1bc7cfa1b77b',1,'Snake']]]
 ];

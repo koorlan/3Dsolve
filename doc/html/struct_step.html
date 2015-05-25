@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
     <ul class="tablist">
       <li><a href="index.html"><span>Page&#160;principale</span></a></li>
       <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -87,7 +88,7 @@ $(document).ready(function(){initNavTree('struct_step.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -100,7 +101,7 @@ $(document).ready(function(){initNavTree('struct_step.html','');});
   <div class="summary">
 <a href="#pub-attribs">Champs de données</a>  </div>
   <div class="headertitle">
-<div class="title">Référence de la structure Step</div>  </div>
+<div class="title">Référence de la structure Step<div class="ingroups"><a class="el" href="group___snake.html">Snake</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -113,7 +114,7 @@ $(document).ready(function(){initNavTree('struct_step.html','');});
 Champs de données</h2></td></tr>
 <tr class="memitem:a825b51abf06a992115019d263c27dfc3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_coord.html">Coord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_step.html#a825b51abf06a992115019d263c27dfc3">coord</a></td></tr>
 <tr class="separator:a825b51abf06a992115019d263c27dfc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ca269cf93df1b512b52174c1a256fe5"><td class="memItemLeft" align="right" valign="top">Dir&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_step.html#a4ca269cf93df1b512b52174c1a256fe5">dir</a></td></tr>
+<tr class="memitem:a4ca269cf93df1b512b52174c1a256fe5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_step.html#a4ca269cf93df1b512b52174c1a256fe5">dir</a></td></tr>
 <tr class="separator:a4ca269cf93df1b512b52174c1a256fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
@@ -155,7 +156,7 @@ Champs de données</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_step.html">Step</a></li>
-    <li class="footer">Généré le Samedi 23 Mai 2015 16:22:51 pour SolidSnake par
+    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
