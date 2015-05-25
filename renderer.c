@@ -25,16 +25,23 @@ void* renderer ( void *arg )
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
 
+
+	Player* curPlayer;
+	if (context->playmode == PM_PLAY)
+		curPlayer = gplayer;
+	else
+		curPlayer = gsolver;
+
 	int i;
 	int cubesNb = context->snake->length;
 
-	gplayer = playerInit ( context->snake );
+
 	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
 	for (i=0;i<cubesNb;i++)
 	{
-		flatCubePos[i][0] = (float) gplayer->steps[i].coord.x;
-		flatCubePos[i][1] = (float) gplayer->steps[i].coord.y;
-		flatCubePos[i][2] = (float) gplayer->steps[i].coord.z;
+		flatCubePos[i][0] = (float) curPlayer->steps[i].coord.x;
+		flatCubePos[i][1] = (float) curPlayer->steps[i].coord.y;
+		flatCubePos[i][2] = (float) curPlayer->steps[i].coord.z;
 	}
 
 	float last_time=127.f;
@@ -59,19 +66,16 @@ void* renderer ( void *arg )
 
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
-
-		//crap
-		if (context->flatten == 1)
-		{
-			playerFlatten ( gplayer, context->snake, 0 );
-			context->flatten = 0;
-		}
+		if (context->playmode == PM_PLAY)
+			curPlayer = gplayer;
+		else
+			curPlayer = gsolver;
 
 		//===========picking==========
 
 		int segEnd = cubesNb;
-		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
+			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -99,7 +103,10 @@ void* renderer ( void *arg )
 				objID++;
 
 				mat4x4_identity ( WMat );
-				mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
+					mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
+								 curPlayer->steps[i].coord.y,
+								 curPlayer->steps[i].coord.z );
+
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
@@ -131,8 +138,8 @@ void* renderer ( void *arg )
 		glBindVertexArray (context->cube_mesh->vao_id);
 
 		segEnd = cubesNb;
-		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
+			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -146,8 +153,10 @@ void* renderer ( void *arg )
 			glUniform1f(alphaID, (i > segEnd?0.2f:1.0f));
 
 			mat4x4_identity ( WMat );
-			mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
-			if (i==gplayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
+			mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
+						 curPlayer->steps[i].coord.y,
+						 curPlayer->steps[i].coord.z );
+			if (i==curPlayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
 			else mat4x4_scale3d(WMat, WMat, 0.97f);
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 

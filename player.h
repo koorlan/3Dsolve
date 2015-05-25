@@ -14,9 +14,11 @@ typedef struct player
 {
 	Step* steps;
 	int selected;
+	Solution* currentSolution;
 } Player;
 
 Player* gplayer;
+Player* gsolver;
 
 Player* playerInit ( Snake* snake );
 void playerFlatten ( Player* player, Snake* snake, int fromIndex );
