@@ -4,10 +4,12 @@ compiler:
   - clang
 
 #Use this to prepare the system to install prerequisites or dependencies
-#before_install:
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
 
 #Use this to install any prerequisites or dependencies necessary to run your build
-install: apt-get install libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
+#install: apt-get install libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
 
 #Use this to prepare your build for testing
 #e.g. copy database configurations, environment variables, etc.
