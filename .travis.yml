@@ -1,12 +1,13 @@
+sudo: required
 language: c
 compiler:
   - gcc
-  - clang
+#  - clang
 
 #Use this to prepare the system to install prerequisites or dependencies
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
+  - sudo apt-get update --q
+  - sudo apt-get install -y libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
 
 #Use this to install any prerequisites or dependencies necessary to run your build
 #install: apt-get install libglfw3 libglfw3-dev libfreetype6 libfreetype6-dev libftgl2 libftgl-dev libglew-dev libglew
