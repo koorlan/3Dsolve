@@ -1,0 +1,51 @@
+\hypertarget{struct_node_tree}{\section{Référence de la structure Node\-Tree}
+\label{struct_node_tree}\index{Node\-Tree@{Node\-Tree}}
+}
+
+
+Représente un noeud de l'arbre de résolution.  
+
+
+
+
+{\ttfamily \#include $<$resolver.\-h$>$}
+
+\subsection*{Champs de données}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_step}{Step} \hyperlink{struct_node_tree_ae5f3bfeb7e3cb5c8bc769d5504ebeeae}{step}
+\item 
+struct \hyperlink{struct_node_tree}{Node\-Tree} $\ast$ \hyperlink{struct_node_tree_a457d913bff1ebc8671c1eca1c9d5fc03}{parent}
+\item 
+struct \hyperlink{struct_node_tree}{Node\-Tree} $\ast$ \hyperlink{struct_node_tree_a171a4a950363163c8a809722b874ace5}{current\-Child}
+\item 
+struct \hyperlink{struct_node_tree}{Node\-Tree} $\ast$ \hyperlink{struct_node_tree_a5ef305fb016dbd90107261284be7f64d}{brother}
+\item 
+int \hyperlink{struct_node_tree_aeb3531905942c7123621cd828297f99a}{has\-Played}
+\end{DoxyCompactItemize}
+
+
+\subsection{Description détaillée}
+Représente un noeud de l'arbre de résolution. 
+
+\subsection{Documentation des champs}
+\hypertarget{struct_node_tree_a5ef305fb016dbd90107261284be7f64d}{\index{Node\-Tree@{Node\-Tree}!brother@{brother}}
+\index{brother@{brother}!NodeTree@{Node\-Tree}}
+\subsubsection[{brother}]{\setlength{\rightskip}{0pt plus 5cm}brother}}\label{struct_node_tree_a5ef305fb016dbd90107261284be7f64d}
+Lien vers un frère (noeud au même niveau dans l'arbre, ayant le même père) \hypertarget{struct_node_tree_a171a4a950363163c8a809722b874ace5}{\index{Node\-Tree@{Node\-Tree}!current\-Child@{current\-Child}}
+\index{current\-Child@{current\-Child}!NodeTree@{Node\-Tree}}
+\subsubsection[{current\-Child}]{\setlength{\rightskip}{0pt plus 5cm}current\-Child}}\label{struct_node_tree_a171a4a950363163c8a809722b874ace5}
+Pointeur sur le fils courrant (le prochain noeud à procéder) \hypertarget{struct_node_tree_aeb3531905942c7123621cd828297f99a}{\index{Node\-Tree@{Node\-Tree}!has\-Played@{has\-Played}}
+\index{has\-Played@{has\-Played}!NodeTree@{Node\-Tree}}
+\subsubsection[{has\-Played}]{\setlength{\rightskip}{0pt plus 5cm}has\-Played}}\label{struct_node_tree_aeb3531905942c7123621cd828297f99a}
+Indique si les calculs pour le noeud ont été réalisé ou non \hypertarget{struct_node_tree_a457d913bff1ebc8671c1eca1c9d5fc03}{\index{Node\-Tree@{Node\-Tree}!parent@{parent}}
+\index{parent@{parent}!NodeTree@{Node\-Tree}}
+\subsubsection[{parent}]{\setlength{\rightskip}{0pt plus 5cm}parent}}\label{struct_node_tree_a457d913bff1ebc8671c1eca1c9d5fc03}
+Pointeur sur le noeud parent \hypertarget{struct_node_tree_ae5f3bfeb7e3cb5c8bc769d5504ebeeae}{\index{Node\-Tree@{Node\-Tree}!step@{step}}
+\index{step@{step}!NodeTree@{Node\-Tree}}
+\subsubsection[{step}]{\setlength{\rightskip}{0pt plus 5cm}step}}\label{struct_node_tree_ae5f3bfeb7e3cb5c8bc769d5504ebeeae}
+L'étape de la résolution portée par le noeud 
+
+La documentation de cette structure a été générée à partir du fichier suivant \-:\begin{DoxyCompactItemize}
+\item 
+resolver.\-h\end{DoxyCompactItemize}

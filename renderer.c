@@ -30,16 +30,22 @@ void* renderer ( void *arg )
 	/// [1]
 
 	/// [2] Player initialization
+	Player* curPlayer;
+	if (context->playmode == PM_PLAY)
+		curPlayer = gplayer;
+	else
+		curPlayer = gsolver;
+
 	int i;
 	int cubesNb = context->snake->length;
 
-	gplayer = playerInit ( context->snake );
+
 	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
 	for (i=0;i<cubesNb;i++)
 	{
-		flatCubePos[i][0] = (float) gplayer->steps[i].coord.x;
-		flatCubePos[i][1] = (float) gplayer->steps[i].coord.y;
-		flatCubePos[i][2] = (float) gplayer->steps[i].coord.z;
+		flatCubePos[i][0] = (float) curPlayer->steps[i].coord.x;
+		flatCubePos[i][1] = (float) curPlayer->steps[i].coord.y;
+		flatCubePos[i][2] = (float) curPlayer->steps[i].coord.z;
 	}
 	/// [2]
 
@@ -65,17 +71,15 @@ void* renderer ( void *arg )
 		// Set OpenGl viewport to the entire window
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
-		//crap
-		if (context->flatten == 1)
-		{
-			playerFlatten ( gplayer, context->snake, 0 );
-			context->flatten = 0;
-		}
+		if (context->playmode == PM_PLAY)
+			curPlayer = gplayer;
+		else
+			curPlayer = gsolver;
 
 		/// [5] Color picking (cube selection)
 		int segEnd = cubesNb;
-		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
+			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -102,7 +106,10 @@ void* renderer ( void *arg )
 				objID++;
 
 				mat4x4_identity ( WMat );
-				mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
+					mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
+								 curPlayer->steps[i].coord.y,
+								 curPlayer->steps[i].coord.z );
+
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
@@ -127,6 +134,7 @@ void* renderer ( void *arg )
 		glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram (context->snake_program);
+		glEnable(GL_TEXTURE_2D);
 		mat4x4_look_at(viewMat, context->camera->eye,
 				context->camera->target, context->camera->up);
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
@@ -135,8 +143,8 @@ void* renderer ( void *arg )
 		glBindVertexArray (context->cube_mesh->vao_id);
 
 		segEnd = cubesNb;
-		if (gplayer->selected!=-1 && gplayer->selected!=cubesNb)
-			for ( i=gplayer->selected+1; i < cubesNb; i++ )
+		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
+			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
 					segEnd = i;
@@ -146,13 +154,18 @@ void* renderer ( void *arg )
 		for ( i=0; i < cubesNb; i++ )
 		{
 
+
 			glUniform1f(timeID, glfwGetTime());
 			glUniform1f(alphaID, (i > segEnd?0.2f:1.0f));
 
 			mat4x4_identity ( WMat );
-			mat4x4_translate ( WMat, gplayer->steps[i].coord.x, gplayer->steps[i].coord.y, gplayer->steps[i].coord.z );
-			if (i==gplayer->selected) mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*glfwGetTime()))));
-			else mat4x4_scale3d(WMat, WMat, 0.97f);
+			mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
+						 curPlayer->steps[i].coord.y,
+						 curPlayer->steps[i].coord.z );
+				if (curPlayer->selected > -1 && i>=curPlayer->selected && i<=segEnd)
+					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime()+i)))));
+				else mat4x4_scale3d(WMat, WMat, 0.97f);
+
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
 			//pair/impair = blanc/noir
@@ -175,8 +188,8 @@ void* renderer ( void *arg )
 		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
 		{
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			if (i%2!=0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
 			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
@@ -184,29 +197,66 @@ void* renderer ( void *arg )
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 			mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
-			if (i==context->snake->currentUnit)
+			if (i==curPlayer->selected)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 
 			glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
 		}
 
-			glViewport (0, 0, context->screen_width, context->screen_height);
+
+		if (!pthread_mutex_trylock(mymenu->mutex)){
 			glUseProgram (0);
+			glDisable(GL_TEXTURE_2D);
+
+			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			//glScalef(0.02f,0.02f,0.02f);
-			//glRotatef(90.f,1.f,1.f,1.f);
-			//glTranslatef(-1.f,-1.f,0.f);
-			//glRasterPos2f( -1.0, -1.0f);
-			float ratio = context->screen_width/context->screen_height;
-			glOrtho(-1.f*(context->screen_width/2),1.f*(context->screen_width/2),-1*ratio*(context->screen_height/2),1.f*ratio*(context->screen_height/2),1.f,-1.f);
-			glTranslatef(200.f*abs(cos(1.f*glfwGetTime())),200.f*abs(cos(1.f*glfwGetTime())),0.f);
-			glRotatef(360.f*abs(cos(1.f*glfwGetTime())),0.f,0.f,1.f);
-			glColor4f (0.2f+abs(cos(20*glfwGetTime())), 0.2f+abs(cos(10*glfwGetTime())), 0.2f+abs(cos(15*glfwGetTime())), 0.2f+abs(cos(5*glfwGetTime())));
-			//glRotatef(90.f,1.f,1.f,1.f);
-			//tglSetFontFaceSize(myfont, 1, 72);
-	    	ftglRenderFont(myfont, "Snake resolver v0.1b.70", FTGL_RENDER_ALL);
-	    	//glScalef(1.f/0.02f,1.f/0.02f,1.f/0.02f);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			//Render text over menu template
+
+			glViewport (0, 0, context->screen_width, context->screen_height);
+			glOrtho(0,context->screen_width,0,context->screen_height,0,1);		//Render menu template
+		//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+			glBegin(GL_QUADS);
+				glColor4f(1.f,1.f,1.f,0.8f);
+		   	glVertex3f( (mymenu->margin[0]) + mymenu->bbox[0], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[1],0.f);
+				glVertex3f( (mymenu->margin[0]) + mymenu->bbox[0], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[3],0.f);
+				glVertex3f( (mymenu->margin[0]) + mymenu->bbox[2], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[3],0.f);
+				glVertex3f( (mymenu->margin[0]) + mymenu->bbox[2], (context->screen_height-mymenu->margin[1]) - mymenu->bbox[1],0.f);
+			glEnd();
+
+			float acc = 0.f;
+
+			for ( i = 0; i < mymenu->size; i++) {
+				glLoadIdentity();
+				glOrtho(0,context->screen_width,0,context->screen_height,0,1);		//Render menu template
+				glColor4f(0.f/255.f,0.f/255.f,0.f/255.f,0.2f);
+				glBegin(GL_QUADS);
+					glVertex3f( (mymenu->margin[0]) + mymenu->item[i]->margin[0] + mymenu->item[i]->bbox[0], context->screen_height - mymenu->margin[1] - acc  - mymenu->item[i]->margin[1] - mymenu->item[i]->bbox[1],0.f);
+					glVertex3f( (mymenu->margin[0]) + mymenu->item[i]->margin[0] + mymenu->item[i]->bbox[0], context->screen_height - mymenu->margin[1] - acc  - mymenu->item[i]->margin[1] - mymenu->item[i]->bbox[3],0.f);
+					glVertex3f( (mymenu->margin[0]) + mymenu->item[i]->margin[0] + mymenu->item[i]->bbox[2] ,  context->screen_height - mymenu->margin[1] - acc - mymenu->item[i]->margin[1] - mymenu->item[i]->bbox[3],0.f);
+					glVertex3f( (mymenu->margin[0]) + mymenu->item[i]->margin[0] + mymenu->item[i]->bbox[2],  context->screen_height - mymenu->margin[1] - acc  - mymenu->item[i]->margin[1] - mymenu->item[i]->bbox[1],0.f);
+				glEnd();
+				acc += mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->descriptor.bbox[1]  + mymenu->item[i]->margin[1]  + mymenu->item[i]->margin[3];
+			}
+
+			acc = 0.f;
+			for ( i = 0;  i < mymenu->size; i++) {
+				glLoadIdentity();
+				glOrtho(0,context->screen_width,0,context->screen_height,0,1);		//Render menu template
+				glColor4f (mymenu->item[i]->descriptor.color.r, mymenu->item[i]->descriptor.color.g,mymenu->item[i]->descriptor.color.b,mymenu->item[i]->descriptor.color.a);
+
+				glTranslatef((mymenu->margin[0]) + mymenu->bbox[0] + mymenu->item[i]->descriptor.bbox[0] + mymenu->item[i]->margin[0],(context->screen_height - mymenu->margin[1]) - acc  - mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->margin[1]  ,0.f);
+				acc += mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->descriptor.bbox[1]  + mymenu->item[i]->margin[1] + mymenu->item[i]->margin[3];
+			  //if (ftglGetFontFaceSize(mymenu->item[i]->descriptor.font) != mymenu->item[i]->descriptor.fontSize	)
+				//	ftglSetFontFaceSize(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.fontSize,72);
+				ftglRenderFont(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.name, FTGL_RENDER_ALL);
+				glPopMatrix();
+			}
+			pthread_mutex_unlock(mymenu->mutex);
+		}
 
 		glfwSwapBuffers (context->window);
 	}

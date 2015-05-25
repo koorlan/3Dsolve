@@ -59,10 +59,10 @@
 #include "resolver.h"
 #include "player.h"
 #include "fonts.h"
+#include "menu.h"
 
 int main ( int argc, char ** argv )
 {
-	myfont = LoadFont("fonts/Libertine.ttf");
 
 	//0;1;2;1;2;1;2;1;2;2;2;2;1;2;1;2;2;2;1;2;2;1;2;2;2;1;0;
 
@@ -91,6 +91,43 @@ int main ( int argc, char ** argv )
 		logError ("[MAIN.] Could not create context\n");
 		return EXIT_FAILURE;
 	}
+
+	//Menu test;
+	int i ;
+	mymenu = NULL;
+	initMenu(&mymenu);
+	setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+
+	Item *tmpitem;
+	for ( i = 0;  i <20; i++) {
+		initItem(&(tmpitem));
+		setItemType(tmpitem, ITEM);
+		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+		setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
+		setItemDescriptor(tmpitem,(struct Descriptor)
+			{	.name="Default Text",
+				.font=LoadFont("fonts/Libertine.ttf"),
+				.fontSize = 20,
+				.minFontSize = DEFAULT_MIN_FONT_SIZE,
+				.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+				.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+				.action= OPEN});
+		ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+		addItemToMenu(mymenu,tmpitem);
+	}
+
+	//setItemDescriptor(mymenu->item[3],(struct Descriptor)
+	//	{	.name="Custom Text",
+	//		.font=LoadFont("fonts/Fipps-Regular.otf"),
+	//		.fontSize = 25,
+	//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
+	//		.action= OPEN});
+	//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
+	//test relative fontSize
+	calcMenu(mymenu);
+	//End test menu
+
+
 	context->snake = snake;
 
 	struct timespec time1;
