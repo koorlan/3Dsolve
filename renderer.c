@@ -181,7 +181,7 @@ void* renderer ( void *arg )
 		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
 		{
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			if (i%2!=0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
@@ -190,7 +190,7 @@ void* renderer ( void *arg )
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 			mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
-			if (i==context->snake->currentUnit)
+			if (i==curPlayer->selected)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 

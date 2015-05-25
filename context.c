@@ -129,7 +129,7 @@ int getInput ( Context* context )
 			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
 		}
 	}
-	else if ((key_flags&K_LF)==K_LF)
+	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
 	{
 		int i;
 		
@@ -176,7 +176,7 @@ int getInput ( Context* context )
 
 		
 	}
-	else if ((key_flags&K_RT)==K_RT)
+	else if ((key_flags&K_RT)==K_RT && gsolver->currentSolution != NULL)
 	{
 		int i;
 
@@ -244,7 +244,8 @@ int getInput ( Context* context )
 			magnet++;
 			if ( magnet > 20 )
 			{
-				int way = (accx>0?1:0);
+				int way=0;
+				if (accx>0 || accy>0) way = 1;
 				if (gplayer->selected != -1)
 					playerRotate(gplayer, gplayer->selected, context->snake, way);
 				magnet = 0;
