@@ -96,39 +96,35 @@ int main ( int argc, char ** argv )
 	int i ;
 	mymenu = NULL;
 	initMenu(&mymenu);
-	setMenuMargin(mymenu,(float []) {200.f, 50.f, 0.f, 0.f} );
-	mymenu->margin[0] = 50.f;
-	mymenu->margin[1] = 50.f;
-	mymenu->margin[2] = 0.f;
-	mymenu->margin[3] = 0.f;
+	setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
 
 	Item *tmpitem;
-	for ( i = 0;  i < 10; i++) {
+	for ( i = 0;  i <20; i++) {
 		initItem(&(tmpitem));
 		setItemType(tmpitem, ITEM);
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-		setItemMargin(tmpitem,(float[]){5.f,20.f,0.f,0.f,0.f});
+		setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
 		setItemDescriptor(tmpitem,(struct Descriptor)
 			{	.name="Default Text",
 				.font=LoadFont("fonts/Libertine.ttf"),
 				.fontSize = 20,
-				.color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
+				.minFontSize = DEFAULT_MIN_FONT_SIZE,
+				.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+				.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
 				.action= OPEN});
+		ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
 		addItemToMenu(mymenu,tmpitem);
 	}
 
-	setItemDescriptor(mymenu->item[3],(struct Descriptor)
-		{	.name="Custom Text",
-			.font=LoadFont("fonts/Quaaludes-Regular.ttf"),
-			.fontSize = 40,
-			.color=(struct Color){.r=1.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-			.action= OPEN});
-
-
+	//setItemDescriptor(mymenu->item[3],(struct Descriptor)
+	//	{	.name="Custom Text",
+	//		.font=LoadFont("fonts/Fipps-Regular.otf"),
+	//		.fontSize = 25,
+	//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
+	//		.action= OPEN});
+	//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
+	//test relative fontSize
 	calcMenu(mymenu);
-
-	logError ("MENU BBOX %f %f %f %f \n", mymenu->bbox[0], mymenu->bbox[1], mymenu->bbox[2], mymenu->bbox[3]);
-
 	//End test menu
 
 

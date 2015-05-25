@@ -1,8 +1,5 @@
 #include "context.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
 	resize_w = width;
@@ -98,6 +95,17 @@ int getInput ( Context* context )
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
+		pthread_mutex_lock(mymenu->mutex);
+
+		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+		calcMenu(mymenu);
+	//	if( (mymenu->bbox[2] - mymenu->bbox[0] >= context->screen_width) || (mymenu->bbox[3] - mymenu->bbox[1] >= context->screen_height) ){
+		//	reduceMenu(mymenu, context->screen_width/(mymenu->bbox[2] - mymenu->bbox[0]), context->screen_height	/ (mymenu->bbox[3] - mymenu->bbox[1]));
+	//		calcMenu(mymenu);
+	//	}
+		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
+		pthread_mutex_unlock(mymenu->mutex);
+
 	}
 
 	if ((key_flags&K_UP)==K_UP)
@@ -326,7 +334,7 @@ void contextInit ( Context* context )
 	context->drawpick = 0;
 	context->flatten = 0;
 	//bhv_flags |= BHV_ROTATE;
-	
+
 	context->running = 1;
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
