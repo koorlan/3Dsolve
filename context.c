@@ -1,8 +1,5 @@
 #include "context.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 extern const int dir2int[6][3];
 
 void resizeCallback (GLFWwindow* window, int width, int height)
@@ -104,8 +101,16 @@ int getInput ( Context* context )
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
+
+		pthread_mutex_lock(mymenu->mutex);
+		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+		calcMenu(mymenu);
+		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
+		pthread_mutex_unlock(mymenu->mutex);
+
 		resize_h = -1;
 		resize_w = -1;
+
 	}
 
 	if ((key_flags&K_UP)==K_UP)
@@ -132,7 +137,7 @@ int getInput ( Context* context )
 	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
 	{
 		int i;
-		
+
 		for ( i=gsolver->selected-1; i < context->snake->length; i++ )
 		{
 			if ( gsolver->selected > 0) gsolver->selected--;
@@ -158,23 +163,23 @@ int getInput ( Context* context )
 			{
 				if (toggle == 0)
 				{
-					gsolver->steps[i].dir = prevDir;	
+					gsolver->steps[i].dir = prevDir;
 					toggle = 1;
 				}
 				else
 				{
-					gsolver->steps[i].dir = curDir;	
+					gsolver->steps[i].dir = curDir;
 					toggle = 0;
 				}
 			}
-			else gsolver->steps[i].dir = curDir;	
+			else gsolver->steps[i].dir = curDir;
 
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
 		}
 
-		
+
 	}
 	else if ((key_flags&K_RT)==K_RT && gsolver->currentSolution != NULL)
 	{
@@ -205,16 +210,16 @@ int getInput ( Context* context )
 			{
 				if (toggle == 0)
 				{
-					gsolver->steps[i].dir = prevDir;	
+					gsolver->steps[i].dir = prevDir;
 					toggle = 1;
 				}
 				else
 				{
-					gsolver->steps[i].dir = curDir;	
+					gsolver->steps[i].dir = curDir;
 					toggle = 0;
 				}
 			}
-			else gsolver->steps[i].dir = curDir;	
+			else gsolver->steps[i].dir = curDir;
 
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
@@ -431,8 +436,9 @@ void contextInit ( Context* context )
 
 	context->drawpick = 0;
 	//bhv_flags |= BHV_ROTATE;
+
 	context->running = 1;
-	context->playmode = PM_PLAY;	
+	context->playmode = PM_PLAY;
 
 	gplayer = playerInit ( context->snake );
 	gsolver = playerInit ( context->snake );

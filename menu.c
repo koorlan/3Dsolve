@@ -10,6 +10,9 @@ int initMenu(Menu **menu){
   memset((*menu)->bbox, 0.f,4*sizeof(float));
   (*menu)->size = 0;
   (*menu)->item = malloc( MAX_MENU_SIZE * sizeof(Item)); // A voir si pas sizeof(*(*menu)->item)
+  (*menu)->mutex = malloc( sizeof(pthread_mutex_t));
+  pthread_mutex_init((*menu)->mutex, NULL);
+
   return 1;
 }
 
@@ -85,6 +88,8 @@ int initItem(Item **item){
   (*item)->descriptor.name = NULL;
   (*item)->descriptor.font = NULL;
   (*item)->descriptor.fontSize = 0;
+  (*item)->descriptor.maxFontSize = 0;
+  (*item)->descriptor.minFontSize = 0;
   (*item)->descriptor.color.r = 0.f;
   (*item)->descriptor.color.g = 0.f;
   (*item)->descriptor.color.b = 0.f;
@@ -131,6 +136,8 @@ int getItemDescriptor(Item *item, Descriptor *descriptor){
   descriptor->name = item->descriptor.name ;
   descriptor->font = item->descriptor.font ;
   descriptor->fontSize = item->descriptor.fontSize ;
+  descriptor->minFontSize = item->descriptor.minFontSize ;
+  descriptor->maxFontSize = item->descriptor.maxFontSize ;
   descriptor->color.r = item->descriptor.color.r ;
   descriptor->color.g = item->descriptor.color.g ;
   descriptor->color.b = item->descriptor.color.b ;
@@ -140,6 +147,9 @@ int getItemDescriptor(Item *item, Descriptor *descriptor){
   descriptor->bbox[1] = item->descriptor.bbox[1];
   descriptor->bbox[2] = item->descriptor.bbox[2];
   descriptor->bbox[3] = item->descriptor.bbox[3];
+  descriptor->bbox[4] = item->descriptor.bbox[4];
+  descriptor->bbox[5] = item->descriptor.bbox[5];
+
 
   return 1;
 }
@@ -196,7 +206,9 @@ int setItemDescriptor(Item *item, Descriptor descriptor){
     strcpy(item->descriptor.name,descriptor.name);
   }
   item->descriptor.font = descriptor.font;
-  item->descriptor.fontSize = descriptor.fontSize;
+  item->descriptor.fontSize = (descriptor.fontSize < 1 ) ? DEFAULT_MAX_FONT_SIZE : descriptor.fontSize ;
+  item->descriptor.maxFontSize = (descriptor.maxFontSize < 1 ) ?  DEFAULT_MAX_FONT_SIZE : descriptor.maxFontSize ;
+  item->descriptor.minFontSize = (descriptor.minFontSize < 1 ) ?  DEFAULT_MIN_FONT_SIZE : descriptor.minFontSize ;
   item->descriptor.color.r = descriptor.color.r;
   item->descriptor.color.g = descriptor.color.g;
   item->descriptor.color.b = descriptor.color.b;
@@ -206,6 +218,8 @@ int setItemDescriptor(Item *item, Descriptor descriptor){
   item->descriptor.bbox[1] = descriptor.bbox[1];
   item->descriptor.bbox[2] = descriptor.bbox[2];
   item->descriptor.bbox[3] = descriptor.bbox[3];
+  item->descriptor.bbox[4] = descriptor.bbox[4];
+  item->descriptor.bbox[5] = descriptor.bbox[5];
   return 1;
 }
 int setItemMenu(Item *item, Menu *menu){
@@ -234,13 +248,84 @@ int calcMenu(Menu *menu){
   if (menu == NULL)
     return 0;
   for (i = 0; i < menu->size; i++) {
-    ftglSetFontFaceSize(menu->item[i]->descriptor.font, menu->item[i]->descriptor.fontSize, 72);
+    if (ftglGetFontFaceSize(menu->item[i]->descriptor.font) != menu->item[i]->descriptor.fontSize 	){
+      ftglSetFontFaceSize(menu->item[i]->descriptor.font, menu->item[i]->descriptor.fontSize,72);
+      ftglSetFontCharMap(menu->item[i]->descriptor.font, ft_encoding_unicode);
+      }
     ftglGetFontBBox(menu->item[i]->descriptor.font,menu->item[i]->descriptor.name,strlen(menu->item[i]->descriptor.name),menu->item[i]->descriptor.bbox);
-    if ( (menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0]) + menu->item[i]->margin[0]  >= menuWidth)
-      menuWidth = menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0] + menu->item[i]->margin[0];
-    menuHeight +=  menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1] + menu->item[i]->margin[1];
+    if ( (menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0]) + menu->item[i]->margin[0] + menu->item[i]->margin[2]  >= menuWidth)
+      menuWidth = menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0] + menu->item[i]->margin[0]  + menu->item[i]->margin[2];
+    menuHeight +=  menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1] + menu->item[i]->margin[1] + menu->item[i]->margin[3];
     setItemBbox(menu->item[i], (float[]) {0.f,0.f,menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0], menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1]}   );
   }
   setMenuBbox(menu,(float []){menu->bbox[0], menu->bbox[1], menuWidth, menuHeight});
+  return 1;
+}
+
+int reshapeMenu(Menu *menu, int width, int height){
+  int reduced = 0,
+      increased = 0;
+
+  if ( menu == NULL)
+    return 0;
+  calcMenu(menu);
+  while( !reduced || !increased){
+    if( !increased && ( ((menu->bbox[2] - menu->bbox[0] >= width) ||  (menu->bbox[3] - menu->bbox[1] >= height)) || increaseMenu(menu) == -1 )){
+      increased = 1;
+    } else if ( !reduced && ( !((menu->bbox[2] - menu->bbox[0] >= width) ||  (menu->bbox[3] - menu->bbox[1] >= height)) || (reduceMenu(menu) == -1) ) ){
+        reduced = 1;
+      }
+  }
+
+  return 1;
+  return -1;
+}
+
+int reduceMenu(Menu *menu){
+  if ( menu == NULL)
+    return 0;
+  int i = 0,
+      limit = 0;
+  for (i = 0; i < menu->size ; i++) {
+    menu->item[i]->descriptor.fontSize -= 1;
+    if (menu->item[i]->descriptor.fontSize <= menu->item[i]->descriptor.minFontSize){
+      menu->item[i]->descriptor.fontSize = menu->item[i]->descriptor.minFontSize;
+      limit = 1;
+      continue;
+    }else {
+      menu->item[i]->margin[0] = menu->item[i]->margin[0] * 0.90f ;
+      menu->item[i]->margin[1] = menu->item[i]->margin[1] * 0.90f ;
+      menu->item[i]->margin[2] = menu->item[i]->margin[2] * 0.90f ;
+      menu->item[i]->margin[3] = menu->item[i]->margin[3] * 0.90f ;
+    }
+  }
+  calcMenu(menu);
+  if(limit)
+    return -1;
+  return 1;
+}
+
+int increaseMenu(Menu *menu){
+  if ( menu == NULL)
+    return 0;
+  int i = 0,
+      limit = 0;
+
+  for (i = 0; i < menu->size ; i++) {
+      menu->item[i]->descriptor.fontSize += 1;
+    if (menu->item[i]->descriptor.fontSize >= menu->item[i]->descriptor.maxFontSize){
+      menu->item[i]->descriptor.fontSize = menu->item[i]->descriptor.maxFontSize;
+      limit = 1;
+      continue;
+    } else{
+      menu->item[i]->margin[0] = menu->item[i]->margin[0] * 1.10f ;
+      menu->item[i]->margin[1] = menu->item[i]->margin[1] * 1.10f ;
+      menu->item[i]->margin[2] = menu->item[i]->margin[2] * 1.10f ;
+      menu->item[i]->margin[3] = menu->item[i]->margin[3] * 1.10f ;
+    }
+  }
+  calcMenu(menu);
+  if(limit)
+    return -1;
   return 1;
 }

@@ -4,13 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "linmath.h"
 
+#include "log.h"
 #include "snake.h"
 #include "fonts.h"
 
 #define MAX_MENU_SIZE 20
+#define DEFAULT_MIN_FONT_SIZE 5
+#define DEFAULT_MAX_FONT_SIZE 20
 
 typedef enum ItemType {ITEM ,ROW, COLLUM} ItemType;
 
@@ -27,7 +31,9 @@ typedef struct Descriptor
 {
   char *name;
   FTGLfont *font;
-  int fontSize; //TODO check ftgl font strcut
+  int fontSize;
+  int minFontSize;
+  int maxFontSize;
   Color color;
   Action action;
   float bbox[6];
@@ -45,10 +51,11 @@ typedef struct Item
 } Item;
 
 struct Menu{
-        float margin[4];//left top right bottom
-        float bbox[4];
-        int size;
-        Item **item;
+  float margin[4];//left top right bottom
+  float bbox[4];
+  int size;
+  Item **item;
+  pthread_mutex_t *mutex;
 };
 
 //Global pointer
@@ -82,7 +89,8 @@ int setItemMenu(Item *item, Menu *menu);
 //Building Prototype;
 int addItemToMenu(Menu *menu, Item *item);
 int calcMenu(Menu *menu);
-int reshapeMenu(Menu *menu); //See later
-
+int reshapeMenu(Menu *menu,int width, int height); //See later
+int reduceMenu(Menu *menu);
+int increaseMenu(Menu *menu);
 
 #endif
