@@ -26,6 +26,7 @@
 #include "snake.h"
 #include "player.h"
 #include "fonts.h"
+#include "menu.h"
 
 FTGLfont *myfont;
 

@@ -6,11 +6,17 @@ SUFFIXES	?= .c .o
 
 OS := $(shell uname -s)
 
+RM =  rm -f /cmd /C del
+EXT = .exe
+CFLAGS = -g -Wall -IC:/MinGW/include -IC:/MinGW/include/freetype2
+LDLIBS = -LC:/MinGW/lib -mwindows -lglfw3 -lglew32 -lopengl32 -lfreetype -lftgl -lpthread -lm
+
+
 ifdef SystemRoot
  	RM = cmd /C del
  	EXT = .exe
 	CFLAGS = -g -Wall -IC:/MinGW/include -IC:/MinGW/include/freetype2
-	LDLIBS = -LC:/MinGW/lib -lfreetype -lftgl -mwindows -lglfw3 -lglew32 -lopengl32 -lpthread -lm
+	LDLIBS = -LC:/MinGW/lib -mwindows -lglfw3 -lglew32 -lopengl32 -lfreetype -lftgl -lpthread -lm
 else
    ifeq ($(OS),Linux)
 		RM = rm -f
@@ -27,7 +33,7 @@ else
    endif
 endif
 
-OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o fonts.o player.o main.o
+OBJS  = resolver.o listSolution.o snake.o log.o camera.o shader.o lodepng.o object.o context.o renderer.o fonts.o menu.o  player.o main.o
 
 PROG = snake
 
