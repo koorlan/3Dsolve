@@ -1,7 +1,7 @@
 #include "player.h"
 
 //UP,DOWN,LEFT,RIGHT,FRONT,BACK
-//AXE IN SECOND POSITION
+//Axes en deuxième position
 const Dir rotationTable[6][6] =
 {
 { UP, UP, FRONT, BACK, RIGHT, LEFT },
@@ -23,12 +23,15 @@ const int dir2int[6][3] =
 { 0, 0,-1 }
 };
 
+
 Player* playerInit ( Snake* snake )
 {
 	Player* player = malloc ( sizeof (Player) );
 	player->steps = malloc ( snake->length * sizeof(Step) );
 	player->selected = -1;
+	player->steps[0].dir = RIGHT;
 	playerFlatten ( player, snake, 0 );
+	player->currentSolution = NULL;
 	
 	return player;
 }
@@ -36,18 +39,19 @@ Player* playerInit ( Snake* snake )
 void playerFlatten ( Player* player, Snake* snake, int fromIndex )
 {
 
-	Dir dir = RIGHT;
-	//if (fromIndex==0) dir = RIGHT;
-	//else dir = player->steps[fromIndex].dir;
+	Dir dir = player->steps[fromIndex].dir;
 
 
 	int i;
-	//for ( i = fromIndex; i < snake->length; i++ )
-	for ( i = 0; i < snake->length; i++ )
+	//for ( i = 0; i < snake->length; i++ )
+	for ( i = fromIndex; i < snake->length; i++ )
 	{
 		//direction
 		if ( snake->units[i] == CORNER )
+		{
 			dir = (dir==BACK?RIGHT:BACK);
+			//dir = rotationTable[(dir+2)%6][dir];
+		}
 		player->steps[i].dir = dir;
 
 		//placement
