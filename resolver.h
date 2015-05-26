@@ -323,5 +323,7 @@ int validCoordSym(Coord coord, FloatCoord max);
  */
 Tree createAllInitialVectors(Volume volume);
 
+int validVectCube(Coord nCoord, Dir dir, int max);
+
 
 #endif // RESOLVER_H
