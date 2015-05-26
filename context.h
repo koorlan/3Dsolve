@@ -83,8 +83,10 @@ typedef struct context
 	GLuint picking_program;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
+	GLuint linktex;
 	Object* cube_mesh;
 	Object* square_mesh;
+	Object* link_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;
