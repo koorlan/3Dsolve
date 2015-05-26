@@ -8,9 +8,11 @@ int initMenu(Menu **menu){
     return 0;
   memset((*menu)->margin, 0.f,4*sizeof(float));
   memset((*menu)->bbox, 0.f,4*sizeof(float));
+  memset((*menu)->bboxRel, 0.f,4*sizeof(float));
   (*menu)->size = 0;
   (*menu)->item = malloc( MAX_MENU_SIZE * sizeof(Item)); // A voir si pas sizeof(*(*menu)->item)
   (*menu)->mutex = malloc( sizeof(pthread_mutex_t));
+  memset((*menu)->scale, 1.f,3*sizeof(float));
   pthread_mutex_init((*menu)->mutex, NULL);
 
   return 1;
@@ -256,7 +258,7 @@ int calcMenu(Menu *menu){
     if ( (menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0]) + menu->item[i]->margin[0] + menu->item[i]->margin[2]  >= menuWidth)
       menuWidth = menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0] + menu->item[i]->margin[0]  + menu->item[i]->margin[2];
     menuHeight +=  menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1] + menu->item[i]->margin[1] + menu->item[i]->margin[3];
-    setItemBbox(menu->item[i], (float[]) {0.f,0.f,menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0], menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1]}   );
+    setItemBbox(menu->item[i], (float[]) {0.f,0.f,menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0],menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1]}   );
   }
   setMenuBbox(menu,(float []){menu->bbox[0], menu->bbox[1], menuWidth, menuHeight});
   return 1;
@@ -332,9 +334,14 @@ int increaseMenu(Menu *menu){
 
 
 int testMenuMesh(Menu *menu,int width, int height){
-
-  float mW = (menu->bbox[2]+menu->margin[0]) - (menu->bbox[0] - menu->margin[1]) ;
-  float mH = (menu->bbox[3]+menu->margin[0]) - (menu->bbox[1] - menu->margin[1]) ;
+  menu->scale[0] = 1.f;
+  menu->scale[1] = 1.f;
+  menu->scale[2] = 1.f;
+  int i,j;
+  float ratio = (float)width / (float)height;
+  float mW = (menu->bbox[2]) - (menu->bbox[0] ) ;
+  float mH = (menu->bbox[3]) - (menu->bbox[1] ) ;
+  logWrite("[MENUTEST] menuW = %f , menuH = %f",mW/width,mH/height);
   float * points = (float *) malloc (6 * 3 * sizeof(float));
   float * uvs = malloc (6 * 2 * sizeof(float));
   points = (float []) {
@@ -347,15 +354,19 @@ int testMenuMesh(Menu *menu,int width, int height){
     -mW/width,mH/height,0.f
   };
 
+  menu->bboxRel[0] = -mW/width;
+  menu->bboxRel[1] = mH/height ;
+  menu->bboxRel[2] = mW/width ;
+  menu->bboxRel[3] = -mH/height;
 
   uvs = (float []) {
-    0.f,0.0f,
-    0.0f,0.f,
+    1.f,0.f,
     0.f,0.f,
+    1.f,1.f,
 
+    1.f,1.f,
     0.f,0.f,
-    0.f,0.f,
-    0.f,0.f
+    0.f,1.f
   };
 
   glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_points_id);
@@ -363,6 +374,58 @@ int testMenuMesh(Menu *menu,int width, int height){
 
   glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_uvs_id);
   glBufferSubData(GL_ARRAY_BUFFER, 0, (2*6) * sizeof (float), uvs);
+
+  float acc =0.f ;
+  for (i = 0; i < menu->size ; i++){
+    menu->item[i]->mesh = objectLoad("stc/square.stc");
+    mW = (menu->item[i]->bbox[2] - menu->item[i]->bbox[0])/width ;
+    mH = (menu->item[i]->bbox[3] - menu->item[i]->bbox[1])/height;
+    logWrite("[MENUTEST] ObjW = %f , ObjH = %f",mW,mH);
+
+    points = (float []) {
+      mW,-mH,0.f,
+      -mW,-mH,0.f,
+      mW,mH,0.f,
+
+      mW,mH,0.f,
+      -mW,-mH,0.f,
+      -mW,mH,0.f
+    };
+    menu->item[i]->bboxRel[0] = -mW;
+    menu->item[i]->bboxRel[1] = mH ;
+    menu->item[i]->bboxRel[2] = mW ;
+    menu->item[i]->bboxRel[3] = -mH;
+
+    uvs = (float []) {
+      1.f,0.f,
+      0.f,0.f,
+      1.f,1.f,
+
+      1.f,1.f,
+      0.f,0.f,
+      0.f,1.f
+    };
+
+    if (i == 0)
+      acc =  menu->bboxRel[1] - menu->item[i]->bboxRel[1] - 2*(menu->item[i]->margin[1]/height);
+    else
+      acc -= 2*(menu->item[i]->margin[1]/height);
+
+    for (j = 1; j < 18; j += 3) {
+      points[j] = (points[j]*1.f) + acc;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, mymenu->item[i]->mesh->vbo_points_id);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (3*6) * sizeof (float), points);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mymenu->item[i]->mesh->vbo_uvs_id);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (2*6) * sizeof (float), uvs);
+
+
+    acc -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/height); ;
+  }
+
+
 
   return 1;
 }

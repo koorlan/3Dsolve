@@ -139,6 +139,8 @@ typedef struct Item
   float margin[4]; //left top right bottom
   Descriptor descriptor;
   Menu *menu;
+  Object *mesh;
+  float bboxRel[4];
 } Item;
 
 /**
@@ -165,9 +167,11 @@ typedef struct Item
 struct Menu{
   float margin[4];
   float bbox[4];
+  float bboxRel[4];
   int size;
   Item **item;
   Object *mesh;
+  float scale[3];
   pthread_mutex_t *mutex;
 };
 

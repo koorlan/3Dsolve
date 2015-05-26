@@ -20,8 +20,9 @@ void applicationFindSnakes(Application* app)
     #ifdef _WIN32
         struct _finddata_t c_file;
         long   hFile;
+        char *path = "Snakes\\" ;
         printf("Change to %s\n", path);
-        if(_chdir("./Snakes"))
+        if(_chdir(path))
             printf("Unable to locate the directory: %s\n", path);
         else
             hFile = _findfirst("*.snake", &c_file);
@@ -35,6 +36,7 @@ void applicationFindSnakes(Application* app)
         printf((c_file.attrib & _A_ARCH)   ? " Y  " : " N  ");
 
         printf(" %-12s %.24s  %9ld\n", c_file.name, ctime(&(c_file.time_write)), c_file.size);
+        logWrite("[APPLI] FOUND TAMER LA CHIENNE %s\n", c_file.name);
         /* find the rest of the files */
 
         while(_findnext(hFile, &c_file) == 0)

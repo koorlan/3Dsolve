@@ -73,7 +73,7 @@ int main ( int argc, char ** argv )
 	/// [1]
 
 	Application* app = applicationCreate();
-	applicationFindSnakes(app);
+	//applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
 	char* filePath = malloc(50);
@@ -104,10 +104,10 @@ int main ( int argc, char ** argv )
 	int i ;
 	mymenu = NULL;
 	initMenu(&mymenu);
-	setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+	setMenuMargin(mymenu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
 
 	Item *tmpitem;
-	for ( i = 0;  i <20; i++) {
+	for ( i = 0;  i <10; i++) {
 		initItem(&(tmpitem));
 		setItemType(tmpitem, ITEM);
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});

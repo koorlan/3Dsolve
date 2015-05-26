@@ -7,12 +7,14 @@
     #include <direct.h>
     #include <conio.h>
     #include <ctype.h>
+    #include <windows.h>
 #endif
 
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "log.h"
 #include "player.h"
 
 /**

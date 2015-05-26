@@ -77,6 +77,8 @@ typedef struct context
 	GLuint picking_program;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
+	GLuint menutex;
+	GLuint itemtex;
 	Object* cube_mesh;
 	Object* square_mesh;
 	Camera* camera;

@@ -2,7 +2,7 @@
 
 FTGLfont *LoadFont(char *file){
   FTGLfont *font;
-  font =  ftglCreateBufferFont(file);
+  font =  ftglCreateTextureFont(file);
   if(!font)
     {
         fprintf(stderr, "[FONT] Could not load font `%s'\n", file);
