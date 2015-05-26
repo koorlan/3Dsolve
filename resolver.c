@@ -16,15 +16,11 @@ void resolverSolveSnake(Snake *snake)
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
     clock_t startTime = clock();
-    /*struct timespec timer;
-    timer.tv_sec = 0;
-    timer.tv_nsec = 10;*/
     long unsigned int exploredWayNb = 0;
-
-    //Tree rootNode = createAllInitialVectors(snake->volume);
 
     int initialVectorNb = 0;
     Tree rootNode = findInitialVectors(snake, &initialVectorNb);
+    //Tree rootNode = createAllInitialVectors(snake->volume);
 
     logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
 
@@ -70,8 +66,6 @@ void resolverSolveSnake(Snake *snake)
                 free(currentNode->currentChild);
                 currentNode->currentChild = NULL;
                 snakeRewind(snake);
-
-                //nanosleep(&timer, NULL);
             }
         }
     }
@@ -248,40 +242,18 @@ int buildChildren(Tree currentNode, Snake * snake)
             if(cornerTruthTable[currentNode->step.dir][i])
             {
                 newChild = malloc(sizeof(NodeTree));
-              /*Dir tempDir;
-              switch(i)
-              {
-                case 0:
-                  tempDir = UP ;
-                  break;
-                case 1:
-                  tempDir = DOWN ;
-                  break;
-                case 2:
-                  tempDir = LEFT ;
-                  break;
-                case 3:
-                  tempDir = RIGHT ;
-                  break;
-                case 4:
-                  tempDir = FRONT ;
-                  break;
-                case 5:
-                  tempDir = BACK ;
-                  break;
-              }*/
 
-              newChild->parent = currentNode;
-              newChild->brother = currentNode->currentChild;
-              newChild->hasPlayed = 0;
-              newChild->currentChild = NULL;
+                newChild->parent = currentNode;
+                newChild->brother = currentNode->currentChild;
+                newChild->hasPlayed = 0;
+                newChild->currentChild = NULL;
 
-              newChild->step.dir = i;
-              newChild->step.coord.x = nCoord.x;
-              newChild->step.coord.y = nCoord.y;
-              newChild->step.coord.z = nCoord.z;
+                newChild->step.dir = i;
+                newChild->step.coord.x = nCoord.x;
+                newChild->step.coord.y = nCoord.y;
+                newChild->step.coord.z = nCoord.z;
 
-              currentNode->currentChild = newChild;
+                currentNode->currentChild = newChild;
               }
           }
           break;
@@ -436,50 +408,48 @@ int lineCmp(Step step, Coord coord, Dir dir)
 
 Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 {
+    FloatCoord projectionCenter;
 
-  FloatCoord projectionCenter;
+    Line verticalAxis;
+    Line horizontalAxis;
+    Line diagonalAxis;
+    Line slashAxis;
 
-  Line verticalAxis;
-  Line horizontalAxis;
-  Line diagonalAxis;
-  Line slashAxis;
+    verticalAxis.a = -1;
+    horizontalAxis.a = -1;
+    diagonalAxis.a = -1;
+    slashAxis.a = -1;
 
-  verticalAxis.a = -1;
-  horizontalAxis.a = -1;
-  diagonalAxis.a = -1;
-  slashAxis.a = -1;
+    int i, j, k, dirIndex, flag, dx, dy;
+    dx = 1;
+    dy = 1;
 
-  int i, j, k, dirIndex, flag, dx, dy;
-  dx = 1;
-  dy = 1;
+    Coord nCoord;
 
-  Coord nCoord;
+    FloatCoord cubeCenter;
+    cubeCenter.x = (float)(snake->volume.max.x-1)/2;
+    cubeCenter.y = (float)(snake->volume.max.y-1)/2;
+    cubeCenter.z = (float)(snake->volume.max.z-1)/2;
 
-  FloatCoord cubeCenter;
-  cubeCenter.x = (float)(snake->volume.max.x-1)/2;
-  cubeCenter.y = (float)(snake->volume.max.y-1)/2;
-  cubeCenter.z = (float)(snake->volume.max.z-1)/2;
+    printf("cube center %lf %lf %lf\n", cubeCenter.x, cubeCenter.y, cubeCenter.z);
 
-  printf("cube center %lf %lf %lf\n", cubeCenter.x, cubeCenter.y, cubeCenter.z);
+    Tree initialNode = initTree();
+    addInitialVector(initialNode, 0, 0, 2, UP);
+    (*initialVectorNb)++;
+    Tree tmpNode = initialNode->currentChild;
 
-  Tree initialNode = initTree();
-  addInitialVector(initialNode, 0, 0, 2, UP);
-  (*initialVectorNb)++;
-  Tree tmpNode = initialNode->currentChild;
+    k = 0;
+    flag = 0;
 
-  k = 0;
-  flag = 0;
-
-  if(snake->symetries[0] == 1)
-    dx = 2;
+    if(snake->symetries[0] == 1)
+        dx = 2;
 
     if(snake->symetries[1] == 1)
         dy = 2;
 
-  //select each face of the cube, parallel to the plan (0,x,y)
-  while(snake->volume.max.z -1 - k >= 0)
-
-  {
+    //select each face of the cube, parallel to the plan (0,x,y)
+    while(snake->volume.max.z -1 - k >= 0)
+    {
     //projected othogonal of the cube center on the considered face
     projectionCenter.x = cubeCenter.x;
     projectionCenter.y = cubeCenter.y;
@@ -544,66 +514,65 @@ Tree findInitialVectors(Snake *snake, int* initialVectorNb)
 
     }
 
-
     for(i=0; i<=snake->volume.max.x / dx; i++)
     {
-      for(j=0; j<=snake->volume.max.y / dy; j++)
-      {
-        tmpNode=initialNode->currentChild;
-        nCoord.x = i;
-        nCoord.y = j;
-        nCoord.z = projectionCenter.z;
-        if(snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
+        for(j=0; j<=snake->volume.max.y / dy; j++)
         {
-        for (dirIndex = 0; dirIndex < 4; dirIndex++)
-        {
-          tmpNode=initialNode->currentChild;
-          Dir tempDir;
-          switch(dirIndex)
-          {
-            case 0:
-              tempDir = UP ;
-              break;
-            case 1:
-              tempDir = DOWN ;
-              break;
-            case 2:
-              tempDir = LEFT ;
-              break;
-            case 3:
-              tempDir = RIGHT ;
-              break;
-          }
-          if(validCoordSym(calcCoord(nCoord, tempDir), projectionCenter))
-          {
-            while(tmpNode!=NULL && !flag )
+            tmpNode=initialNode->currentChild;
+            nCoord.x = i;
+            nCoord.y = j;
+            nCoord.z = projectionCenter.z;
+            if(validCoord(nCoord, snake->volume.max) &&
+            snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
             {
-              if(!lineCmp(tmpNode->step, nCoord, tempDir))
-                flag = symmetries(tmpNode->step, nCoord, tempDir, verticalAxis, horizontalAxis, diagonalAxis, slashAxis);
-              else
-                flag = 1;
-              tmpNode=tmpNode->brother;
+                for (dirIndex = 0; dirIndex < 4; dirIndex++)
+                {
+                    tmpNode=initialNode->currentChild;
+                    Dir tempDir;
+                    switch(dirIndex)
+                    {
+                        case 0:
+                          tempDir = UP ;
+                          break;
+                        case 1:
+                          tempDir = DOWN ;
+                          break;
+                        case 2:
+                          tempDir = LEFT ;
+                          break;
+                        case 3:
+                          tempDir = RIGHT ;
+                          break;
+                    }
+                    if(validCoordSym(calcCoord(nCoord, tempDir), projectionCenter))
+                    {
+                        while(tmpNode!=NULL && !flag )
+                        {
+                            if(!lineCmp(tmpNode->step, nCoord, tempDir))
+                                flag = symmetries(tmpNode->step, nCoord, tempDir, verticalAxis, horizontalAxis, diagonalAxis, slashAxis);
+                            else
+                                flag = 1;
+                            tmpNode=tmpNode->brother;
+                        }
+                        if(flag)
+                        {
+                            logWrite("[RESOL] Symmetry found\n");
+                            flag = 0;
+                        }
+                        else
+                        {
+                            logWrite("[RESOL] Symmetry not found\n");
+                            addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
+                            (*initialVectorNb)++;
+                        }
+                    }
+                }
             }
-            if(flag)
-            {
-              logWrite("[RESOL] Symmetry found\n");
-              flag = 0;
-            }
-            else
-            {
-              logWrite("[RESOL] Symmetry not found\n");
-              addInitialVector(initialNode, i, j, projectionCenter.z, tempDir);
-              (*initialVectorNb)++;
-            }
-          }
         }
-      }
-      }
     }
     k++;
   }
   return initialNode;
-
 }
 
 Coord calcCoord(Coord coord,Dir dir){
@@ -648,12 +617,16 @@ Coord calcCoord(Coord coord,Dir dir){
 
 int validCoord(Coord coord, Coord max)
 {
-  return (coord.x >= 0 && coord.x < max.x) && (coord.y >= 0 && coord.y < max.y) && (coord.z >= 0 && coord.z < max.z) ;
+    return  (coord.x >= 0 && coord.x < max.x) &&
+            (coord.y >= 0 && coord.y < max.y) &&
+            (coord.z >= 0 && coord.z < max.z);
 }
 
 int validCoordSym(Coord coord, FloatCoord max)
 {
-  return (coord.x >= 0 && coord.x <= max.x) && (coord.y >= 0 && coord.y <= max.y) && (coord.z >= 0 && coord.z <= max.z) ;
+      return  (coord.x >= 0 && coord.x <= max.x) &&
+              (coord.y >= 0 && coord.y <= max.y) &&
+              (coord.z >= 0 && coord.z <= max.z);
 }
 
 Tree createAllInitialVectors(Volume volume)
@@ -661,17 +634,10 @@ Tree createAllInitialVectors(Volume volume)
     Tree root = initTree();
     int x, y, z, dir;
     for(x=0; x < volume.max.x; x++)
-    {
         for(y=0; y < volume.max.y; y++)
-        {
             for(z=0; z < volume.max.z; z++)
-            {
                 for(dir=0; dir < 6; dir++)
-                {
                     addInitialVector(root, x, y, z, dir);
-                }
-            }
-        }
-    }
+
     return root;
 }
