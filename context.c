@@ -1,8 +1,11 @@
 #include "context.h"
 
+extern const int dir2int[6][3];
 
 void resizeCallback (GLFWwindow* window, int width, int height)
 {
+	resize_w = width;
+	resize_h = height;
 }
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
@@ -15,12 +18,19 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 {
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-	{
 		mouse_flags |= M_RIGHT;
-	}
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
-	{
 		mouse_flags ^= M_RIGHT;
+
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		mouse_flags |= M_LEFT;
+		mouse_flags |= M_LEFTONCE;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		mouse_flags ^= M_LEFT;
+		mouse_flags |= M_RLEFTONCE;
 	}
 }
 
@@ -41,6 +51,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 			{
 				case GLFW_KEY_ESCAPE:
 					glfwSetWindowShouldClose(window, GL_TRUE);
+					break;
+				case GLFW_KEY_PAGE_UP:
+					key_flags |= K_PGUP;
 					break;
 				case GLFW_KEY_UP:
 					key_flags |= K_UP;
@@ -73,28 +86,178 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 int getInput ( Context* context )
 {
+	static int magnet;
+
 	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
 	key_flags = M_NONE;
+	resize_h = -1;
+	resize_w = -1;
 	glfwPollEvents ();
-	
+
+	if (resize_h!=-1 || resize_w!=-1)
+	{
+		context->screen_width = resize_w;
+		context->screen_height = resize_h;
+		context->ratio = ((float)resize_w)/(float)resize_h;
+
+		pthread_mutex_lock(mymenu->mutex);
+		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+		calcMenu(mymenu);
+		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
+		pthread_mutex_unlock(mymenu->mutex);
+
+		resize_h = -1;
+		resize_w = -1;
+
+	}
+
 	if ((key_flags&K_UP)==K_UP)
 	{
+		playerFlatten ( gplayer, context->snake, 0 );
+	}
+	else if ((key_flags&K_PGUP)==K_PGUP)
+	{
+		if (gsolver->currentSolution->next!=NULL) gsolver->currentSolution = gsolver->currentSolution->next;
+		else gsolver->currentSolution = context->snake->solutions->head;
+		gsolver->selected = 0;
+		gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
 	}
 	else if ((key_flags&K_DN)==K_DN)
 	{
+		context->playmode = ( context->playmode == PM_PLAY ? PM_RESOLVE : PM_PLAY );
+		if (context->playmode == PM_RESOLVE)
+		{
+			gsolver->currentSolution = context->snake->solutions->head;
+			gsolver->selected = 0;
+			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+		}
 	}
-	else if ((key_flags&K_LF)==K_LF)
+	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
 	{
-		context->snake->currentUnit =
-			(context->snake->currentUnit>0?context->snake->currentUnit-1:0);
+		int i;
+
+		for ( i=gsolver->selected-1; i < context->snake->length; i++ )
+		{
+			if ( gsolver->selected > 0) gsolver->selected--;
+			if ( context->snake->units[gsolver->selected] == CORNER || context->snake->units[gsolver->selected] == EDGE )
+				break;
+		}
+
+		Dir curDir = DNONE;
+		Dir prevDir = DNONE;
+		int toggle = 0;
+		for (i=0;i<=gsolver->selected;i++)
+		{
+			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
+			prevDir = ( curDir != prevDir ? curDir : prevDir );
+			curDir = gsolver->steps[i].dir;
+			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
+			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
+			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+		}
+		for (i=gsolver->selected+1;i<context->snake->length;i++)
+		{
+			if (context->snake->units[i] == CORNER)
+			{
+				if (toggle == 0)
+				{
+					gsolver->steps[i].dir = prevDir;
+					toggle = 1;
+				}
+				else
+				{
+					gsolver->steps[i].dir = curDir;
+					toggle = 0;
+				}
+			}
+			else gsolver->steps[i].dir = curDir;
+
+			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
+			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
+			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+		}
+
+
 	}
-	else if ((key_flags&K_RT)==K_RT)
+	else if ((key_flags&K_RT)==K_RT && gsolver->currentSolution != NULL)
 	{
-		context->snake->currentUnit =
-			(context->snake->currentUnit>=context->snake->length-2?context->snake->length-1:context->snake->currentUnit+1);
+		int i;
+
+		for ( i=gsolver->selected+1; i < context->snake->length; i++ )
+		{
+			if ( gsolver->selected < context->snake->length + 1) gsolver->selected++;
+			if ( context->snake->units[gsolver->selected] == CORNER || context->snake->units[gsolver->selected] == EDGE )
+				break;
+		}
+
+		Dir curDir = DNONE;
+		Dir prevDir = DNONE;
+		int toggle = 0;
+		for (i=0;i<=gsolver->selected;i++)
+		{
+			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
+			prevDir = ( curDir != prevDir ? curDir : prevDir );
+			curDir = gsolver->steps[i].dir;
+			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
+			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
+			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+		}
+		for (i=gsolver->selected+1;i<context->snake->length;i++)
+		{
+			if (context->snake->units[i] == CORNER)
+			{
+				if (toggle == 0)
+				{
+					gsolver->steps[i].dir = prevDir;
+					toggle = 1;
+				}
+				else
+				{
+					gsolver->steps[i].dir = curDir;
+					toggle = 0;
+				}
+			}
+			else gsolver->steps[i].dir = curDir;
+
+			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
+			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
+			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+		}
+
 	}
+
+	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
+	{
+		magnet = 0;
+		mouse_flags ^= M_RLEFTONCE;
+	}
+
+	if ((mouse_flags&M_LEFT)==M_LEFT)
+	{
+		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
+		{
+			context->drawpick = 1;
+			mouse_flags ^= M_LEFTONCE;
+		}
+		float accx = (last_xpos-gxpos)*0.01f;
+		float accy = (last_ypos-gypos)*0.01f;
+		if ( accx!=0.f || accy!=0.f )
+		{
+			//printf("accx=%f  accy=%f\n", accx, accy);
+			magnet++;
+			if ( magnet > 20 )
+			{
+				int way=0;
+				if (accx>0 || accy>0) way = 1;
+				if (gplayer->selected != -1)
+					playerRotate(gplayer, gplayer->selected, context->snake, way);
+				magnet = 0;
+			}
+		}
+	}
+
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
 	{
@@ -110,7 +273,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
 		context->camera->distance-=0.4f;
@@ -122,9 +285,9 @@ int getInput ( Context* context )
 		mouse_flags = M_NONE;
 	}
 
-	context->camera->eye[0] = context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->distance * sin(context->camera->angle[1]);
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance * sin(context->camera->angle[1]);
 
 	return 0;
 }
@@ -181,7 +344,7 @@ Context* contextCreate ()
 	glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+	glfwSwapInterval(1);
 
 	glewExperimental = GL_TRUE;
 	glewInit ();
@@ -206,60 +369,81 @@ void contextInit ( Context* context )
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLuint vs = shaderLoad ("shaders/test_vs.glsl", GL_VERTEX_SHADER);
-	GLuint fs = shaderLoad ("shaders/test_fs.glsl", GL_FRAGMENT_SHADER);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
+	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
 	shaderCompile(vs);
 	shaderCompile(fs);
-	context->shader_program = shaderCreateProgram(vs, fs);
-	context->dcube_mesh = objectLoad ( "stc/cube.stc" );
-	context->lcube_mesh = objectLoad ( "stc/cube.stc" );
+	context->snake_program = shaderCreateProgram(vs, fs);
+
+	vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
+	fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(vs);
+	shaderCompile(fs);
+	context->picking_program = shaderCreateProgram(vs, fs);
+
+	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
+	context->square_mesh = objectLoad ( "stc/square.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
 
-
-	lodepng_decode32_file(&buffer, &width, &height, "textures/lightwood.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/darkwood.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
 
+	vec3 vol_offset;
+	vol_offset[0]=(context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
+	vol_offset[1]=(context->snake->volume.max.y%2==0 ? context->snake->volume.max.y /2 - 0.5f : (context->snake->volume.max.y -1 )/2);
+	vol_offset[2]=(context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
 
 	Camera * camera = cameraCreate();
-	camera->eye[0] = 7.f;
+	camera->eye[0] = 0.f;
 	camera->eye[1] = 0.f;
 	camera->eye[2] = 0.f;
-	camera->target[0] = 0.f;
-	camera->target[1] = 0.f;
-	camera->target[2] = 0.f;
+	camera->target[0] = vol_offset[0];
+	camera->target[1] = vol_offset[1];
+	camera->target[2] = vol_offset[2];
 	camera->up[0] = 0.f;
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.5f;
+	camera->angle[1] = 0.8f;
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
 
-	//bhv_flags |= BHV_ROTATE;	
+	context->drawpick = 0;
+	//bhv_flags |= BHV_ROTATE;
+
 	context->running = 1;
+	context->playmode = PM_PLAY;
+
+	gplayer = playerInit ( context->snake );
+	gsolver = playerInit ( context->snake );
+	gsolver->currentSolution = context->snake->solutions->head;
+
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }

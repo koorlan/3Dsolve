@@ -40,5 +40,12 @@ snake
 # Added by Anthony (agourd)
 MyStuff/*
 Doxyfile
-html/*
-latex/*
+doc/latex/*
+Rapport/*.aux
+Rapport/*.idx
+Rapport/*.ilg
+Rapport/*.ind
+Rapport/*.lof
+Rapport/*.lol
+Rapport/*.tex.backup
+Rapport/*.toc

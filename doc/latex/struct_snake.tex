@@ -1,0 +1,61 @@
+\hypertarget{struct_snake}{\section{Référence de la structure Snake}
+\label{struct_snake}\index{Snake@{Snake}}
+}
+
+
+Définit le snake à résoudre.  
+
+
+
+
+{\ttfamily \#include $<$snake.\-h$>$}
+
+\subsection*{Champs de données}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{struct_snake_af9d495c1655d813d553030485d00fea7}{length}
+\item 
+\hyperlink{struct_step}{Step} $\ast$ \hyperlink{struct_snake_a99a4f4239fb1568fe35d9a081c9b2660}{tmp\-Steps}
+\item 
+\hyperlink{group___snake_gabceb2331ad056e3c5ad27894199a49ed}{Unit} $\ast$ \hyperlink{struct_snake_a2ff02817760e56a95b3b1bc7cfa1b77b}{units}
+\item 
+int \hyperlink{struct_snake_a1e5f8a70f50d68340f54ac884c05dcff}{current\-Unit}
+\item 
+\hyperlink{struct_list_solution}{List\-Solution} $\ast$ \hyperlink{struct_snake_a97be9d71c3998b7a3a97e9403e375979}{solutions}
+\item 
+\hyperlink{struct_volume}{Volume} \hyperlink{struct_snake_a9bc498ccac8db41438f855f5dd3f4c05}{volume}
+\item 
+\hypertarget{struct_snake_a9bb94a758344ce8b7ebf170b8389fa36}{int {\bfseries symetries} \mbox{[}4\mbox{]}}\label{struct_snake_a9bb94a758344ce8b7ebf170b8389fa36}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Description détaillée}
+Définit le snake à résoudre. 
+
+Un snake est une suite d'éléments accroché les uns au autres. Chaque élément possède un type précis affectant les possibilités de rotation des éléments les uns par rapport aux autres. Résoudre le snake consiste à trouver le bon enchainement des rotations ammenant les éléments à remplir le volument définit par \hyperlink{struct_snake_a9bc498ccac8db41438f855f5dd3f4c05}{Snake\-::volume}. Les éléments constituant le snake sont définit par \hyperlink{struct_snake_a2ff02817760e56a95b3b1bc7cfa1b77b}{Snake\-::units}. 
+
+\subsection{Documentation des champs}
+\hypertarget{struct_snake_a1e5f8a70f50d68340f54ac884c05dcff}{\index{Snake@{Snake}!current\-Unit@{current\-Unit}}
+\index{current\-Unit@{current\-Unit}!Snake@{Snake}}
+\subsubsection[{current\-Unit}]{\setlength{\rightskip}{0pt plus 5cm}current\-Unit}}\label{struct_snake_a1e5f8a70f50d68340f54ac884c05dcff}
+Index de l'élément en cour de traitement \hypertarget{struct_snake_af9d495c1655d813d553030485d00fea7}{\index{Snake@{Snake}!length@{length}}
+\index{length@{length}!Snake@{Snake}}
+\subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}length}}\label{struct_snake_af9d495c1655d813d553030485d00fea7}
+Nombre d'élement dans units \hypertarget{struct_snake_a97be9d71c3998b7a3a97e9403e375979}{\index{Snake@{Snake}!solutions@{solutions}}
+\index{solutions@{solutions}!Snake@{Snake}}
+\subsubsection[{solutions}]{\setlength{\rightskip}{0pt plus 5cm}solutions}}\label{struct_snake_a97be9d71c3998b7a3a97e9403e375979}
+Liste des solutions \hypertarget{struct_snake_a99a4f4239fb1568fe35d9a081c9b2660}{\index{Snake@{Snake}!tmp\-Steps@{tmp\-Steps}}
+\index{tmp\-Steps@{tmp\-Steps}!Snake@{Snake}}
+\subsubsection[{tmp\-Steps}]{\setlength{\rightskip}{0pt plus 5cm}tmp\-Steps}}\label{struct_snake_a99a4f4239fb1568fe35d9a081c9b2660}
+\hyperlink{struct_solution}{Solution} en cour de recherche \hypertarget{struct_snake_a2ff02817760e56a95b3b1bc7cfa1b77b}{\index{Snake@{Snake}!units@{units}}
+\index{units@{units}!Snake@{Snake}}
+\subsubsection[{units}]{\setlength{\rightskip}{0pt plus 5cm}units}}\label{struct_snake_a2ff02817760e56a95b3b1bc7cfa1b77b}
+Eléments unitaires du snake \hypertarget{struct_snake_a9bc498ccac8db41438f855f5dd3f4c05}{\index{Snake@{Snake}!volume@{volume}}
+\index{volume@{volume}!Snake@{Snake}}
+\subsubsection[{volume}]{\setlength{\rightskip}{0pt plus 5cm}volume}}\label{struct_snake_a9bc498ccac8db41438f855f5dd3f4c05}
+\hyperlink{struct_volume}{Volume} que le snake doit remplir pour être solutionné 
+
+La documentation de cette structure a été générée à partir du fichier suivant \-:\begin{DoxyCompactItemize}
+\item 
+snake.\-h\end{DoxyCompactItemize}

@@ -7,10 +7,16 @@
  *
  * 3DSolve : un logiciel de résolution du casse-tête connu sous
  * le nom de Snake-Cube.
- * Projet tutoré par Patrice Clemente <patrice.clement@insa-cvl.fr>
+ * Projet tutoré par Patrice Clemente <patrice.clemente@insa-cvl.fr>
  *
  * INSA Centre Val de Loire : Année 2014-2015
  * Promotion 2017
+ */
+
+/**
+ * @defgroup Snake Snake
+ *
+ * @brief Module de gestion du Snake
  */
 
 #ifndef SNAKE_H
@@ -23,6 +29,7 @@
 #include "log.h"
 
 /**
+ * @ingroup Snake
  * @enum Dir
  * @brief Direction, utilisé pour caractériser l'orientation
  * des éléments du snake
@@ -39,6 +46,7 @@ typedef enum
 } Dir;
 
 /**
+ * @ingroup Snake
  * @enum Unit
  * @brief Caractérise le type d'un élément du snake
  * @var Unit::EDGE
@@ -56,6 +64,7 @@ typedef enum
 } Unit;
 
 /**
+ * @ingroup Snake
  * @struct Coord
  * @brief Coordonnée dans un espace 3D
  * @var Coord::x
@@ -73,6 +82,7 @@ typedef struct Coord
 } Coord;
 
 /**
+ * @ingroup Snake
  * @struct Step
  * @brief Définit une étape de résolution.
  *
@@ -90,6 +100,7 @@ struct Step
 };
 
 /**
+ * @ingroup Snake
  * @enum VolumeState
  * @brief Type énuméré définisant l'état d'un élement du volume.
  * @var VolumeState::FORBIDDEN
@@ -107,6 +118,7 @@ typedef enum
 } VolumeState;
 
 /**
+ * @ingroup Snake
  * @struct Volume
  * @brief Définit la forme que le snake possède dans son état résolu
  * @var Volume::max
@@ -123,6 +135,7 @@ typedef struct Volume
 
 
 /**
+ * @ingroup Snake
  * @struct Snake
  * @brief Définit le snake à résoudre.
  *
@@ -153,9 +166,11 @@ typedef struct Snake
 	int currentUnit;
 	ListSolution* solutions;
 	Volume volume;
+	int symetries[4]; // Indique les différents axes de symétrie relatifs au snake
 } Snake;
 
 /**
+ * @ingroup Snake
  * @brief Initialise un snake en lisant les donnée depuis
  * le fichier spécifier par <templatePath>
  * @param  templatePath Chemin absolu ou relatif à l'exécutable du fichier
@@ -167,12 +182,14 @@ Snake* snakeInit(char* templatePath);
 void snakeCopy(Snake* destination, Snake* source);
 
 /**
+ * @ingroup Snake
  * @brief Supprime snake de la mémoire
  * @param snake Le snake à détruir
  */
 void snakeDestroy ( Snake* snake );
 
 /**
+ * @ingroup Snake
  * @brief Copie la solution trouvé (Snake::tmpSteps) dans la liste
  * des solution (Snake::solutions)
  * @param snake le snake concerné
@@ -180,6 +197,7 @@ void snakeDestroy ( Snake* snake );
 void snakeAddSolution ( Snake* snake );
 
 /**
+ * @ingroup Snake
  * @brief Renvoie le type de la prochaine unité de snake
  * qu'il faut placer dans le volume.
  *
@@ -192,6 +210,7 @@ void snakeAddSolution ( Snake* snake );
 Unit snakeGetNextUnit ( Snake* snake );
 
 /**
+ * @ingroup Snake
  * @brief Cette fonction permet de revenir en arrière dans
  * le snake. Elle est complémentaire à snakeGetNextUnit
  * @param  snake le snake concerné
@@ -201,6 +220,7 @@ Unit snakeGetNextUnit ( Snake* snake );
 int snakeRewind ( Snake* snake);
 
 /**
+ * @ingroup Snake
  * @brief Ajoute une étape à la solution en cour de recherche.
  *
  * step sera écrit dans le tableau Snake::tmpSteps
@@ -211,6 +231,7 @@ int snakeRewind ( Snake* snake);
 void snakeAddStep ( Snake* snake, Step* step);
 
 /**
+ * @ingroup Snake
  * @brief Imprimme le snake dans une chaine de caractère
  *
  * Renvoie une chaine de caractère de type
@@ -226,6 +247,7 @@ void snakeAddStep ( Snake* snake, Step* step);
 char* snakePrint(Snake* snake);
 
 /**
+ * @ingroup Snake
  * @brief Affiche à l'écran les différentes solutions du snake
  * @param snake le snake concerné
  */

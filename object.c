@@ -147,6 +147,111 @@ Object * objectLoad(const char * file)
 		logWrite ("[OBJCT] VBO %d created for uvs\n", uvs_vbo);
 
 		GLuint vao = 0;
+		#ifdef __APPLE__
+		glGenVertexArraysAPPLE (1, &vao);
+		glBindVertexArrayAPPLE (vao);
+		#else
+		glGenVertexArrays (1, &vao);
+		glBindVertexArray (vao);
+		#endif
+		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+		glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glBindBuffer (GL_ARRAY_BUFFER, uvs_vbo);
+		glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray (0);
+		glEnableVertexAttribArray (1);
+
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (vao);
+		#else
+		glBindVertexArray (vao);
+		#endif
+		object->vao_id = vao;
+
+		logWrite ("[OBJCT] VAO %d created bound to VBO %d and VBO %d\n", vao, points_vbo, uvs_vbo);
+	}
+	else if (object->method == 50)
+	{
+
+		float baseverts[4096];
+		float baseuvs[4096];
+		//float normals[1024];
+		int faces[4096][3];
+		int bvcnt = 0;
+		int uvcnt = 0;
+		int nrcnt = 0;
+		int fccnt = 0;
+		while ( 1 )
+		{
+			char lineHeader[128];
+			int res = fscanf(fp, "%s", lineHeader);
+			if (res == EOF)
+				break;
+			if ( strcmp( lineHeader, "v" ) == 0 )
+			{
+				fscanf(fp, "%f %f %f\n", &baseverts[bvcnt], &baseverts[bvcnt+1], &baseverts[bvcnt+2] );
+				bvcnt += 3;
+			}
+			else if ( strcmp( lineHeader, "vt" ) == 0 )
+			{
+				fscanf(fp, "%f %f\n", &baseuvs[uvcnt], &baseuvs[uvcnt+1] );
+				baseuvs[uvcnt+1] = 1 - baseuvs[uvcnt+1];
+				uvcnt += 2;
+			}
+			else if ( strcmp( lineHeader, "vn" ) == 0 )
+			{
+			//	fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+				nrcnt += 3;
+			}
+			else if ( strcmp( lineHeader, "f" ) == 0 )
+			{
+				fscanf(fp, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &(faces[fccnt][0]), &(faces[fccnt][1])
+					, &(faces[fccnt][2]), &(faces[fccnt+1][0]), &(faces[fccnt+1][1]), &(faces[fccnt+1][2])
+					, &(faces[fccnt+2][0]), &(faces[fccnt+2][1]), &(faces[fccnt+2][2]) );
+				fccnt += 3;
+			}
+		}
+		fclose(fp);
+
+		/*
+		bvcnt -= 3;
+		uvcnt -= 2;
+		nrcnt -= 3;
+		fccnt -= 3;
+		*/
+
+		float compverts[4096];
+		float compuvs[4096];
+		int cvcnt = 0;
+		int face, dim;
+		for ( face = 0; face <= fccnt; face++ )
+		{
+			for (dim=0;dim<3;dim++)
+				compverts[face*3+dim] = baseverts[(faces[face][0]-1)*3+dim];
+			for (dim=0;dim<2;dim++)
+				compuvs[face*2+dim] = baseuvs[(faces[face][1]-1)*2+dim];
+			cvcnt++;
+			printf("%f %f %f\n", compverts[face*3+0],compverts[face*3+1],compverts[face*3+2]);
+		}
+		printf ("v: %d\n", cvcnt);
+
+		object->nb_faces = cvcnt;
+
+		logWrite ("[OBJCT] Object loaded from %s\n", file);
+
+		GLuint points_vbo = 0;
+		glGenBuffers (1, &points_vbo);
+		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
+		glBufferData (GL_ARRAY_BUFFER, (3*cvcnt) * sizeof (float), compverts, GL_STATIC_DRAW);
+		logWrite ("[OBJCT] VBO %d created for vertices\n", points_vbo);
+
+		GLuint uvs_vbo = 0;
+		glGenBuffers (1, &uvs_vbo);
+		glBindBuffer (GL_ARRAY_BUFFER, uvs_vbo);
+		glBufferData (GL_ARRAY_BUFFER, (2*cvcnt) * sizeof (float), compuvs, GL_STATIC_DRAW);
+		logWrite ("[OBJCT] VBO %d created for uvs\n", uvs_vbo);
+
+		GLuint vao = 0;
 		glGenVertexArrays (1, &vao);
 		glBindVertexArray (vao);
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
