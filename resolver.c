@@ -17,7 +17,7 @@ void resolverSolveSnake(Snake *snake)
     // Let's resolve <snake>
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
-    clock_t startTime = clock();
+    double startTime = glfwGetTime();
     //long unsigned int exploredWayNb = 0;
 
     int initialVectorNb = 0;
@@ -94,7 +94,7 @@ void resolverSolveSnake(Snake *snake)
     if(endTime == (clock_t)(-1))
     logError("[RESOL] CPU clock time not available\n");
 
-    double elapsedTime = ((double)(endTime - startTime)) / CLOCKS_PER_SEC;
+    double elapsedTime = glfwGetTime() - startTime;
 
     printf("\033[38;01mSnake resolved with\033[00m\033[31;01m %d \033[00m\033[38;01msolution(s)\n",
     snake->solutions->size);
