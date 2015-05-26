@@ -87,7 +87,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 int getInput ( Context* context )
 {
 	static int magnet;
-
 	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
@@ -252,7 +251,9 @@ int getInput ( Context* context )
 				int way=0;
 				if (accx>0 || accy>0) way = 1;
 				if (gplayer->selected != -1)
-					playerRotate(gplayer, gplayer->selected, context->snake, way);
+				{	playerRotate(gplayer, gplayer->selected, context->snake, way);
+					playerCheckSolution(gplayer, context->snake->volume, context->snake->length);
+				}
 				magnet = 0;
 			}
 		}

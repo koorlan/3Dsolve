@@ -5,11 +5,11 @@
  * de recherche de solution est itérative et utilise un arbre n-aire.
  *
  * Le principe est le suivant :
- * 	1. Un algorithme de recherche de symétrie élime les point de départ
- * 	symétique afin de réduire au maximum le temps de calcule.
+ * 	1. Un algorithme de recherche de symétrie élime les points de départ
+ * 	symétiques afin de réduire au maximum le temps de calcul.
  * 	2. Un autre algorithme essaie tous les chemins (combinaison de placement
- * 	des éléments du snake) qu'il est possible de généré depuis les points
- * 	trouvé à l'étape 1.
+ * 	des éléments du snake) qu'il est possible de générer depuis les points
+ * 	trouvés à l'étape 1.
  * 	3. Les chemins qui aboutissent (qui permettent de placer tous les éléments
  * 	du snake de manière valide) sont des solutions.
  * 	4. Les solutions sont ensuite présentées à l'utilisateur dans une scène de

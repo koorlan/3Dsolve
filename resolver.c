@@ -682,7 +682,6 @@ int validVectCube(Coord nCoord, Dir dir, int max)
 {
   if(nCoord.z == 0 || nCoord.z == max || (nCoord.x != 0 && nCoord.x != max && nCoord.y != 0 && nCoord.y != 0))
     return 1;
-
   Coord vectCoord;
   vectCoord = calcCoord(nCoord, dir);
   if(vectCoord.x == 0 || vectCoord.y == 0 ) 
