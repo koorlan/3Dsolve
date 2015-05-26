@@ -67,6 +67,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_RIGHT:
 					key_flags |= K_RT;
 					break;
+				case GLFW_KEY_ENTER:
+					bhv_flags ^= BHV_SPREAD;
+					break;
 				case GLFW_KEY_SPACE:
 					bhv_flags ^= BHV_ROTATE;
 					break;
@@ -171,6 +174,10 @@ int getInput ( Context* context )
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 		for (i=gsolver->selected+1;i<context->snake->length;i++)
 		{
@@ -192,6 +199,10 @@ int getInput ( Context* context )
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 
 
@@ -218,6 +229,10 @@ int getInput ( Context* context )
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 		for (i=gsolver->selected+1;i<context->snake->length;i++)
 		{
@@ -239,12 +254,18 @@ int getInput ( Context* context )
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 
 	}
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
+		playerRotate(gplayer, gplayer->selected, context->snake, 0);
+		playerRotate(gplayer, gplayer->selected, context->snake, 1);
 		magnet = 0;
 		mouse_flags ^= M_RLEFTONCE;
 	}
@@ -258,18 +279,19 @@ int getInput ( Context* context )
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
-		if ( accx!=0.f || accy!=0.f )
+		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
 		{
-			//printf("accx=%f  accy=%f\n", accx, accy);
-			magnet++;
-			if ( magnet > 20 )
+			//TODO: meilleure detection du sens de rotation
+			if (accx>0) magnet += MAG_STEP;
+			else if (accx<0) magnet -= MAG_STEP;
+
+			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
-				int way=0;
-				if (accx>0 || accy>0) way = 1;
-				if (gplayer->selected != -1)
-					playerRotate(gplayer, gplayer->selected, context->snake, way);
+				playerRotate(gplayer, gplayer->selected, context->snake, magnet);
 				magnet = 0;
 			}
+			else
+				playerFakeRotate(gplayer, gplayer->selected, context->snake, magnet);
 		}
 	}
 
@@ -282,12 +304,15 @@ int getInput ( Context* context )
 		context->camera->angle[1] += accy;
 		if (context->camera->angle[1] > (M_PI/2-0.01f)) context->camera->angle[1] = (M_PI/2-0.01f);
 		if (context->camera->angle[1] < (-M_PI/2+0.01f)) context->camera->angle[1] = (-M_PI/2+0.01f);
-		//printf("accx=%f  accy=%f\n", accx, accy);
 	}
 	else if ((bhv_flags&BHV_ROTATE)==BHV_ROTATE)
 	{
 		context->camera->angle[0]+=0.002f;
 	}
+	
+	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
+		context->spread = 1;
+	else context->spread = 0;
 
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
@@ -300,9 +325,13 @@ int getInput ( Context* context )
 		mouse_flags = M_NONE;
 	}
 
-	context->camera->eye[0] = context->camera->target[0] + context->camera->distance * sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->target[1] + context->camera->distance * cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->target[2] + context->camera->distance * sin(context->camera->angle[1]);
+	//mise à jour de la position/orientation de la camera
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
+				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+				* sin(context->camera->angle[1]);
 
 	return 0;
 }
@@ -408,7 +437,7 @@ void contextInit ( Context* context )
 	unsigned int width, height;
 	GLuint textureID;
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -418,7 +447,7 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
 
-	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
+	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -487,6 +516,8 @@ void contextDestroy ( Context * context )
 {
 	context->running = 0;
 	pthread_join ( context->render_thread, NULL );
+	logWrite ("[CNTXT] Graphic thread terminated\n");
+	glfwMakeContextCurrent ( NULL );
 	glfwTerminate ();
 	logWrite ("[CNTXT] GLFW terminated\n");
 	free ( context );

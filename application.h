@@ -43,6 +43,10 @@
  * (indexé Application::loadedSnake dans Application::snakeNames)
  * @var Application::player
  * Le joueur
+ * @var Application::pathExplored
+ * Le nombre de chemin exploré pour trouver toutes les solutions
+ * @var Application::calculTime
+ * Le temps pris pour le calcul des solutions
  */
 typedef struct Application
 {
@@ -51,6 +55,10 @@ typedef struct Application
     int loadedSnake;
     Snake* snake;
     Player* player;
+    Player* solver;
+
+    unsigned int pathExplored;
+    double calculTime;
 } Application;
 
 /**

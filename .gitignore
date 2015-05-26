@@ -40,8 +40,7 @@ snake
 # Added by Anthony (agourd)
 MyStuff/*
 Doxyfile
-html/*
-latex/*
+doc/latex/*
 Rapport/*.aux
 Rapport/*.idx
 Rapport/*.ilg

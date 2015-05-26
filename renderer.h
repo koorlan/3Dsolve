@@ -36,7 +36,6 @@ FTGLfont *myfont;
 #define abs(X) ((X)<0?-(X):(X))
 
 void* renderer ( void *arg );
-void dir2vec ( Dir dir, vec3 vec );
 void render_text(const char *text, float x, float y, float sx, float sy);
 
 #endif //RENDERERS_H

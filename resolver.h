@@ -252,14 +252,15 @@ void cpyLine(Line *dest, Line src);
 /**
  * @ingroup Resolver
  * @brief Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan.
- * @param  initialStep    [description]
- * @param  nCoord         [description]
- * @param  nDir           [description]
- * @param  verticalAxis   [description]
- * @param  horizontalAxis [description]
- * @param  diagonalAxis   [description]
- * @param  slashAxis      [description]
- * @return                [description]
+ *
+ * @param  initialStep    Un vecteur de départ à partir on calcul les symétries
+ * @param  nCoord         Coordonnée du vecteur étudié
+ * @param  nDir           Direction du vecteur étudié
+ * @param  verticalAxis   Axe vertical
+ * @param  horizontalAxis Axe horizontal
+ * @param  diagonalAxis   Axe diagonal
+ * @param  slashAxis      Second axe diagonal
+ * @return                1 si le vecteur est symétrique, 0 sinon
  */
 int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis);
 
@@ -322,6 +323,20 @@ int validCoordSym(Coord coord, FloatCoord max);
  * les vecteurs initiaux
  */
 Tree createAllInitialVectors(Volume volume);
+
+/**
+ * @ingroup Resolver
+ * @brief Permet d'indenfier des vecteurs valides pour le recherche de sysmétrie.
+ *
+ * Dans le cas où le "tranche" étudié est une "tranche" intérieur, on ne veut pas
+ * étudier les vecteur extérieur car ils sont déjà considéré dans l'étude des
+ * faces extérieures.
+ * @param  nCoord Les coordonnées du vecteur à valideCoord
+ * @param  dir    La direction du vecteur à valider
+ * @param  max    La taille du cube
+ * @return        1 si le vecteur est valide, 0 sinon
+ */
+int validVectCube(Coord nCoord, Dir dir, int max);
 
 
 #endif // RESOLVER_H
