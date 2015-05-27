@@ -179,6 +179,8 @@ typedef struct Snake
  */
 Snake* snakeInit(char* templatePath);
 
+void snakeCopy(Snake* destination, Snake* source);
+
 /**
  * @ingroup Snake
  * @brief Supprime snake de la mémoire

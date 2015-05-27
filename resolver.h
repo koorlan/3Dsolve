@@ -48,6 +48,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
+#include <pthread.h>
 
 #include "log.h"
 #include "snake.h"
@@ -133,6 +134,12 @@ typedef struct Line
  */
 typedef NodeTree * Tree;
 
+typedef struct ThreadArgs
+{
+    Tree rootNode;
+    Snake* snake;
+    pthread_mutex_t mutex;
+} ThreadArgs;
 
 /**
  * @ingroup Resolver
@@ -140,6 +147,8 @@ typedef NodeTree * Tree;
  * @param snake : le serpent à résoudre
  */
 void resolverSolveSnake(Snake *snake);
+
+void* resolverSolveNode(void* args);
 
 /**
  * @ingroup Resolver
@@ -274,6 +283,7 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
  * - On construit les axes de symétrie passant par le centre
  * - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique
  * @param  volume Le volume sur lequel effectuer le calcul
+ * @param vectorNb un pointer sur int pour stocker le nombre de vecteur initiaux
  * @return        L'arbre contenant les vecteurs initiaux
  */
 Tree findInitialVectors(Snake *snake, int* initialVectorNb);

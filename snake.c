@@ -94,6 +94,36 @@ Snake* snakeInit(char* templatePath)
 	return snake;
 }
 
+void snakeCopy(Snake* destination, Snake* source)
+{
+	destination->length = source->length;
+	destination->currentUnit = 0;
+	destination->solutions = listSolutionCreate();
+	destination->tmpSteps = malloc(source->length * sizeof(Step));
+	memset(destination->tmpSteps, 0,source->length * sizeof(Step));
+
+	destination->volume.max.x = source->volume.max.x;
+	destination->volume.max.y = source->volume.max.y;
+	destination->volume.max.z = source->volume.max.z;
+
+	int i, j ,k;
+
+	destination->volume.state = malloc(destination->volume.max.x * sizeof(VolumeState*));
+	for(i = 0; i < destination->volume.max.x; i++)
+		destination->volume.state[i] = malloc(destination->volume.max.y * sizeof(VolumeState*));
+	for(i = 0; i < destination->volume.max.x; i++)
+		for(j = 0; j < destination->volume.max.y; j++)
+		{
+			destination->volume.state[i][j] = malloc(destination->volume.max.z * sizeof(VolumeState));
+			for(k = 0; k < destination->volume.max.z; k++)
+				destination->volume.state[i][j][k] = source->volume.state[i][j][k];
+		}
+
+	destination->units = malloc(source->length * sizeof(Unit));
+	for(i = 0; i < source->length; i++)
+		destination->units[i] = source->units[i];
+}
+
 void snakeDestroy ( Snake* snake )
 {
 	if(snake->tmpSteps != NULL)
@@ -116,7 +146,7 @@ void snakeDestroy ( Snake* snake )
 		logWrite("[SNDES] Volume freed\n");
 	}
 
-	free(snake);
+	//free(snake);
 }
 
 void snakeAddSolution ( Snake* snake )

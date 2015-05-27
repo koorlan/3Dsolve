@@ -3,7 +3,6 @@ CC = gcc
 SUFFIXES	?= .c .o
 .SUFFIXES: $(SUFFIXES) .
 
-
 OS := $(shell uname -s)
 
 RM =  rm -f /cmd /C del
