@@ -107,7 +107,7 @@ int main ( int argc, char ** argv )
 	setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
 
 	Item *tmpitem;
-	for ( i = 0;  i <20; i++) {
+	for ( i = 0;  i <2; i++) {
 		initItem(&(tmpitem));
 		setItemType(tmpitem, ITEM);
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});

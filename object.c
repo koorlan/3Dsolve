@@ -252,8 +252,13 @@ Object * objectLoad(const char * file)
 		logWrite ("[OBJCT] VBO %d created for uvs\n", uvs_vbo);
 
 		GLuint vao = 0;
+		#ifdef __APPLE__
+		glGenVertexArraysAPPLE (1, &vao);
+		glBindVertexArrayAPPLE (vao);
+		#else
 		glGenVertexArrays (1, &vao);
 		glBindVertexArray (vao);
+		#endif
 		glBindBuffer (GL_ARRAY_BUFFER, points_vbo);
 		glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glBindBuffer (GL_ARRAY_BUFFER, uvs_vbo);
@@ -261,7 +266,11 @@ Object * objectLoad(const char * file)
 		glEnableVertexAttribArray (0);
 		glEnableVertexAttribArray (1);
 
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (vao);
+		#else
 		glBindVertexArray (vao);
+		#endif
 		object->vao_id = vao;
 
 		logWrite ("[OBJCT] VAO %d created bound to VBO %d and VBO %d\n", vao, points_vbo, uvs_vbo);

@@ -486,6 +486,7 @@ void contextInit ( Context* context )
 	gsolver->currentSolution = context->snake->solutions->head;
 
 	glfwMakeContextCurrent ( NULL );
+	
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 

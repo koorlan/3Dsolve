@@ -40,6 +40,7 @@ void* renderer ( void *arg )
 	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
 	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
 	GLuint wID = glGetUniformLocation(context->snake_program, "W");
+	GLuint wID2 = glGetUniformLocation(context->picking_program, "W");
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
 	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
@@ -64,6 +65,7 @@ void* renderer ( void *arg )
 	//! [3] Renderer loop
 	while (context->running)
 	{
+
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
 
 		//! [4] FPS limitation control
@@ -104,9 +106,10 @@ void* renderer ( void *arg )
 					break;
 				}
 		// The selected segment goes from gplayer->selected to segEnd
-
+		
 		if ( context->drawpick == 1 )
 		{
+			
 			glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glUseProgram (context->picking_program);
@@ -115,24 +118,30 @@ void* renderer ( void *arg )
 			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
+			
+			#ifdef __APPLE__
+			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
 			glBindVertexArray (context->cube_mesh->vao_id);
-
+			#endif
+			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			for ( i=0; i <= curPlayer->segEnd; i++ )
 			{
 				glUniform3f(pickcolorID, ((float)i)/255.f, 0.f, 0.f);
 
 				mat4x4_identity ( WMat );
+
 				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
 				mat4x4_scale3d(WMat, WMat, scoef);
 				mat4x4_scale3d(WMat, WMat, 0.6f);
 
-				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-
+				glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 			glFlush();
 			glFinish();
+
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
@@ -143,7 +152,6 @@ void* renderer ( void *arg )
 			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
 			context->drawpick = 0;
-
 		}
 		//! [5]
 
@@ -180,7 +188,11 @@ void* renderer ( void *arg )
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
+			#ifdef __APPLE__
+			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
 			glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			glBindTexture(GL_TEXTURE_2D, context->linktex);
 
@@ -194,7 +206,13 @@ void* renderer ( void *arg )
 				if (curPlayer->steps[i].dir == LEFT)
 					mat4x4_rotate_Y (WMat, WMat, -3.1415 * 0.5f);
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				
+				#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->link_mesh->vao_id);
+				#else
 				glBindVertexArray (context->link_mesh->vao_id);
+				#endif
+
 				glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
 			}
 
@@ -204,7 +222,12 @@ void* renderer ( void *arg )
 		mat4x4_identity(perMat);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+		#else
 		glBindVertexArray (context->square_mesh->vao_id);
+		#endif
+		
 		glUniform1f(alphaID, 1.0f);
 
 		float xoffset = -(context->snake->length*0.3333333f);
@@ -277,7 +300,7 @@ void* renderer ( void *arg )
 			  //if (ftglGetFontFaceSize(mymenu->item[i]->descriptor.font) != mymenu->item[i]->descriptor.fontSize	)
 				//	ftglSetFontFaceSize(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.fontSize,72);
 				ftglRenderFont(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-				glPopMatrix();
+				
 			}
 			pthread_mutex_unlock(mymenu->mutex);
 		}
