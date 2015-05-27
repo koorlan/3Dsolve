@@ -108,7 +108,7 @@ void* resolverSolveNode(void* args)
     ThreadArgs* tmp = args;
     Snake* snake = tmp->snake;
     int buildResult = -1;
-    int exploredWayNb;
+    int exploredWayNb = 0;
 
     Tree currentNode = tmp->rootNode;
 
