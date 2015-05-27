@@ -1,7 +1,7 @@
 #include "player.h"
 
 //UP,DOWN,LEFT,RIGHT,FRONT,BACK
-//Axes en deuxième position
+//Axe en deuxième position
 const Dir rotationTable[6][6] =
 {
 { UP, UP, FRONT, BACK, RIGHT, LEFT },

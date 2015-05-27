@@ -1,5 +1,27 @@
 #include "renderer.h"
 
+//UP,DOWN,LEFT,RIGHT,FRONT,BACK
+const float dir2lr[6][3] = 
+{
+{  0.f ,  0.f ,  1.f  },
+{  0.f ,  0.f , -1.f  },
+{  0.f ,  1.f ,  0.f  },
+{  0.f ,  0.f ,  0.f  },
+{  0.f , -1.f ,  0.f  },
+{  0.f ,  1.f ,  0.f  }
+};
+
+const float dir2sc[6][3] = 
+{
+{  0.f ,  1.f ,  0.f  },
+{  0.f ,  1.f ,  0.f  },
+{  1.f ,  0.f ,  0.f  },
+{  1.f ,  0.f ,  0.f  },
+{  0.f ,  0.f ,  1.f  },
+{  0.f ,  0.f ,  1.f  }
+};
+
+
 void* renderer ( void *arg )
 {
 	//! [1] OpenGl setup
@@ -8,8 +30,6 @@ void* renderer ( void *arg )
 	Context* context = (Context*) arg;
 
 	glfwMakeContextCurrent ( context->window );
-	glEnable (GL_DEPTH_TEST);
-	glDepthFunc (GL_LEQUAL);
 
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
@@ -37,6 +57,7 @@ void* renderer ( void *arg )
 		curPlayer = gsolver;
 
 	int i;
+	float scoef = 1.f;
 	int cubesNb = context->snake->length;
 	//! [2]
 
@@ -66,6 +87,12 @@ void* renderer ( void *arg )
 			curPlayer = gplayer;
 		else
 			curPlayer = gsolver;
+
+
+		if ( context->spread == 1 && scoef > 0.6f )
+			scoef -= 0.01f;
+		else if ( context->spread == 0 && scoef < 1.f )
+			scoef += 0.01f;
 
 		//! [5] Color picking (cube selection)
 		curPlayer->segEnd = cubesNb;
@@ -97,7 +124,8 @@ void* renderer ( void *arg )
 				mat4x4_identity ( WMat );
 				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-				if (context->spread == 1) mat4x4_scale3d(WMat, WMat, 0.6f);
+				mat4x4_scale3d(WMat, WMat, scoef);
+				mat4x4_scale3d(WMat, WMat, 0.6f);
 
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
@@ -129,7 +157,6 @@ void* renderer ( void *arg )
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-		glBindVertexArray (context->cube_mesh->vao_id);
 
 		for ( i=0; i < cubesNb; i++ )
 		{
@@ -139,18 +166,37 @@ void* renderer ( void *arg )
 			mat4x4_identity ( WMat );
 			mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 			mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-			if (context->spread == 1) mat4x4_scale3d(WMat, WMat, 0.6f);
+			mat4x4_scale3d(WMat, WMat, scoef);
 			if (curPlayer->selected == i )
 				mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
 			else mat4x4_scale3d(WMat, WMat, 0.97f);
 
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
+			if (curPlayer->selected == i )
+				mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
+
 			//pair/impair = blanc/noir
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
+			glBindVertexArray (context->cube_mesh->vao_id);
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			glBindTexture(GL_TEXTURE_2D, context->linktex);
+
+			if ( i < cubesNb-1 && context->spread==1)
+			{
+				
+				mat4x4_rotate(WMat, WMat,
+					dir2lr[curPlayer->steps[i].dir][0],
+					dir2lr[curPlayer->steps[i].dir][1],
+					dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
+				if (curPlayer->steps[i].dir == LEFT)
+					mat4x4_rotate_Y (WMat, WMat, -3.1415 * 0.5f);
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				glBindVertexArray (context->link_mesh->vao_id);
+				glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+			}
 
 		}
 
