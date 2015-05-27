@@ -64,7 +64,7 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
-    Menu* menu;
+    Menu *menu;
     int menuDepth;
 
     unsigned int pathExplored;

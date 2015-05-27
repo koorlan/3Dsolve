@@ -25,6 +25,7 @@ void* renderer ( void *arg )
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
 	float last_time=127.f;
+	float accumulator;
 	struct timespec time1;
 	struct timespec time2;
 	//! [1]
@@ -119,10 +120,24 @@ void* renderer ( void *arg )
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			for ( i = 0; i < app->menu->size; i++) {
-				glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
-				glBindVertexArray (app->menu->item[i]->mesh->vao_id);
-				glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
+
+			accumulator = 0.f;
+			if(app->menu->type == COLLUM){
+					for ( i = 0; i < app->menu->size; i++) {
+						glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
+						mat4x4_identity(WMat);
+						mat4x4_scale3d(WMat, WMat, 1.f);
+						mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+						if (i == 0)
+							accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
+						else
+							accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
+						mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
+						mat4x4_scale_aniso(WMat, WMat, 1.f, app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1] * 2.f, 0.f); //2.f est le coef de grossisement de la hitbox
+						glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+						glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
+						accumulator -= (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
+					}
 			}
 
 			glFlush();
@@ -222,22 +237,40 @@ void* renderer ( void *arg )
 			mat4x4_identity(WMat);
 
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+			mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 			glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
 
-
-			for ( i = 0; i < app->menu->size; i++) {
-				glBindVertexArray (app->menu->item[i]->mesh->vao_id);
-				if(i == app->menu->selected){
-					glBindTexture(GL_TEXTURE_2D, context->itemtex);
-					glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
-					glBindTexture(GL_TEXTURE_2D, context->menutex);
-					continue;
-				}
-				glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
+			//float accumulator = app->menu->bboxRel[1] - app->menu->item[0]->bboxRel[1] - 2*(app->menu->item[0]->margin[1]/context->screen_height) ;
+			accumulator = 0.f;
+			if(app->menu->type == COLLUM){
+					for ( i = 0; i < app->menu->size; i++) {
+						mat4x4_identity(WMat);
+						mat4x4_scale3d(WMat, WMat, 1.f);
+						mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+						if (i == 0)
+				      accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
+				    else
+				      accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
+				    mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
+						mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
+						mat4x4_scale_aniso(WMat, WMat, 1.f, (app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1]) , 0.f);
+						glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+						if(i == app->menu->selected){
+							glBindTexture(GL_TEXTURE_2D, context->itemtex);
+						//	glDrawArrays(GL_TRIANGLES, 0, app->menu->mesh->nb_faces);
+							glBindTexture(GL_TEXTURE_2D, context->menutex);
+							accumulator -= (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
+							continue;
+						}
+						glBindTexture(GL_TEXTURE_2D, context->itemtex);
+						glDrawArrays(GL_TRIANGLES, 0, app->menu->mesh->nb_faces);
+						accumulator -= (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
+					}
 			}
+
 
 		//==========view Text==========
 		if (!pthread_mutex_trylock(app->menu->mutex)){
@@ -249,7 +282,7 @@ void* renderer ( void *arg )
 			glLoadIdentity();
 			glViewport (0, 0, context->screen_width, context->screen_height);
 
-			float acc = 0.f;
+			accumulator = 0.f;
 			glColor4f (1.f,0.f,0.f,1.f);
 
 			glTranslatef( (-1.f  + app->menu->margin[0]) + app->menu->bboxRel[0] , (1.f -  app->menu->margin[1]),0.f);
@@ -259,7 +292,7 @@ void* renderer ( void *arg )
 
 			  glColor4f (app->menu->item[i]->descriptor.color.r, app->menu->item[i]->descriptor.color.g,app->menu->item[i]->descriptor.color.b,app->menu->item[i]->descriptor.color.a);
 				glTranslatef(app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[1] + app->menu->item[i]->descriptor.bbox[4]),0.f);
-			  acc += app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
+			  accumulator += app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
 			  ftglRenderFont(app->menu->item[i]->descriptor.font, app->menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
 				glTranslatef(-app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[3] + abs(app->menu->item[i]->descriptor.bbox[1]) ),0.f);
 			}

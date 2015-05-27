@@ -124,8 +124,6 @@ int getInput ( Context* context )
 		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
 		//testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
-
-
 		resize_h = -1;
 		resize_w = -1;
 
@@ -275,7 +273,23 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
-			mouse_flags ^= M_LEFTONCE;
+			if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
+				//logWrite("[MENU] Before Segfault (item %d)\n",app->menu->selected);
+				switch (app->menu->item[app->menu->selected]->descriptor.action){
+					case CLOSE:
+						logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
+						break;
+					case TEST:
+						logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
+						break;
+					case OPEN:
+						logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
+						break;
+					default:
+						break;
+				}
+			}
+				mouse_flags ^= M_LEFTONCE;
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;

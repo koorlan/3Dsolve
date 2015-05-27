@@ -36,7 +36,7 @@
  * @var ItemType::COLLUM
  * Un menu en colone
  */
-typedef enum ItemType {ITEM ,ROW, COLLUM} ItemType;
+typedef enum MenuType {ROW, COLLUM} MenuType;
 
 /**
  * @ingroup Menu
@@ -137,13 +137,13 @@ typedef struct Menu Menu;
 
 typedef struct Item
 {
-  ItemType type;
   float bbox[4];
   float margin[4]; //left top right bottom
   Descriptor descriptor;
   Menu *menu;
   Object *mesh;
   float bboxRel[4];
+  float marginRel[4];
 } Item;
 
 /**
@@ -168,6 +168,7 @@ typedef struct Item
  * en particulier.
  */
 struct Menu{
+  MenuType type;
   float margin[4];
   float bbox[4];
   float bboxRel[4];
@@ -251,14 +252,6 @@ int setMenuSize(Menu *menu, int size);
  */
 int initItem(Item **item);
 
-/**
- * @ingroup Menu
- * @brief Permet de récupérer le type d'un item
- * @param  item     l'item
- * @param  itemType le pointeur dans lequel récupérer la valeur
- * @return          valeur de contrôle, 1 si l'opération s'est bien passé, 0 sinon
- */
-int getItemType(Item *item, ItemType *itemType);
 
 /**
  * @ingroup Menu
@@ -316,15 +309,6 @@ int setItemBbox(Item *item,float bbox[]);
  */
 int setItemMargin(Item *item,float margin[]);
 
-/**
- * @ingroup Menu
- * @brief Permet de modifier le type d'un item.
- *
- * @param  item l'item
- * @param  itemType le nouveau type de l'item
- * @return      valeur de contrôle, s si l'opération s'est bien passé, 0 sinon
- */
-int setItemType(Item *item, ItemType itemType);
 
 /**
  * @ingroup Menu
