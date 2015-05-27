@@ -334,16 +334,14 @@ int increaseMenu(Menu *menu){
 
 
 int testMenuMesh(Menu *menu,int width, int height){
-  menu->scale[0] = 1.f;
-  menu->scale[1] = 1.f;
-  menu->scale[2] = 1.f;
   int i,j;
-  float ratio = (float)width / (float)height;
+  //float ratio = (float)width / (float)height;
   float mW = (menu->bbox[2]) - (menu->bbox[0] ) ;
   float mH = (menu->bbox[3]) - (menu->bbox[1] ) ;
   logWrite("[MENUTEST] menuW = %f , menuH = %f",mW/width,mH/height);
   float * points = (float *) malloc (6 * 3 * sizeof(float));
   float * uvs = malloc (6 * 2 * sizeof(float));
+  //set background menu vertex
   points = (float []) {
     mW/width,-mH/height,0.f,
     -mW/width,-mH/height,0.f,
@@ -369,18 +367,18 @@ int testMenuMesh(Menu *menu,int width, int height){
     0.f,1.f
   };
 
-  glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_points_id);
+  glBindBuffer(GL_ARRAY_BUFFER, menu->mesh->vbo_points_id);
   glBufferSubData(GL_ARRAY_BUFFER, 0, (3*6) * sizeof (float), points);
 
-  glBindBuffer(GL_ARRAY_BUFFER, mymenu->mesh->vbo_uvs_id);
+  glBindBuffer(GL_ARRAY_BUFFER, menu->mesh->vbo_uvs_id);
   glBufferSubData(GL_ARRAY_BUFFER, 0, (2*6) * sizeof (float), uvs);
 
+  //Generate each mesh for items
   float acc =0.f ;
   for (i = 0; i < menu->size ; i++){
     menu->item[i]->mesh = objectLoad("stc/square.stc");
     mW = (menu->item[i]->bbox[2] - menu->item[i]->bbox[0])/width ;
     mH = (menu->item[i]->bbox[3] - menu->item[i]->bbox[1])/height;
-    logWrite("[MENUTEST] ObjW = %f , ObjH = %f",mW,mH);
 
     points = (float []) {
       mW,-mH,0.f,
@@ -411,21 +409,19 @@ int testMenuMesh(Menu *menu,int width, int height){
     else
       acc -= 2*(menu->item[i]->margin[1]/height);
 
+    //Amplify and recal !
     for (j = 1; j < 18; j += 3) {
-      points[j] = (points[j]*1.f) + acc;
+      points[j] = (points[j]*2.f) + acc;
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, mymenu->item[i]->mesh->vbo_points_id);
+    glBindBuffer(GL_ARRAY_BUFFER, menu->item[i]->mesh->vbo_points_id);
     glBufferSubData(GL_ARRAY_BUFFER, 0, (3*6) * sizeof (float), points);
 
-    glBindBuffer(GL_ARRAY_BUFFER, mymenu->item[i]->mesh->vbo_uvs_id);
+    glBindBuffer(GL_ARRAY_BUFFER, menu->item[i]->mesh->vbo_uvs_id);
     glBufferSubData(GL_ARRAY_BUFFER, 0, (2*6) * sizeof (float), uvs);
 
 
     acc -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/height); ;
   }
-
-
-
   return 1;
 }

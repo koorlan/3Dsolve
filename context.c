@@ -108,21 +108,21 @@ int getInput ( Context* context )
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
-		pthread_mutex_lock(mymenu->mutex);
+		pthread_mutex_lock(app->menu->mutex);
 		if(resize_method){
-		//	mymenu->scale[0] = 1.f*(1/(context->ratio/((float)DRESX/(float)DRESY)));
-		//	mymenu->scale[1] = (float)context->screen_height/DRESY;
-			mymenu->scale[2] = 1.f;
+		//	app->menu->scale[0] = 1.f*(1/(context->ratio/((float)DRESX/(float)DRESY)));
+		//	app->menu->scale[1] = (float)context->screen_height/DRESY;
+			app->menu->scale[2] = 1.f;
 		} else {
-			mymenu->scale[0] = 1.f ;
-			mymenu->scale[1] = 1.f;
-			mymenu->scale[2] = 1.f;
+			app->menu->scale[0] = 1.f ;
+			app->menu->scale[1] = 1.f;
+			app->menu->scale[2] = 1.f;
 		}
-		pthread_mutex_unlock(mymenu->mutex);
-		//setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		//calcMenu(mymenu);
-		//reshapeMenu(mymenu, context->screen_width	, context->screen_height);
-		//testMenuMesh(mymenu, context->screen_width	, context->screen_height);
+		pthread_mutex_unlock(app->menu->mutex);
+		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+		//calcMenu(app->menu);
+		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
+		//testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 
 
@@ -309,7 +309,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
 	else context->spread = 0;

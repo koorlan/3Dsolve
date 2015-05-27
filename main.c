@@ -72,7 +72,7 @@ int main ( int argc, char ** argv )
 	}
 	/// [1]
 
-	Application* app = applicationCreate();
+	app = applicationCreate();
 	//applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -101,10 +101,11 @@ int main ( int argc, char ** argv )
 	}
 
 	//Menu test;
-	int i ;
-	mymenu = NULL;
-	initMenu(&mymenu);
-	setMenuMargin(mymenu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
+	int i;
+	initMenu(&(app->menu));
+	app->menuDepth = 0;
+
+	setMenuMargin(app->menu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
 
 	Item *tmpitem;
 	for ( i = 0;  i <10; i++) {
@@ -121,20 +122,20 @@ int main ( int argc, char ** argv )
 				.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
 				.action= OPEN});
 		ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
-		addItemToMenu(mymenu,tmpitem);
+		addItemToMenu(app->menu,tmpitem);
 	}
 
-	//setItemDescriptor(mymenu->item[3],(struct Descriptor)
+	//setItemDescriptor(app->menu->item[3],(struct Descriptor)
 	//	{	.name="Custom Text",
 	//		.font=LoadFont("fonts/Fipps-Regular.otf"),
 	//		.fontSize = 25,
 	//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
 	//		.action= OPEN});
-	//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
+	//ftglSetFontFaceSize(app->menu->item[3]->descriptor.font,app->menu->item[3]->descriptor.fontSize,72);
 	//test relative fontSize
-	calcMenu(mymenu);
-	mymenu->mesh = objectLoad("stc/square.stc");
-	testMenuMesh(mymenu,context->screen_width,context->screen_height);
+	calcMenu(app->menu);
+	app->menu->mesh = objectLoad("stc/square.stc");
+	testMenuMesh(app->menu,context->screen_width,context->screen_height);
 
 	//End test menu
 	/// [3]

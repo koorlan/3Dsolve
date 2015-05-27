@@ -80,6 +80,7 @@ void* renderer ( void *arg )
 
 		if ( context->drawpick == 1 )
 		{
+			//==========render cubes==========
 			glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glUseProgram (context->picking_program);
@@ -92,7 +93,7 @@ void* renderer ( void *arg )
 
 			for ( i=0; i <= curPlayer->segEnd; i++ )
 			{
-				glUniform3f(pickcolorID, ((float)i)/255.f, 0.f, 0.f);
+				glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
 
 				mat4x4_identity ( WMat );
 				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
@@ -103,6 +104,27 @@ void* renderer ( void *arg )
 
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
+			//==========render menu button==========
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+			glBindVertexArray (app->menu->mesh->vao_id);
+			glUniform1f(alphaID, 1.0f);
+			float xoffset = -1.f  + app->menu->margin[0];
+			float yoffset = 1.f  - app->menu->bboxRel[1] - app->menu->margin[1];
+
+			mat4x4_identity(WMat);
+			//mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
+			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			for ( i = 0; i < app->menu->size; i++) {
+				glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
+				glBindVertexArray (app->menu->item[i]->mesh->vao_id);
+				glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
+			}
+
 			glFlush();
 			glFinish();
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -111,11 +133,13 @@ void* renderer ( void *arg )
 					GL_RGBA, GL_UNSIGNED_BYTE, data);
 			//if (data[0] == gplayer->selected)
 			//	playerRotate(gplayer, gplayer->selected, context->snake);
-			gplayer->selected = (data[0]==255?-1:data[0]);
+			if( (data[1]==255?-1:data[1]) != -1)
+				app->menu->selected = (data[1]==255?-1:data[1]);
+			else
+				gplayer->selected = (data[0]==255?-1:data[0]);
 			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
 			context->drawpick = 0;
-
 		}
 		//! [5]
 
@@ -183,35 +207,40 @@ void* renderer ( void *arg )
 		}
 
 		//==========view Menu template==========
-		// do stuff...
+
 		 	mat4x4_identity(viewMat);
 			mat4x4_identity(perMat);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-			glBindVertexArray (mymenu->mesh->vao_id);
+			glBindVertexArray (app->menu->mesh->vao_id);
 			glUniform1f(alphaID, 1.0f);
-			xoffset = -1.f  + mymenu->margin[0];
-			yoffset = 1.f  - mymenu->bboxRel[1] - mymenu->margin[1];
+			xoffset = -1.f  + app->menu->margin[0];
+			yoffset = 1.f  - app->menu->bboxRel[1] - app->menu->margin[1];
 			r_angle =  0.f;
 
 			glBindTexture(GL_TEXTURE_2D, context->menutex);
 			mat4x4_identity(WMat);
-			//mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-			//mat4x4_scale3d(WMat, WMat, 1.f);
+
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
-			//mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
-			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-			glDrawArrays(GL_TRIANGLES, 0,mymenu->mesh->nb_faces);
 
-			glBindTexture(GL_TEXTURE_2D, context->itemtex);
-			for ( i = 0; i < mymenu->size; i++) {
-				glBindVertexArray (mymenu->item[i]->mesh->vao_id);
-				glDrawArrays(GL_TRIANGLES, 0, mymenu->item[i]->mesh->nb_faces);
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
+
+
+			for ( i = 0; i < app->menu->size; i++) {
+				glBindVertexArray (app->menu->item[i]->mesh->vao_id);
+				if(i == app->menu->selected){
+					glBindTexture(GL_TEXTURE_2D, context->itemtex);
+					glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
+					glBindTexture(GL_TEXTURE_2D, context->menutex);
+					continue;
+				}
+				glDrawArrays(GL_TRIANGLES, 0, app->menu->item[i]->mesh->nb_faces);
 			}
 
 		//==========view Text==========
-		if (!pthread_mutex_trylock(mymenu->mutex)){
+		if (!pthread_mutex_trylock(app->menu->mutex)){
 			glUseProgram (0);
 
 			glMatrixMode(GL_PROJECTION);
@@ -220,31 +249,23 @@ void* renderer ( void *arg )
 			glLoadIdentity();
 			glViewport (0, 0, context->screen_width, context->screen_height);
 
-
-			//glScalef(mymenu->scale[0],mymenu->scale[1],mymenu->scale[2]);
 			float acc = 0.f;
 			glColor4f (1.f,0.f,0.f,1.f);
-			//glTranslatef(-1.f + mymenu->margin[0], 1.f - ((mymenu->bbox[3]-mymenu->bbox[1])/context->screen_height) - mymenu->margin[1],0.f);
 
-			//mat4x4_identity(WMat);
-			//mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-			//logWrite("[TEST] %f %f %f",WMat[0],WMat[1],WMat[2]);
-			//
-			//glScalef(1.f,1.f*((float)context->screen_height/(float)DRESY),1.f);
-			glTranslatef( (-1.f  + mymenu->margin[0]) + mymenu->bboxRel[0] , (1.f -  mymenu->margin[1]),0.f);
+			glTranslatef( (-1.f  + app->menu->margin[0]) + app->menu->bboxRel[0] , (1.f -  app->menu->margin[1]),0.f);
 			glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
-			//glTranslatef(-0.2*context->screen_width,0.2*context->screen_height ,0.f);
-			for ( i = 0;  i < mymenu->size; i++) {
-				//glOrtho(0,context->screen_width,0,context->screen_height,0,1);
-			  glColor4f (mymenu->item[i]->descriptor.color.r, mymenu->item[i]->descriptor.color.g,mymenu->item[i]->descriptor.color.b,mymenu->item[i]->descriptor.color.a);
-				glTranslatef(mymenu->item[i]->descriptor.bbox[0],-(mymenu->item[i]->margin[1] + mymenu->item[i]->descriptor.bbox[4]),0.f);
-			  acc += mymenu->item[i]->descriptor.bbox[4] - mymenu->item[i]->descriptor.bbox[1]  + mymenu->item[i]->margin[1] + mymenu->item[i]->margin[3];
-			  ftglRenderFont(mymenu->item[i]->descriptor.font, mymenu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-				glTranslatef(-mymenu->item[i]->descriptor.bbox[0],-(mymenu->item[i]->margin[3] + abs(mymenu->item[i]->descriptor.bbox[1]) ),0.f);
+
+			for ( i = 0;  i < app->menu->size; i++) {
+
+			  glColor4f (app->menu->item[i]->descriptor.color.r, app->menu->item[i]->descriptor.color.g,app->menu->item[i]->descriptor.color.b,app->menu->item[i]->descriptor.color.a);
+				glTranslatef(app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[1] + app->menu->item[i]->descriptor.bbox[4]),0.f);
+			  acc += app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
+			  ftglRenderFont(app->menu->item[i]->descriptor.font, app->menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
+				glTranslatef(-app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[3] + abs(app->menu->item[i]->descriptor.bbox[1]) ),0.f);
 			}
 
 
-			pthread_mutex_unlock(mymenu->mutex);
+			pthread_mutex_unlock(app->menu->mutex);
 		}
 
 		glfwSwapBuffers (context->window);

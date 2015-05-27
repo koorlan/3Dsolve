@@ -14,6 +14,7 @@
 
 #include "linmath.h"
 
+
 #include "log.h"
 #include "object.h"
 #include "snake.h"
@@ -109,7 +110,6 @@ typedef struct Descriptor
   float bbox[6];
 } Descriptor;
 
-typedef struct Menu Menu;
 
 /**
  * @ingroup Menu
@@ -132,6 +132,9 @@ typedef struct Menu Menu;
  * Le menu à dérouler au clique. Ce pointeur est égale à NULL si
  * Item::type == ITEM
  */
+
+typedef struct Menu Menu;
+
 typedef struct Item
 {
   ItemType type;
@@ -172,11 +175,9 @@ struct Menu{
   Item **item;
   Object *mesh;
   float scale[3];
+  int selected;
   pthread_mutex_t *mutex;
 };
-
-//Global pointer
-Menu *mymenu;
 
 /**
  * @ingroup Menu

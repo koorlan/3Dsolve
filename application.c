@@ -24,7 +24,6 @@ void applicationFindSnakes(Application* app)
         char* path = ".\\Snakes\\";
         struct _finddata_t c_file;
         long   hFile;
-        char *path = "Snakes\\" ;
         printf("Change to %s\n", path);
         if(_chdir(path))
             printf("Unable to locate the directory: %s\n", path);

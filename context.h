@@ -27,6 +27,7 @@
 #include "snake.h"
 #include "lodepng.h"
 #include "player.h"
+#include "application.h"
 
 #define FULLSCREEN	0
 #define DRESX		800
