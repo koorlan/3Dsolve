@@ -32,6 +32,7 @@ void applicationFindSnakes(Application* app)
 
         printf("File name %-12s\n", c_file.name);
 
+
         /* find the rest of the files */
         while(_findnext(hFile, &c_file) == 0)
         {

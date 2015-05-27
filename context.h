@@ -27,6 +27,7 @@
 #include "snake.h"
 #include "lodepng.h"
 #include "player.h"
+#include "application.h"
 
 #define FULLSCREEN	0
 #define DRESX		800
@@ -84,6 +85,8 @@ typedef struct context
 	GLuint dwoodtex;
 	GLuint lwoodtex;
 	GLuint linktex;
+	GLuint menutex;
+	GLuint itemtex;
 	Object* cube_mesh;
 	Object* square_mesh;
 	Object* link_mesh;

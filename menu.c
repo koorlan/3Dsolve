@@ -6,11 +6,15 @@ int initMenu(Menu **menu){
   *menu = malloc(sizeof(Menu));
   if(*menu == NULL)
     return 0;
+  (*menu)->type = COLLUM;
   memset((*menu)->margin, 0.f,4*sizeof(float));
   memset((*menu)->bbox, 0.f,4*sizeof(float));
+  memset((*menu)->bboxRel, 0.f,4*sizeof(float));
   (*menu)->size = 0;
+  (*menu)->selected = -1;
   (*menu)->item = malloc( MAX_MENU_SIZE * sizeof(Item)); // A voir si pas sizeof(*(*menu)->item)
   (*menu)->mutex = malloc( sizeof(pthread_mutex_t));
+  memset((*menu)->scale, 1.f,3*sizeof(float));
   pthread_mutex_init((*menu)->mutex, NULL);
 
   return 1;
@@ -80,7 +84,6 @@ int initItem(Item **item){
   *item = malloc(sizeof(Item));
   if( *item == NULL)
     return 0;
-  (*item)->type = ITEM;
 
   memset((*item)->bbox, 0.f,4*sizeof(float));
   memset((*item)->margin, 0.f,4*sizeof(float));
@@ -101,12 +104,6 @@ int initItem(Item **item){
   return 1;
 }
 
-int getItemType(Item *item, ItemType *itemType){
-  if( item == NULL || itemType == NULL)
-    return 0;
-  *itemType = item->type;
-  return 1;
-}
 
 int getItemBbox(Item *item, float bbox[]){
   if( item == NULL || bbox == NULL)
@@ -156,18 +153,12 @@ int getItemDescriptor(Item *item, Descriptor *descriptor){
 int getItemMenu(Item *item, Menu *menu){
   if( item == NULL || menu == NULL)
     return 0;
-  if ( item->type != ROW || item->type != COLLUM )
+  if ( item->menu == NULL )
     return -1; // Only ROW and COLLUM can have a pointer to a menu.
   menu = item->menu;
   return 1;
 }
 
-int setItemType(Item *item, ItemType itemType){
-  if (item == NULL || itemType < 0 || itemType > COLLUM )
-    return 0;
-  item->type = itemType;
-  return 1;
-}
 int setItemBbox(Item *item,float bbox[]){
   if (item == NULL || bbox == NULL)
     return 0;
@@ -256,7 +247,7 @@ int calcMenu(Menu *menu){
     if ( (menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0]) + menu->item[i]->margin[0] + menu->item[i]->margin[2]  >= menuWidth)
       menuWidth = menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0] + menu->item[i]->margin[0]  + menu->item[i]->margin[2];
     menuHeight +=  menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1] + menu->item[i]->margin[1] + menu->item[i]->margin[3];
-    setItemBbox(menu->item[i], (float[]) {0.f,0.f,menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0], menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1]}   );
+    setItemBbox(menu->item[i], (float[]) {0.f,0.f,menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0],menu->item[i]->descriptor.bbox[4]-menu->item[i]->descriptor.bbox[1]}   );
   }
   setMenuBbox(menu,(float []){menu->bbox[0], menu->bbox[1], menuWidth, menuHeight});
   return 1;
@@ -327,5 +318,51 @@ int increaseMenu(Menu *menu){
   calcMenu(menu);
   if(limit)
     return -1;
+  return 1;
+}
+
+
+int testMenuMesh(Menu *menu,int width, int height){
+  int i,j;
+  //float ratio = (float)width / (float)height;
+  float mW = (menu->bbox[2] - menu->bbox[0] )/width ;
+  float mH = (menu->bbox[3] - menu->bbox[1]) /height;
+  logWrite("[MENUTEST] menuW = %f , menuH = %f",mW,mH);
+  float * points = (float *) malloc (6 * 3 * sizeof(float));
+  float * uvs = malloc (6 * 2 * sizeof(float));
+  //set background menu vertex
+  points = (float []) {
+    mW/width,-mH/height,0.f,
+    -mW/width,-mH/height,0.f,
+    mW/width,mH/height,0.f,
+
+    mW/width,mH/height,0.f,
+    -mW/width,-mH/height,0.f,
+    -mW/width,mH/height,0.f
+  };
+
+  menu->bboxRel[0] = -mW;
+  menu->bboxRel[1] = mH ;
+  menu->bboxRel[2] = mW ;
+  menu->bboxRel[3] = -mH;
+
+
+  //Generate each mesh for items
+  float acc =0.f ;
+  for (i = 0; i < menu->size ; i++){
+    //menu->item[i]->mesh = objectLoad("stc/square.stc");
+    mW = (menu->item[i]->bbox[2] - menu->item[i]->bbox[0])/width ;
+    mH = (menu->item[i]->bbox[3] - menu->item[i]->bbox[1])/height;
+
+    menu->item[i]->bboxRel[0] = -mW;
+    menu->item[i]->bboxRel[1] = mH ;
+    menu->item[i]->bboxRel[2] = mW ;
+    menu->item[i]->bboxRel[3] = -mH;
+
+    menu->item[i]->marginRel[0] = (menu->item[i]->margin[0]*menu->bboxRel[2])/2*((menu->bbox[2] - menu->bbox[0] )/width );
+    menu->item[i]->marginRel[1] = (menu->item[i]->margin[1]*4*menu->bbox[1])/height;
+    menu->item[i]->marginRel[2] = (menu->item[i]->margin[2]*menu->bboxRel[2])/2*((menu->bbox[2] - menu->bbox[0] )/width );
+    menu->item[i]->marginRel[3] = (menu->item[i]->margin[3]*4*menu->bbox[1])/height;
+  }
   return 1;
 }

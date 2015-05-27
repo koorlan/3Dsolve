@@ -7,13 +7,16 @@
     #include <direct.h>
     #include <conio.h>
     #include <ctype.h>
+    #include <windows.h>
 #endif
 
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "log.h"
 #include "player.h"
+#include "menu.h"
 
 /**
  * @defgroup Application Application
@@ -41,11 +44,18 @@
  * (indexé Application::loadedSnake dans Application::snakeNames)
  * @var Application::player
  * Le joueur
+ *
+ * @var Application::menu
+ * Le menu de l'application
+ * @var Application::menuDepth
+ * La profondeur du menu actuellement ouvert
  * @var Application::pathExplored
  * Le nombre de chemin exploré pour trouver toutes les solutions
  * @var Application::calculTime
  * Le temps pris pour le calcul des solutions
  */
+
+
 typedef struct Application
 {
     char** snakeNames;
@@ -54,10 +64,16 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
+    Menu *menu;
+    int menuDepth;
 
     unsigned int pathExplored;
     double calculTime;
 } Application;
+
+//GLOBAL POINTER OMG OMG
+Application* app;
+
 
 /**
  * @ingroup Application

@@ -101,15 +101,28 @@ int getInput ( Context* context )
 
 	if (resize_h!=-1 || resize_w!=-1)
 	{
+		int resize_method = 0;
+		if(context->screen_width == resize_w)
+			resize_method = 1; //resize hauteur....
+
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
-
-		pthread_mutex_lock(mymenu->mutex);
-		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		calcMenu(mymenu);
-		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
-		pthread_mutex_unlock(mymenu->mutex);
+		pthread_mutex_lock(app->menu->mutex);
+		if(resize_method){
+		//	app->menu->scale[0] = 1.f*(1/(context->ratio/((float)DRESX/(float)DRESY)));
+		//	app->menu->scale[1] = (float)context->screen_height/DRESY;
+			app->menu->scale[2] = 1.f;
+		} else {
+			app->menu->scale[0] = 1.f ;
+			app->menu->scale[1] = 1.f;
+			app->menu->scale[2] = 1.f;
+		}
+		pthread_mutex_unlock(app->menu->mutex);
+		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+		//calcMenu(app->menu);
+		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
+		//testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 		resize_h = -1;
 		resize_w = -1;
@@ -263,7 +276,23 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
-			mouse_flags ^= M_LEFTONCE;
+			if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
+				//logWrite("[MENU] Before Segfault (item %d)\n",app->menu->selected);
+				switch (app->menu->item[app->menu->selected]->descriptor.action){
+					case CLOSE:
+						logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
+						break;
+					case TEST:
+						logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
+						break;
+					case OPEN:
+						logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
+						break;
+					default:
+						break;
+				}
+			}
+				mouse_flags ^= M_LEFTONCE;
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
@@ -296,7 +325,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
 	else context->spread = 0;
@@ -453,6 +482,26 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/menu.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->menutex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/item.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->itemtex = textureID;
 
 	vec3 vol_offset;
 	vol_offset[0]=(context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
