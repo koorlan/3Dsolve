@@ -1,4 +1,4 @@
-/**
+   /**
  * @file snake.h
  * @brief Structures et fonctions utilisées pour définir un snake
  * @authors Lisa Aubry <lisa.aubry@insa-cvl.fr>, Alban Chazot <alban.chazot@insa-cvl.fr>,

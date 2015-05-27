@@ -1,0 +1,857 @@
+<!-- HTML header for doxygen 1.8.6-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.6"/>
+<title>SolidSnake: Resolver</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+    </div>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.6 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Page&#160;principale</span></a></li>
+      <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('group___resolver.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Structures de données</a> &#124;
+<a href="#typedef-members">Définitions de type</a> &#124;
+<a href="#func-members">Fonctions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle">
+<div class="title">Resolver</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Module gérant la résolution d'un snake cube.  
+<a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Structures de données</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_node_tree.html">NodeTree</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Représente un noeud de l'arbre de résolution.  <a href="struct_node_tree.html#details">Plus de détails...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_line.html">Line</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit une ligne (ou axe de symétrie).  <a href="struct_line.html#details">Plus de détails...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Définitions de type</h2></td></tr>
+<tr class="memitem:gae8c0014cf5924af97d3a7bad74cf54eb"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="struct_node_tree.html">NodeTree</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a></td></tr>
+<tr class="separator:gae8c0014cf5924af97d3a7bad74cf54eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga0bd04b9a2502baf8afbd94c3c0a4d974">resolverSolveSnake</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
+<tr class="memdesc:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonction principale dans la résolution du snake.  <a href="#ga0bd04b9a2502baf8afbd94c3c0a4d974">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3069e7da183b89bbec0f3441253e4da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gac3069e7da183b89bbec0f3441253e4da">initTree</a> ()</td></tr>
+<tr class="memdesc:gac3069e7da183b89bbec0f3441253e4da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une nouvelle racine d'arbre.  <a href="#gac3069e7da183b89bbec0f3441253e4da">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gac3069e7da183b89bbec0f3441253e4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ece3acf45a9cf3a4f43d24be4b8ceb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga6ece3acf45a9cf3a4f43d24be4b8ceb0">printSnake</a> (<a class="el" href="struct_snake.html">Snake</a> snake)</td></tr>
+<tr class="memdesc:ga6ece3acf45a9cf3a4f43d24be4b8ceb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche un snake.  <a href="#ga6ece3acf45a9cf3a4f43d24be4b8ceb0">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga6ece3acf45a9cf3a4f43d24be4b8ceb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5963fc6270adcb0ea7849334abea3afa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga5963fc6270adcb0ea7849334abea3afa">copyStep</a> (<a class="el" href="struct_step.html">Step</a> *dest, <a class="el" href="struct_step.html">Step</a> src)</td></tr>
+<tr class="memdesc:ga5963fc6270adcb0ea7849334abea3afa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effectue la copie d'une variable de type structure <a class="el" href="struct_step.html" title="Définit une étape de résolution. ">Step</a>.  <a href="#ga5963fc6270adcb0ea7849334abea3afa">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga5963fc6270adcb0ea7849334abea3afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafc6abaee62415960f12fde37f598f640"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gafc6abaee62415960f12fde37f598f640">addInitialVector</a> (<a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> rootNode, int x, int y, int z, <a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> newDir)</td></tr>
+<tr class="memdesc:gafc6abaee62415960f12fde37f598f640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ajoute un noeud dans un arbre.  <a href="#gafc6abaee62415960f12fde37f598f640">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gafc6abaee62415960f12fde37f598f640"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8eb45285dea3218d08a2e532ca31db6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga8eb45285dea3218d08a2e532ca31db6d">printCurrentNode</a> (<a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> currentNode)</td></tr>
+<tr class="memdesc:ga8eb45285dea3218d08a2e532ca31db6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche les caractéristique de &lt;currentNode&gt; dans la console.  <a href="#ga8eb45285dea3218d08a2e532ca31db6d">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga8eb45285dea3218d08a2e532ca31db6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b757700512c4fd0bba270167c0b3a21"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga9b757700512c4fd0bba270167c0b3a21">buildChildren</a> (<a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> currentNode, <a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
+<tr class="memdesc:ga9b757700512c4fd0bba270167c0b3a21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construit les enfants directs de &lt;currentNode&gt;.  <a href="#ga9b757700512c4fd0bba270167c0b3a21">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga9b757700512c4fd0bba270167c0b3a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb462b1cee08e8d549f077b204369ece"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gafb462b1cee08e8d549f077b204369ece">printTree</a> (<a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> rootNode)</td></tr>
+<tr class="memdesc:gafb462b1cee08e8d549f077b204369ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche &lt;rootNode&gt; dans la console.  <a href="#gafb462b1cee08e8d549f077b204369ece">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gafb462b1cee08e8d549f077b204369ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab41fb96ca2f03baa37109c18a9636813"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gab41fb96ca2f03baa37109c18a9636813">printLine</a> (<a class="el" href="struct_line.html">Line</a> line)</td></tr>
+<tr class="memdesc:gab41fb96ca2f03baa37109c18a9636813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche les caractéristique de &lt;line&gt; dans la console.  <a href="#gab41fb96ca2f03baa37109c18a9636813">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gab41fb96ca2f03baa37109c18a9636813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4467a1033b48636551d61a1e2dc158f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga4467a1033b48636551d61a1e2dc158f9">linearEquation</a> (<a class="el" href="struct_line.html">Line</a> *line)</td></tr>
+<tr class="memdesc:ga4467a1033b48636551d61a1e2dc158f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcul l'équation linéaire de &lt;line&gt;.  <a href="#ga4467a1033b48636551d61a1e2dc158f9">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga4467a1033b48636551d61a1e2dc158f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga57d5583e8e2300db9f6aec08bbee470e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga57d5583e8e2300db9f6aec08bbee470e">oppositeDir</a> (<a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> srcDir, <a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> destDir, char *typeOfAxis)</td></tr>
+<tr class="memdesc:ga57d5583e8e2300db9f6aec08bbee470e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie si &lt;srcDir&gt; et &lt;destDir&gt; sont opposées par rapport à &lt;typeOfAxis&gt;.  <a href="#ga57d5583e8e2300db9f6aec08bbee470e">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga57d5583e8e2300db9f6aec08bbee470e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3f4dc9c4cdd2bf0048bad419a9008ac2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga3f4dc9c4cdd2bf0048bad419a9008ac2">cpyLine</a> (<a class="el" href="struct_line.html">Line</a> *dest, <a class="el" href="struct_line.html">Line</a> src)</td></tr>
+<tr class="memdesc:ga3f4dc9c4cdd2bf0048bad419a9008ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copie &lt;src&gt; dans &lt;dest&gt;.  <a href="#ga3f4dc9c4cdd2bf0048bad419a9008ac2">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga3f4dc9c4cdd2bf0048bad419a9008ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32c547fc9326200a8278a52420ba2aba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga32c547fc9326200a8278a52420ba2aba">symmetries</a> (<a class="el" href="struct_step.html">Step</a> initialStep, <a class="el" href="struct_coord.html">Coord</a> nCoord, <a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> nDir, <a class="el" href="struct_line.html">Line</a> verticalAxis, <a class="el" href="struct_line.html">Line</a> horizontalAxis, <a class="el" href="struct_line.html">Line</a> diagonalAxis, <a class="el" href="struct_line.html">Line</a> slashAxis)</td></tr>
+<tr class="memdesc:ga32c547fc9326200a8278a52420ba2aba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan.  <a href="#ga32c547fc9326200a8278a52420ba2aba">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga32c547fc9326200a8278a52420ba2aba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40fbf6882bcfb4ec22fb1ace6d00b825"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga40fbf6882bcfb4ec22fb1ace6d00b825">findInitialVectors</a> (<a class="el" href="struct_snake.html">Snake</a> *snake, int *initialVectorNb)</td></tr>
+<tr class="memdesc:ga40fbf6882bcfb4ec22fb1ace6d00b825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construit une liste de vecteurs initiaux dans un volume donné.  <a href="#ga40fbf6882bcfb4ec22fb1ace6d00b825">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga40fbf6882bcfb4ec22fb1ace6d00b825"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae921c0ecef95e3d4e77dc39d3f9587a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_coord.html">Coord</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gae921c0ecef95e3d4e77dc39d3f9587a8">calcCoord</a> (<a class="el" href="struct_coord.html">Coord</a> coord, <a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> dir)</td></tr>
+<tr class="memdesc:gae921c0ecef95e3d4e77dc39d3f9587a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcul des coordonnées en fonction d'une direction.  <a href="#gae921c0ecef95e3d4e77dc39d3f9587a8">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gae921c0ecef95e3d4e77dc39d3f9587a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12fbaaab641e2d2632d83785080631b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga12fbaaab641e2d2632d83785080631b0">validCoord</a> (<a class="el" href="struct_coord.html">Coord</a> coord, <a class="el" href="struct_coord.html">Coord</a> max)</td></tr>
+<tr class="memdesc:ga12fbaaab641e2d2632d83785080631b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie la validé de &lt;coord&gt;.  <a href="#ga12fbaaab641e2d2632d83785080631b0">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga12fbaaab641e2d2632d83785080631b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0189b788cfe43109fa9e519f9c57358b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga0189b788cfe43109fa9e519f9c57358b">validCoordSym</a> (<a class="el" href="struct_coord.html">Coord</a> coord, <a class="el" href="struct_float_coord.html">FloatCoord</a> max)</td></tr>
+<tr class="memdesc:ga0189b788cfe43109fa9e519f9c57358b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Même prinicipe que la fonction valideCoord mais avec des inégalitées larges.  <a href="#ga0189b788cfe43109fa9e519f9c57358b">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga0189b788cfe43109fa9e519f9c57358b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gaaf21069b19d4e7351f51cbaf81e1e2cb">createAllInitialVectors</a> (<a class="el" href="struct_volume.html">Volume</a> volume)</td></tr>
+<tr class="memdesc:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée tous les points de départ possible pour un volume donné.  <a href="#gaaf21069b19d4e7351f51cbaf81e1e2cb">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga9336ebf25087d91c818ee6e9ec29f8c1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga9336ebf25087d91c818ee6e9ec29f8c1">x</a></td></tr>
+<tr class="memdesc:ga9336ebf25087d91c818ee6e9ec29f8c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordonnée en précision flotante.La coordonnée sur l'axe x.  <a href="#ga9336ebf25087d91c818ee6e9ec29f8c1">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga9336ebf25087d91c818ee6e9ec29f8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<p>Module gérant la résolution d'un snake cube. </p>
+<p>Ce module permet le calcul de la solution d'un snake. Il calcul les sysmétries du volume afin d'éliminer un maximum de point de départ puis cherche les différentes solutions possibles par un parcourt en profondeur du graphe modélisant tous les chemins possibles. </p>
+<h2 class="groupheader">Documentation des définitions de type</h2>
+<a class="anchor" id="gae8c0014cf5924af97d3a7bad74cf54eb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tree est type définit comme étant un pointer sur <a class="el" href="struct_node_tree.html" title="Représente un noeud de l&#39;arbre de résolution. ">NodeTree</a> </p>
+<dl class="section see"><dt>Voir également</dt><dd><a class="el" href="struct_node_tree.html" title="Représente un noeud de l&#39;arbre de résolution. ">NodeTree</a> </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions</h2>
+<a class="anchor" id="gafc6abaee62415960f12fde37f598f640"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void addInitialVector </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
+          <td class="paramname"><em>rootNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>newDir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ajoute un noeud dans un arbre. </p>
+<p>Créer un nouveau noeud et renseigne son champ <a class="el" href="struct_step.html" title="Définit une étape de résolution. ">Step</a> grâce au paramètres envoyés. Le nouveau noeud est accroché &lt;rootNode&gt; </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rootNode</td><td>: le noeud racine auquel sera attaché le nouveau noeud </td></tr>
+    <tr><td class="paramname">x</td><td>: la coordonnée x </td></tr>
+    <tr><td class="paramname">y</td><td>: la coordonnée y </td></tr>
+    <tr><td class="paramname">z</td><td>: la coordonnée z </td></tr>
+    <tr><td class="paramname">newDir</td><td>: la direction </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga9b757700512c4fd0bba270167c0b3a21"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int buildChildren </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
+          <td class="paramname"><em>currentNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construit les enfants directs de &lt;currentNode&gt;. </p>
+<p>Lors du procésus de création des fils, les caractéristiques de &lt;snake&gt; seront modifiée (elément courrant, et état du volume) </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentNode</td><td>Le noeud pour lequel on veux créer les fils </td></tr>
+    <tr><td class="paramname">snake</td><td>Le snake à résoudre. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>-1 si aucun fils ne peut être créé, 1 si au moins un fils a pu être créé et 2 si le dernier élement du snake a été placé. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gae921c0ecef95e3d4e77dc39d3f9587a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_coord.html">Coord</a> calcCoord </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>coord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calcul des coordonnées en fonction d'une direction. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">coord</td><td>La coordonnée de départ </td></tr>
+    <tr><td class="paramname">dir</td><td>La direction dans laquelle se déplacer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>La coordonnée calculée </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga5963fc6270adcb0ea7849334abea3afa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void copyStep </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_step.html">Step</a> *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_step.html">Step</a>&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Effectue la copie d'une variable de type structure <a class="el" href="struct_step.html" title="Définit une étape de résolution. ">Step</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dest</td><td>: la destination de la copie </td></tr>
+    <tr><td class="paramname">src</td><td>: la source de la copie </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga3f4dc9c4cdd2bf0048bad419a9008ac2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cpyLine </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a> *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>src</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copie &lt;src&gt; dans &lt;dest&gt;. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dest</td><td>Destination de la copie </td></tr>
+    <tr><td class="paramname">src</td><td>Source de la copie </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gaaf21069b19d4e7351f51cbaf81e1e2cb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> createAllInitialVectors </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_volume.html">Volume</a>&#160;</td>
+          <td class="paramname"><em>volume</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Crée tous les points de départ possible pour un volume donné. </p>
+<p>Cette fonction permet de pouvoir chercher les solutions à partir de la liste exhaustive des points de départ possibles. Elle permet nottament de mettre en évidence l'efficacité de la méthode de réduction des points de départ par comparaison des temps d'exécution des deux méthodes. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">volume</td><td>Le volume étudié </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Pointeur vers la racine de l'arbre à laquelle sont attaché les vecteurs initiaux </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga40fbf6882bcfb4ec22fb1ace6d00b825"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> findInitialVectors </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>initialVectorNb</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construit une liste de vecteurs initiaux dans un volume donné. </p>
+<ul>
+<li>On détermine le centre du volume</li>
+<li>On considère tour à tour chacune des faces de cette figure</li>
+<li>On projette orthogonalement le centre de la figure sur une face</li>
+<li>On construit les axes de symétrie passant par le centre</li>
+<li>On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique <dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">volume</td><td>Le volume sur lequel effectuer le calcul </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>L'arbre contenant les vecteurs initiaux </dd></dl>
+</li>
+</ul>
+
+</div>
+</div>
+<a class="anchor" id="gac3069e7da183b89bbec0f3441253e4da"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> initTree </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Crée une nouvelle racine d'arbre. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>Un pointeur sur la racine crée. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga4467a1033b48636551d61a1e2dc158f9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void linearEquation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a> *&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calcul l'équation linéaire de &lt;line&gt;. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Ligne dont on veut calculer l'équation linéaire </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga57d5583e8e2300db9f6aec08bbee470e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int oppositeDir </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>srcDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>destDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>typeOfAxis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vérifie si &lt;srcDir&gt; et &lt;destDir&gt; sont opposées par rapport à &lt;typeOfAxis&gt;. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">srcDir</td><td>1er destination à comparer </td></tr>
+    <tr><td class="paramname">destDir</td><td>2eme destination à comparer </td></tr>
+    <tr><td class="paramname">typeOfAxis</td><td>type de l'axe de sysmétrie utilisé pour la compéraison </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si les directions sont opposée, 0 sinon </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga8eb45285dea3218d08a2e532ca31db6d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printCurrentNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
+          <td class="paramname"><em>currentNode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Affiche les caractéristique de &lt;currentNode&gt; dans la console. </p>
+<p>Les caractéristique affichée sont les coordonnées ainsi que la direction du cube qui a été posé à l'étape de la résolution modélisé par &lt;currentNode&gt; </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentNode</td><td>Le noeud à afficher </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gab41fb96ca2f03baa37109c18a9636813"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printLine </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Affiche les caractéristique de &lt;line&gt; dans la console. </p>
+<p>Les caractéristiques affichées sont :</p>
+<ul>
+<li>les coordonnées des deux point utilisés pour définir la droite</li>
+<li>les valeurs des coefficients dans son écriture cartésienne <dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Ligne que l'on veut afficher </td></tr>
+  </table>
+  </dd>
+</dl>
+</li>
+</ul>
+
+</div>
+</div>
+<a class="anchor" id="ga6ece3acf45a9cf3a4f43d24be4b8ceb0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printSnake </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a>&#160;</td>
+          <td class="paramname"><em>snake</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Affiche un snake. </p>
+<p>Affiche dans la console les champs "units" qui composent le snake. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">snake</td><td>: le serpent à afficher </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gafb462b1cee08e8d549f077b204369ece"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printTree </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
+          <td class="paramname"><em>rootNode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Affiche &lt;rootNode&gt; dans la console. </p>
+<p>Fonctione de la même manière que printCurrentNode en affichant tous les noeuds pour une hauteur donnée. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rootNode</td><td>La racine de l'arbre à afficher </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>Voir également</dt><dd><a class="el" href="group___resolver.html#ga8eb45285dea3218d08a2e532ca31db6d" title="Affiche les caractéristique de &lt;currentNode&gt; dans la console. ">printCurrentNode</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0bd04b9a2502baf8afbd94c3c0a4d974"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void resolverSolveSnake </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fonction principale dans la résolution du snake. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">snake</td><td>: le serpent à résoudre </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga32c547fc9326200a8278a52420ba2aba"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int symmetries </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_step.html">Step</a>&#160;</td>
+          <td class="paramname"><em>initialStep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>nCoord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>nDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>verticalAxis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>horizontalAxis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>diagonalAxis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_line.html">Line</a>&#160;</td>
+          <td class="paramname"><em>slashAxis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">initialStep</td><td>[description] </td></tr>
+    <tr><td class="paramname">nCoord</td><td>[description] </td></tr>
+    <tr><td class="paramname">nDir</td><td>[description] </td></tr>
+    <tr><td class="paramname">verticalAxis</td><td>[description] </td></tr>
+    <tr><td class="paramname">horizontalAxis</td><td>[description] </td></tr>
+    <tr><td class="paramname">diagonalAxis</td><td>[description] </td></tr>
+    <tr><td class="paramname">slashAxis</td><td>[description] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>[description] </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga12fbaaab641e2d2632d83785080631b0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int validCoord </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>coord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vérifie la validé de &lt;coord&gt;. </p>
+<p>Des coordonnées sont valides si pour chacune de leurs composante, sa valeur est comprise entre 0 et la valeur maximale donnée par &lt;max&gt; </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">coord</td><td>Les coordonnées à vérifier </td></tr>
+    <tr><td class="paramname">max</td><td>Les coordonnées maximales </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si &lt;coord&gt; est valide, 0 sinon </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0189b788cfe43109fa9e519f9c57358b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int validCoordSym </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>coord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_float_coord.html">FloatCoord</a>&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Même prinicipe que la fonction valideCoord mais avec des inégalitées larges. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">coord</td><td>Les coordonnées à vérifier </td></tr>
+    <tr><td class="paramname">max</td><td>Les coordonnées maximales </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si &lt;coord&gt; est valide, 0 sinon </dd></dl>
+<dl class="section see"><dt>Voir également</dt><dd>valideCoord </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des variables</h2>
+<a class="anchor" id="ga9336ebf25087d91c818ee6e9ec29f8c1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Coordonnée en précision flotante.La coordonnée sur l'axe x. </p>
+<p><a class="el" href="struct_float_coord.html">FloatCoord</a> </p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
+  </ul>
+</div>
+</body>
+</html>
