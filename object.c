@@ -231,9 +231,9 @@ Object * objectLoad(const char * file)
 			for (dim=0;dim<2;dim++)
 				compuvs[face*2+dim] = baseuvs[(faces[face][1]-1)*2+dim];
 			cvcnt++;
-			printf("%f %f %f\n", compverts[face*3+0],compverts[face*3+1],compverts[face*3+2]);
+			//printf("%f %f %f\n", compverts[face*3+0],compverts[face*3+1],compverts[face*3+2]);
 		}
-		printf ("v: %d\n", cvcnt);
+		//printf ("v: %d\n", cvcnt);
 
 		object->nb_faces = cvcnt;
 

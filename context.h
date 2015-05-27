@@ -28,31 +28,37 @@
 #include "lodepng.h"
 #include "player.h"
 
-#define FULLSCREEN 0
-#define DRESX 800
-#define DRESY 600
+#define FULLSCREEN	0
+#define DRESX		800
+#define DRESY		600
+
 #define M_RIGHT		0b00000001
-#define M_MID		0b10000000
 #define M_LEFT		0b00000010
-#define M_LEFTONCE	0b00100000
-#define M_RLEFTONCE	0b01000000
 #define M_MOVE		0b00000100
 #define M_ROLLF		0b00001000
 #define M_ROLLB		0b00010000
+#define M_LEFTONCE	0b00100000
+#define M_RLEFTONCE	0b01000000
+#define M_MID		0b10000000
 #define M_NONE		0b00000000
 #define MOUSE_SPEED	0.01f
 
-#define K_UP	0b00000001
-#define K_DN	0b00000010
-#define K_LF	0b00000100
-#define K_RT	0b00001000
-#define K_RST	0b00010000
-#define K_PGUP	0b00100000
+#define K_UP		0b00000001
+#define K_DN		0b00000010
+#define K_LF		0b00000100
+#define K_RT		0b00001000
+#define K_RST		0b00010000
+#define K_PGUP		0b00100000
+#define K_ENTER		0b01000000
 
 #define BHV_ROTATE	0b00000001
+#define BHV_SPREAD	0b00000010
 
 #define PM_PLAY		0
 #define PM_RESOLVE	1
+
+#define MAG_TRESHOLD	60
+#define MAG_STEP	5
 
 unsigned char key_flags;
 unsigned char bhv_flags;
@@ -77,13 +83,16 @@ typedef struct context
 	GLuint picking_program;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
+	GLuint linktex;
 	Object* cube_mesh;
 	Object* square_mesh;
+	Object* link_mesh;
 	Camera* camera;
 	float ratio;
 	Snake* snake;
 	int drawpick;
 	int playmode;
+	int spread;
 } Context;
 
 

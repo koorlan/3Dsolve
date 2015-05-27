@@ -1,5 +1,27 @@
 #include "renderer.h"
 
+//UP,DOWN,LEFT,RIGHT,FRONT,BACK
+const float dir2lr[6][3] = 
+{
+{  0.f ,  0.f ,  1.f  },
+{  0.f ,  0.f , -1.f  },
+{  0.f ,  1.f ,  0.f  },
+{  0.f ,  0.f ,  0.f  },
+{  0.f , -1.f ,  0.f  },
+{  0.f ,  1.f ,  0.f  }
+};
+
+const float dir2sc[6][3] = 
+{
+{  0.f ,  1.f ,  0.f  },
+{  0.f ,  1.f ,  0.f  },
+{  1.f ,  0.f ,  0.f  },
+{  1.f ,  0.f ,  0.f  },
+{  0.f ,  0.f ,  1.f  },
+{  0.f ,  0.f ,  1.f  }
+};
+
+
 void* renderer ( void *arg )
 {
 	//! [1] OpenGl setup
@@ -8,8 +30,6 @@ void* renderer ( void *arg )
 	Context* context = (Context*) arg;
 
 	glfwMakeContextCurrent ( context->window );
-	glEnable (GL_DEPTH_TEST);
-	glDepthFunc (GL_LEQUAL);
 
 	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
@@ -37,16 +57,8 @@ void* renderer ( void *arg )
 		curPlayer = gsolver;
 
 	int i;
+	float scoef = 1.f;
 	int cubesNb = context->snake->length;
-
-
-	vec3 * flatCubePos = malloc ( cubesNb * 3 * sizeof(float) );
-	for (i=0;i<cubesNb;i++)
-	{
-		flatCubePos[i][0] = (float) curPlayer->steps[i].coord.x;
-		flatCubePos[i][1] = (float) curPlayer->steps[i].coord.y;
-		flatCubePos[i][2] = (float) curPlayer->steps[i].coord.z;
-	}
 	//! [2]
 
 	//! [3] Renderer loop
@@ -76,13 +88,19 @@ void* renderer ( void *arg )
 		else
 			curPlayer = gsolver;
 
+
+		if ( context->spread == 1 && scoef > 0.6f )
+			scoef -= 0.01f;
+		else if ( context->spread == 0 && scoef < 1.f )
+			scoef += 0.01f;
+
 		//! [5] Color picking (cube selection)
-		int segEnd = cubesNb;
+		curPlayer->segEnd = cubesNb;
 		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
 			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
 				if ( context->snake->units[i] == CORNER)
 				{
-					segEnd = i;
+					curPlayer->segEnd = i;
 					break;
 				}
 		// The selected segment goes from gplayer->selected to segEnd
@@ -99,16 +117,15 @@ void* renderer ( void *arg )
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 			glBindVertexArray (context->cube_mesh->vao_id);
 
-			int objID = 0;
-			for ( i=0; i <= segEnd; i++ )
+			for ( i=0; i <= curPlayer->segEnd; i++ )
 			{
-				glUniform3f(pickcolorID, ((float)objID)/255.f, 0.f, 0.f);
-				objID++;
+				glUniform3f(pickcolorID, ((float)i)/255.f, 0.f, 0.f);
 
 				mat4x4_identity ( WMat );
-					mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
-								 curPlayer->steps[i].coord.y,
-								 curPlayer->steps[i].coord.z );
+				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+				mat4x4_scale3d(WMat, WMat, scoef);
+				mat4x4_scale3d(WMat, WMat, 0.6f);
 
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
@@ -140,39 +157,46 @@ void* renderer ( void *arg )
 		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-		glBindVertexArray (context->cube_mesh->vao_id);
-
-		segEnd = cubesNb;
-		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
-			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
-				if ( context->snake->units[i] == CORNER)
-				{
-					segEnd = i;
-					break;
-				}
 
 		for ( i=0; i < cubesNb; i++ )
 		{
-
-
 			glUniform1f(timeID, glfwGetTime());
-			glUniform1f(alphaID, (i > segEnd?0.2f:1.0f));
+			glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
 
 			mat4x4_identity ( WMat );
-			mat4x4_translate ( WMat, curPlayer->steps[i].coord.x,
-						 curPlayer->steps[i].coord.y,
-						 curPlayer->steps[i].coord.z );
-				if (curPlayer->selected > -1 && i>=curPlayer->selected && i<=segEnd)
-					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime()+i)))));
-				else mat4x4_scale3d(WMat, WMat, 0.97f);
+			mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+			mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+			mat4x4_scale3d(WMat, WMat, scoef);
+			if (curPlayer->selected == i )
+				mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
+			else mat4x4_scale3d(WMat, WMat, 0.97f);
 
 			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
-			//pair/impair = blanc/noir
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			if (curPlayer->selected == i )
+				mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
 
+			//pair/impair = blanc/noir
+			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+			glBindVertexArray (context->cube_mesh->vao_id);
 			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			glBindTexture(GL_TEXTURE_2D, context->linktex);
+
+			if ( i < cubesNb-1 && context->spread==1)
+			{
+				
+				mat4x4_rotate(WMat, WMat,
+					dir2lr[curPlayer->steps[i].dir][0],
+					dir2lr[curPlayer->steps[i].dir][1],
+					dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
+				if (curPlayer->steps[i].dir == LEFT)
+					mat4x4_rotate_Y (WMat, WMat, -3.1415 * 0.5f);
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				glBindVertexArray (context->link_mesh->vao_id);
+				glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+			}
 
 		}
 
@@ -188,7 +212,7 @@ void* renderer ( void *arg )
 		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
 		{
-			if (i%2!=0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
@@ -196,7 +220,7 @@ void* renderer ( void *arg )
 			mat4x4_scale3d(WMat, WMat, 0.05f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
-			mat4x4_translate_in_place( WMat, flatCubePos[i][0], flatCubePos[i][2], 0);
+			mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
 			if (i==curPlayer->selected)
 				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
 			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
@@ -265,37 +289,4 @@ void* renderer ( void *arg )
 	logWrite ("[RENDR] Renderer stopped\n");
 
 	return NULL;
-}
-
-
-void dir2vec ( Dir dir, vec3 vec )
-{
-	int dim;
-	for (dim=0; dim<3; dim++) vec[dim] = 0.f;
-
-	switch ( dir )
-	{
-		case UP:
-			vec[1] = 1.f;
-			break;
-		case DOWN:
-			vec[1] = -1.f;
-			break;
-		case LEFT:
-			vec[0] = -1.f;
-			break;
-		case RIGHT:
-			vec[0] = 1.f;
-			break;
-		case FRONT:
-			vec[2] = 1.f;
-			break;
-		case BACK:
-			vec[2] = -1.f;
-			break;
-		case DNONE:
-		default:
-			break;
-	}
-
 }
