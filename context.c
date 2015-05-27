@@ -121,10 +121,13 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_PGUP)==K_PGUP)
 	{
-		if (gsolver->currentSolution->next!=NULL) gsolver->currentSolution = gsolver->currentSolution->next;
-		else gsolver->currentSolution = context->snake->solutions->head;
-		gsolver->selected = 0;
-		gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+		if ( context->snake->solutions != NULL && context->snake->solutions->head != NULL )
+		{
+			if (gsolver->currentSolution->next!=NULL) gsolver->currentSolution = gsolver->currentSolution->next;
+			else gsolver->currentSolution = context->snake->solutions->head;
+			gsolver->selected = 0;
+			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
 	{
@@ -277,8 +280,7 @@ int getInput ( Context* context )
 				playerRotate(gplayer, gplayer->selected, context->snake, magnet);
 				magnet = 0;
 			}
-			else
-				playerFakeRotate(gplayer, gplayer->selected, context->snake, magnet);
+			else playerFakeRotate(gplayer, gplayer->selected, context->snake, magnet);
 		}
 	}
 
@@ -398,12 +400,11 @@ void contextInit ( Context* context )
 	logWrite ("[CNTXT] Starting Renderer thread\n");
 
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
-
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable (GL_DEPTH_TEST);
+	glDepthFunc (GL_LEQUAL);
 
 	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
 	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
@@ -419,10 +420,21 @@ void contextInit ( Context* context )
 
 	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
 	context->square_mesh = objectLoad ( "stc/square.stc" );
+	context->link_mesh = objectLoad ( "stc/link.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
 	GLuint textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/rope.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->linktex = textureID;
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
 	glGenTextures(1, &textureID);
