@@ -6,7 +6,7 @@ int initMenu(Menu **menu){
   *menu = malloc(sizeof(Menu));
   if(*menu == NULL)
     return 0;
-  (*menu)->type = COLLUM;
+  (*menu)->type = COLUMN;
   memset((*menu)->margin, 0.f,4*sizeof(float));
   memset((*menu)->bbox, 0.f,4*sizeof(float));
   memset((*menu)->bboxRel, 0.f,4*sizeof(float));

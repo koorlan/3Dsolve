@@ -36,7 +36,7 @@
  * @var ItemType::COLLUM
  * Un menu en colone
  */
-typedef enum MenuType {ROW, COLLUM} MenuType;
+typedef enum MenuType {ROW, COLUMN} MenuType;
 
 /**
  * @ingroup Menu

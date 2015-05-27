@@ -103,22 +103,20 @@ int main ( int argc, char ** argv )
 	//Menu test;
 	int i;
 	initMenu(&(app->menu));
-	app->menu->type = COLLUM;
+	app->menu->type = COLUMN;
 	app->menuDepth = 0;
 	setMenuMargin(app->menu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
 	Item *tmpitem;
-<<<<<<< HEAD
-	for ( i = 0;  i <2; i++) {
-=======
-	for ( i = 0;  i <3; i++) {
->>>>>>> 79f7d46cbdab261ca2a11e03b485a0ab94b9f51b
+
+	for ( i = 0;  i <5; i++) {
+
 		initItem(&(tmpitem));
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-		setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
+		setItemMargin(tmpitem,(float[]){10.f,10.f,10.f,10.f});
 		switch (i){
 			case 0:
 				setItemDescriptor(tmpitem,(struct Descriptor)
-					{	.name="TEST",
+					{	.name="TEST LOLILOLOLO",
 						.font=LoadFont("fonts/Libertine.ttf"),
 						.fontSize = 20,
 						.minFontSize = DEFAULT_MIN_FONT_SIZE,
@@ -138,7 +136,7 @@ int main ( int argc, char ** argv )
 				break;
 			case 2:
 				setItemDescriptor(tmpitem,(struct Descriptor)
-					{	.name="CLOSE",
+					{	.name="CLOSE LOLILO",
 						.font=LoadFont("fonts/Libertine.ttf"),
 						.fontSize = 20,
 						.minFontSize = DEFAULT_MIN_FONT_SIZE,
@@ -163,7 +161,6 @@ int main ( int argc, char ** argv )
 	calcMenu(app->menu);
 	app->menu->mesh = objectLoad("stc/menu.stc");
 	testMenuMesh(app->menu,context->screen_width,context->screen_height);
-
 
 
 

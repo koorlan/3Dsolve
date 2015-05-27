@@ -120,9 +120,9 @@ int getInput ( Context* context )
 		}
 		pthread_mutex_unlock(app->menu->mutex);
 		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		//calcMenu(app->menu);
+		calcMenu(app->menu);
 		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
-		//testMenuMesh(app->menu, context->screen_width	, context->screen_height);
+		testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 		resize_h = -1;
 		resize_w = -1;
@@ -276,21 +276,26 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
+			struct timespec waitResult = (struct timespec) {0,100000000};
+			nanosleep(&waitResult,NULL);
 			if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
-				//logWrite("[MENU] Before Segfault (item %d)\n",app->menu->selected);
 				switch (app->menu->item[app->menu->selected]->descriptor.action){
 					case CLOSE:
 						logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
+						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
 						break;
 					case TEST:
 						logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
+						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
 						break;
 					case OPEN:
 						logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
+						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
 						break;
 					default:
 						break;
 				}
+
 			}
 				mouse_flags ^= M_LEFTONCE;
 		}
@@ -535,7 +540,7 @@ void contextInit ( Context* context )
 	gsolver->currentSolution = context->snake->solutions->head;
 
 	glfwMakeContextCurrent ( NULL );
-	
+
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
