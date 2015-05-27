@@ -172,16 +172,10 @@ void playerDestroy ( Player* player )
 	free (player);
 }
 
-int playerCheckSolution (Player *player, Volume volume, int length)
-{
-	int minX, minY, minZ, maxX, maxY, maxZ;
-	minX = 100;
-	minY = 100;
-	minZ = 100;
-	maxX = -100;
-	maxY = -100;
-	maxZ = -100;
-	int i, j;
+
+int playerFindMinMax (int * minX, int* minY, int* minZ, int *maxX, int *maxY, int* maxZ, int length, Player * player, Volume volume)
+{	int i, j;
+
 	for(i=0;i<length;i++)
 	{
 		for(j=0; j<i ; j++)
@@ -192,35 +186,52 @@ int playerCheckSolution (Player *player, Volume volume, int length)
 			}
 
 		}
-		if(player->steps[i].coord.x < minX)
+		if(player->steps[i].coord.x < *minX)
 		{
-			minX = player->steps[i].coord.x;
+			*minX = player->steps[i].coord.x;
 		}
-		if(player->steps[i].coord.y < minY)
+		if(player->steps[i].coord.y < *minY)
 		{
-			minY = player->steps[i].coord.y;
+			*minY = player->steps[i].coord.y;
 		}
-		if(player->steps[i].coord.z < minZ)
+		if(player->steps[i].coord.z < *minZ)
 		{
-			minZ = player->steps[i].coord.z;
+			*minZ = player->steps[i].coord.z;
 		}
-		if(player->steps[i].coord.x > maxX)
+		if(player->steps[i].coord.x > *maxX)
 		{
-			maxX = player->steps[i].coord.x;
+			*maxX = player->steps[i].coord.x;
 		}
-		if(player->steps[i].coord.y > maxY)
+		if(player->steps[i].coord.y > *maxY)
 		{
-			maxY = player->steps[i].coord.y;
+			*maxY = player->steps[i].coord.y;
 		}
-		if(player->steps[i].coord.z > maxZ)
+		if(player->steps[i].coord.z > *maxZ)
 		{
-			maxZ = player->steps[i].coord.z;
+			*maxZ = player->steps[i].coord.z;
 		}
 	}
-	if(maxX-minX > volume.max.x || maxY-minY > volume.max.y || maxZ-minZ > volume.max.z)
+	if(*maxX-*minX > volume.max.x || *maxY-*minY > volume.max.y || *maxZ-*minZ > volume.max.z)
 	{	printf("\033[31;01mPlayer didn't find the solution\033[00m\n");
 		return -1;
 	}
+	return 0;
+}
+
+int playerCheckSolution (Player *player, Volume volume, int length)
+{
+	int minX, minY, minZ, maxX, maxY, maxZ;
+	minX = 100;
+	minY = 100;
+	minZ = 100;
+	maxX = -100;
+	maxY = -100;
+	maxZ = -100;
+	int i;
+
+	if(playerFindMinMax(&minX, &minY, &minZ, &maxX, &maxY, &maxZ, length, player, volume) == -1)
+		return -1;
+
 	minX = -minX;
 
 	minY = -minY;
@@ -236,4 +247,37 @@ int playerCheckSolution (Player *player, Volume volume, int length)
 	}	
 	printf("\033[36;01mPlayer found the solution\033[00m\n");
 	return 1;
+}
+
+void playerHelp(Player *player, Snake * snake)
+{
+	Snake * solSnake = malloc(sizeof(Snake));
+	int i, j, x, y, z;
+
+	solSnake->length = snake->length - player->selected; 
+	solSnake->tmpSteps = NULL;
+	solSnake->units = NULL;
+	solSnake->solutions = NULL;
+	solSnake->volume.state = NULL;
+	
+	solSnake->volume.max.x = snake->volume.max.x;
+	solSnake->volume.max.y = snake->volume.max.y;
+	solSnake->volume.max.z = snake->volume.max.z;
+
+	for(i = 0; i < solSnake->volume.max.x; i++)
+		solSnake->volume.state[i] = malloc(solSnake->volume.max.y * sizeof(VolumeState*));
+	for(i = 0; i < solSnake->volume.max.x; i++)
+		for(j = 0; j < solSnake->volume.max.y; j++)
+			solSnake->volume.state[i][j] = malloc(solSnake->volume.max.z * sizeof(VolumeState));
+
+	for(x=0; x < solSnake->volume.max.x; x++)
+	{	for(y=0; y< solSnake->volume.max.y ; y++)
+		{	for(z=0; z<solSnake->volume.max.z ; z++)
+			{
+				solSnake->volume.state[x][y][z] = snake->volume.state[x][y][z];
+			}
+		}
+	}
+
+
 }

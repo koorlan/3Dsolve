@@ -32,6 +32,9 @@ void playerRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 void playerFakeRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 void playerDestroy ( Player* player );
 
+//calcule les cordonnées min et max du volume
+int playerFindMinMax (int * minX, int* minY, int* minZ, int *maxX, int *maxY, int* maxZ, int length, Player * player, Volume volume);
+
 //retourne 1 si le joueur a trouvé une solution, -1 sinon
 int playerCheckSolution (Player *player, Volume volume, int length);
 

@@ -72,8 +72,8 @@ void applicationFindSnakes(Application* app)
 
         // DEBUG
         for(i = 0; i < app->snakeNumber; i++)
-        {
-            printf("Snake n°%d : %s\n", i, app->snakeNames[i]);
+        {   
+           printf("Snake n°%d : %s\n", i, app->snakeNames[i]);
         }
     #endif
 }
