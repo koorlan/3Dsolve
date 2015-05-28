@@ -119,16 +119,18 @@ int getInput ( Context* context )
 
 	if ((key_flags&K_UP)==K_UP)
 	{
-		playerFlatten ( gplayer, context->snake, 0 );
+		gplayer->selected = 0;
+		playerFlatten ( gplayer, app->snake, 0 );
 	}
 	else if ((key_flags&K_PGUP)==K_PGUP)
 	{
-		if ( context->snake->solutions != NULL && context->snake->solutions->head != NULL )
+		if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
 		{
 			if (gsolver->currentSolution->next!=NULL) gsolver->currentSolution = gsolver->currentSolution->next;
-			else gsolver->currentSolution = context->snake->solutions->head;
+			else gsolver->currentSolution = app->snake->solutions->head;
 			gsolver->selected = 0;
-			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+			gsolver->steps[0].dir = RIGHT;
+			playerFlatten (gsolver, app->snake, 0);
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -136,23 +138,21 @@ int getInput ( Context* context )
 		context->playmode = ( context->playmode == PM_PLAY ? PM_RESOLVE : PM_PLAY );
 		if (context->playmode == PM_RESOLVE)
 		{
-			gsolver->currentSolution = context->snake->solutions->head;
-			gsolver->selected = 0;
-			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+			gsolver->currentSolution = app->snake->solutions->head;
 		}
 	}
 	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
 	{
 		int i;
 
-		for ( i=gsolver->selected-1; i < context->snake->length; i++ )
+		for ( i=gsolver->selected-1; i < app->snake->length; i++ )
 		{
 			if ( gsolver->selected > 0) gsolver->selected--;
-			if ( context->snake->units[gsolver->selected] == CORNER || context->snake->units[gsolver->selected] == EDGE )
+			if ( app->snake->units[gsolver->selected] == CORNER || app->snake->units[gsolver->selected] == EDGE )
 				break;
 		}
 
-		Dir curDir = DNONE;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
 		Dir prevDir = DNONE;
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
@@ -168,9 +168,9 @@ int getInput ( Context* context )
 				(float) gsolver->steps[i].coord.y,
 				(float) gsolver->steps[i].coord.z);
 		}
-		for (i=gsolver->selected+1;i<context->snake->length;i++)
+		for (i=gsolver->selected+1;i<app->snake->length;i++)
 		{
-			if (context->snake->units[i] == CORNER)
+			if (app->snake->units[i] == CORNER)
 			{
 				if (toggle == 0)
 				{
@@ -200,15 +200,17 @@ int getInput ( Context* context )
 	{
 		int i;
 
-		for ( i=gsolver->selected+1; i < context->snake->length; i++ )
+		gsolver->steps[0].dir = app->snake->solutions->head->step[0].dir;
+
+		for ( i=gsolver->selected+1; i < app->snake->length; i++ )
 		{
-			if ( gsolver->selected < context->snake->length + 1) gsolver->selected++;
-			if ( context->snake->units[gsolver->selected] == CORNER || context->snake->units[gsolver->selected] == EDGE )
+			if ( gsolver->selected < app->snake->length + 1) gsolver->selected++;
+			if ( app->snake->units[gsolver->selected] == CORNER || app->snake->units[gsolver->selected] == EDGE )
 				break;
 		}
 
-		Dir curDir = DNONE;
-		Dir prevDir = DNONE;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;
+		Dir prevDir = DNONE;//(gsolver->selected == 0 ? RIGHT : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
@@ -223,9 +225,9 @@ int getInput ( Context* context )
 				(float) gsolver->steps[i].coord.y,
 				(float) gsolver->steps[i].coord.z);
 		}
-		for (i=gsolver->selected+1;i<context->snake->length;i++)
+		for (i=gsolver->selected+1;i<app->snake->length;i++)
 		{
-			if (context->snake->units[i] == CORNER)
+			if (app->snake->units[i] == CORNER)
 			{
 				if (toggle == 0)
 				{
@@ -252,11 +254,11 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
 	{
-		playerCheckSolution(gplayer, context->snake->volume, context->snake->length);
+		playerCheckSolution(gplayer, app->snake->volume, app->snake->length);
 	}
 	else if((key_flags&K_H)==K_H && context->playmode == PM_PLAY)
 	{
-		playerHelp(gplayer, context->snake);
+		playerHelp(gplayer, app->snake);
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -266,8 +268,11 @@ int getInput ( Context* context )
 	}
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-		playerRotate(gplayer, gplayer->selected, context->snake, 0);
-		playerRotate(gplayer, gplayer->selected, context->snake, 1);
+		if (gplayer->selected!=0)
+		{
+			playerRotate(gplayer, gplayer->selected, app->snake, 0);
+			playerRotate(gplayer, gplayer->selected, app->snake, 1);
+		}
 		magnet = 0;
 		mouse_flags ^= M_RLEFTONCE;
 	}
@@ -284,16 +289,26 @@ int getInput ( Context* context )
 		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
 		{
 			//TODO: meilleure detection du sens de rotation
-			if (accx>0) magnet += MAG_STEP;
-			else if (accx<0) magnet -= MAG_STEP;
-
+			//if	(accx>0 && accy>0) magnet += MAG_STEP;
+			//else if (accx<0) magnet -= MAG_STEP;
+			if ( abs(accx) > abs(accy) )
+			{
+				if (accx<0) magnet += MAG_STEP;
+				else if (accx>0) magnet -= MAG_STEP;
+			}
+			else
+			{
+				if (accy>0) magnet += MAG_STEP;
+				else if (accy<0) magnet -= MAG_STEP;
+			}
+	
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
+				playerRotate(gplayer, gplayer->selected, app->snake, magnet);
 
-				playerRotate(gplayer, gplayer->selected, context->snake, magnet);
 				magnet = 0;
 			}
-			else playerFakeRotate(gplayer, gplayer->selected, context->snake, magnet);
+			else playerFakeRotate(gplayer, gplayer->selected, app->snake, magnet);
 		}
 	}
 
@@ -414,22 +429,24 @@ void contextInit ( Context* context )
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation (GL_FUNC_ADD);
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
 	glEnable (GL_DEPTH_TEST);
 	glDepthFunc (GL_LEQUAL);
 
-	GLuint vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
-	GLuint fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
-	shaderCompile(vs);
-	shaderCompile(fs);
-	context->snake_program = shaderCreateProgram(vs, fs);
+	context->snake_program_vs = shaderLoad ("shaders/default_vs.glsl", GL_VERTEX_SHADER);
+	context->snake_program_fs = shaderLoad ("shaders/default_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(context->snake_program_vs);
+	shaderCompile(context->snake_program_fs);
+	context->snake_program = shaderCreateProgram(context->snake_program_vs, context->snake_program_fs);
 
-	vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
-	fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);
-	shaderCompile(vs);
-	shaderCompile(fs);
-	context->picking_program = shaderCreateProgram(vs, fs);
+	context->picking_program_vs = shaderLoad ("shaders/pick_vs.glsl", GL_VERTEX_SHADER);
+	context->picking_program_fs = shaderLoad ("shaders/pick_fs.glsl", GL_FRAGMENT_SHADER);
+	shaderCompile(context->picking_program_vs);
+	shaderCompile(context->picking_program_fs);
+	context->picking_program = shaderCreateProgram(context->picking_program_vs, context->picking_program_fs);
 
 	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
 	context->square_mesh = objectLoad ( "stc/square.stc" );
@@ -448,6 +465,7 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->linktex = textureID;
+	free(buffer);
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/map2.png");
 	glGenTextures(1, &textureID);
@@ -458,6 +476,7 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->lwoodtex = textureID;
+	free(buffer);
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/map3.png");
 	glGenTextures(1, &textureID);
@@ -468,11 +487,24 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
+	free(buffer);
+
+	/*
+	lodepng_decode32_file(&buffer, &width, &height, "textures/bad.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->badtex = textureID;
+	*/
 
 	vec3 vol_offset;
-	vol_offset[0]=(context->snake->volume.max.x%2==0 ? context->snake->volume.max.x /2 - 0.5f : (context->snake->volume.max.x -1 )/2);
-	vol_offset[1]=(context->snake->volume.max.y%2==0 ? context->snake->volume.max.y /2 - 0.5f : (context->snake->volume.max.y -1 )/2);
-	vol_offset[2]=(context->snake->volume.max.z%2==0 ? context->snake->volume.max.z /2 - 0.5f : (context->snake->volume.max.z -1 )/2);
+	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x -1 )/2);
+	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y -1 )/2);
+	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z -1 )/2);
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 0.f;
@@ -489,16 +521,8 @@ void contextInit ( Context* context )
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
-
 	context->drawpick = 0;
 	//bhv_flags |= BHV_ROTATE;
-
-	context->running = 1;
-	context->playmode = PM_PLAY;
-
-	gplayer = playerInit ( context->snake );
-	gsolver = playerInit ( context->snake );
-	gsolver->currentSolution = context->snake->solutions->head;
 
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
@@ -506,7 +530,12 @@ void contextInit ( Context* context )
 
 void contextDestroy ( Context * context )
 {
-	context->running = 0;
+	objectDestroy (context->cube_mesh);
+	objectDestroy (context->square_mesh);
+	objectDestroy (context->link_mesh);
+	shaderProgramDestroy(context->snake_program,context->snake_program_vs,context->snake_program_fs);
+	shaderProgramDestroy(context->picking_program,context->picking_program_vs,context->picking_program_fs);
+
 	pthread_join ( context->render_thread, NULL );
 	logWrite ("[CNTXT] Graphic thread terminated\n");
 	glfwMakeContextCurrent ( NULL );

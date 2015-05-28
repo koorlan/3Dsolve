@@ -1,7 +1,7 @@
 #include "renderer.h"
 
 //UP,DOWN,LEFT,RIGHT,FRONT,BACK
-const float dir2lr[6][3] = 
+const float dir2lr[6][3] =
 {
 {  0.f ,  0.f ,  1.f  },
 {  0.f ,  0.f , -1.f  },
@@ -11,16 +11,7 @@ const float dir2lr[6][3] =
 {  0.f ,  1.f ,  0.f  }
 };
 
-const float dir2sc[6][3] = 
-{
-{  0.f ,  1.f ,  0.f  },
-{  0.f ,  1.f ,  0.f  },
-{  1.f ,  0.f ,  0.f  },
-{  1.f ,  0.f ,  0.f  },
-{  0.f ,  0.f ,  1.f  },
-{  0.f ,  0.f ,  1.f  }
-};
-
+extern const float dir2vec[6][3];
 
 void* renderer ( void *arg )
 {
@@ -31,49 +22,59 @@ void* renderer ( void *arg )
 
 	glfwMakeContextCurrent ( context->window );
 
-	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
+	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
+	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
+	GLuint wID = glGetUniformLocation(context->snake_program, "W");
+	GLuint wID2 = glGetUniformLocation(context->picking_program, "W");
+	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
+	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
+	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 	mat4x4 WMat;
 	mat4x4 PVMat;
 	mat4x4 viewMat;
 	mat4x4 perMat;
-	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
-	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
-	GLuint wID = glGetUniformLocation(context->snake_program, "W");
-	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
-	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
-	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
+	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 	float last_time=127.f;
+	
+	#ifndef _WIN32
 	struct timespec time1;
+	time1.tv_sec = 0;
+	time1.tv_nsec = 100000;
 	struct timespec time2;
+	#endif
 	//! [1]
 
 	//! [2] Player initialization
 	Player* curPlayer;
-	if (context->playmode == PM_PLAY)
-		curPlayer = gplayer;
-	else
-		curPlayer = gsolver;
+	if (context->playmode == PM_PLAY) curPlayer = gplayer;
+	else curPlayer = gsolver;
 
 	int i;
+	int solidCheck = 0;
 	float scoef = 1.f;
-	int cubesNb = context->snake->length;
+	int cubesNb = app->snake->length;
+	int solidStart = 0;
+	int solidEnd = cubesNb;
+	float xoffset = -(app->snake->length*0.3333333f);
+	float yoffset = -0.75f * 20.f;
+	float r_angle =  -M_PI/4;
 	//! [2]
 
 	//! [3] Renderer loop
-	while (context->running)
+	while (app->running && !glfwWindowShouldClose (context->window))
 	{
-		if (glfwWindowShouldClose (context->window)) context->running = 0;
-
 		//! [4] FPS limitation control
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
 		{
-			time1.tv_sec = 0;
-			time1.tv_nsec = 1000;
+			#ifdef _WIN32
+			Sleep(1);
+			#else
 			nanosleep (&time1, &time2);
+			#endif
 			continue;
 		}
 		else last_time = cur_time;
@@ -98,7 +99,7 @@ void* renderer ( void *arg )
 		curPlayer->segEnd = cubesNb;
 		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
 			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
-				if ( context->snake->units[i] == CORNER)
+				if ( app->snake->units[i] == CORNER)
 				{
 					curPlayer->segEnd = i;
 					break;
@@ -115,7 +116,12 @@ void* renderer ( void *arg )
 			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
-			glBindVertexArray (context->cube_mesh->vao_id);
+
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
+				glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
 
 			for ( i=0; i <= curPlayer->segEnd; i++ )
 			{
@@ -127,7 +133,7 @@ void* renderer ( void *arg )
 				mat4x4_scale3d(WMat, WMat, scoef);
 				mat4x4_scale3d(WMat, WMat, 0.6f);
 
-				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
 
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
@@ -137,10 +143,9 @@ void* renderer ( void *arg )
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
 					GL_RGBA, GL_UNSIGNED_BYTE, data);
-			//if (data[0] == gplayer->selected)
-			//	playerRotate(gplayer, gplayer->selected, context->snake);
 			gplayer->selected = (data[0]==255?-1:data[0]);
-			printf ("cube %d gplayer->selected\n", gplayer->selected);
+			//if (gplayer->selected != -1)
+			//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
 			context->drawpick = 0;
 
@@ -158,66 +163,106 @@ void* renderer ( void *arg )
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-		for ( i=0; i < cubesNb; i++ )
+		for (	solidCheck = 0;
+			solidCheck <= (curPlayer->segEnd != cubesNb?1:0);
+			solidCheck++)
 		{
-			glUniform1f(timeID, glfwGetTime());
-			glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
-
-			mat4x4_identity ( WMat );
-			mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
-			mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-			mat4x4_scale3d(WMat, WMat, scoef);
-			if (curPlayer->selected == i )
-				mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
-			else mat4x4_scale3d(WMat, WMat, 0.97f);
-
-			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-
-			if (curPlayer->selected == i )
-				mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
-
-			//pair/impair = blanc/noir
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-
-			glBindVertexArray (context->cube_mesh->vao_id);
-			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-			glBindTexture(GL_TEXTURE_2D, context->linktex);
-
-			if ( i < cubesNb-1 && context->spread==1)
+			if (solidCheck == 0 && curPlayer->segEnd != cubesNb)
 			{
-				
-				mat4x4_rotate(WMat, WMat,
-					dir2lr[curPlayer->steps[i].dir][0],
-					dir2lr[curPlayer->steps[i].dir][1],
-					dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
-				if (curPlayer->steps[i].dir == LEFT)
-					mat4x4_rotate_Y (WMat, WMat, -3.1415 * 0.5f);
-				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-				glBindVertexArray (context->link_mesh->vao_id);
-				glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+				solidStart = curPlayer->segEnd+1;
+				solidEnd = cubesNb;
+			}
+			else if (solidCheck == 1 && curPlayer->segEnd != cubesNb)
+			{
+				solidStart = 0;
+				solidEnd = curPlayer->segEnd+1;
+			}
+			else
+			{
+				solidStart = 0;
+				solidEnd = cubesNb;
 			}
 
+			for ( i=solidStart; i < solidEnd; i++ )
+			{
+				glUniform1f(timeID, glfwGetTime());
+
+				if ( i > curPlayer->segEnd ) glDisable (GL_DEPTH_TEST);
+				else glEnable (GL_DEPTH_TEST);
+
+				mat4x4_identity ( WMat );
+				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+				mat4x4_scale3d(WMat, WMat, scoef);
+				if (curPlayer->selected == i )
+					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
+				else mat4x4_scale3d(WMat, WMat, 0.97f);
+
+
+				if ( i < cubesNb-1)
+				{
+					mat4x4 WMat2;
+					mat4x4_dup (WMat2, WMat);
+					mat4x4_scale_aniso(WMat2, WMat2,
+						(dir2vec[curPlayer->steps[i].dir][0]==0?1:1/scoef),
+						(dir2vec[curPlayer->steps[i].dir][1]==0?1:1/scoef),
+						(dir2vec[curPlayer->steps[i].dir][2]==0?1:1/scoef));
+					mat4x4_rotate(WMat2, WMat2,
+						dir2lr[curPlayer->steps[i].dir][0],
+						dir2lr[curPlayer->steps[i].dir][1],
+						dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
+					if (curPlayer->steps[i].dir == LEFT)
+						mat4x4_rotate_Y (WMat2, WMat2, -3.1415 * 0.5f);
+					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat2[0][0] );
+					glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+					glBindTexture(GL_TEXTURE_2D, context->linktex);
+
+					#ifdef __APPLE__
+						glBindVertexArrayAPPLE (context->link_mesh->vao_id);
+					#else
+						glBindVertexArray (context->link_mesh->vao_id);
+					#endif
+					glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+				}
+				glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+
+				if (curPlayer->selected == i )
+					mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
+
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+				#ifdef __APPLE__
+					glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+				#else
+					glBindVertexArray (context->cube_mesh->vao_id);
+				#endif
+
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			}
 		}
+		glEnable (GL_DEPTH_TEST);
 
 		mat4x4_identity(viewMat);
 		mat4x4_identity(perMat);
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-		glBindVertexArray (context->square_mesh->vao_id);
+		#ifdef __APPLE__
+			glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+		#else
+			glBindVertexArray (context->square_mesh->vao_id);
+		#endif
+
 		glUniform1f(alphaID, 1.0f);
 
-		float xoffset = -(context->snake->length*0.3333333f);
-		float yoffset = -0.75f * 20.f;
-		float r_angle =  -M_PI/4;
-		for ( i=0; i <= context->snake->length-1; i++ )
+		for ( i=0; i <= app->snake->length-1; i++ )
 		{
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
-			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-			mat4x4_scale3d(WMat, WMat, 0.05f);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.05f, 0.05f, 0.f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 			mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
@@ -284,6 +329,7 @@ void* renderer ( void *arg )
 
 		glfwSwapBuffers (context->window);
 	}
+	app->running = 0;
 	//! [3]
 
 	logWrite ("[RENDR] Renderer stopped\n");

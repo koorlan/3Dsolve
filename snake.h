@@ -185,8 +185,11 @@ void snakeCopy(Snake* destination, Snake* source);
  * @ingroup Snake
  * @brief Supprime snake de la mémoire
  * @param snake Le snake à détruir
+ * @param deleteSolution Si mis à 1, indique qu'il faut libérer de la mémoire
+ * les solutions. Si mis à 0, les solution sont conservé en mémoire (utile
+ * lors de la destruction des serpents utilisé par les threads)
  */
-void snakeDestroy ( Snake* snake );
+void snakeDestroy ( Snake* snake, int deleteSolution);
 
 /**
  * @ingroup Snake

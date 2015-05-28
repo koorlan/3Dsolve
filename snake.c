@@ -21,7 +21,7 @@ Snake* snakeInit(char* templatePath)
 		&(snake->volume.max.y), &(snake->volume.max.z)) != 3)
 	{
 		logError("[SNINI] Error on reading volume size info\n");
-		snakeDestroy(snake);
+		snakeDestroy(snake, 1);
 		return NULL;
 	}
 
@@ -42,7 +42,7 @@ Snake* snakeInit(char* templatePath)
 		if(fscanf(file, "%d;%d;%d;%d", &x, &y, &z, &tmp) != 4)
 		{
 			logError("[SNINI] Error on reading volume state\n");
-			snakeDestroy(snake);
+			snakeDestroy(snake, 1);
 			return NULL;
 		}
 		snake->volume.state[x][y][z] = tmp;
@@ -53,7 +53,7 @@ Snake* snakeInit(char* templatePath)
 	if(fscanf(file, "\n[Snake]\n%d\n", &(snake->length)) != 1)
 	{
 		logError("[SNINI] Error on reading snake size\n");
-		snakeDestroy(snake);
+		snakeDestroy(snake, 1);
 		return NULL;
 	}
 
@@ -65,7 +65,7 @@ Snake* snakeInit(char* templatePath)
 		if(fscanf(file, "%d;", &tmp) != 1)
 		{
 			logError("[SNINI] Error on reading snake units\n");
-			snakeDestroy(snake);
+			snakeDestroy(snake, 1);
 			return NULL;
 		}
 
@@ -78,9 +78,9 @@ Snake* snakeInit(char* templatePath)
 	&(snake->symetries[2]), &(snake->symetries[3]) ) != 4)
 	{
 		logError("[SNINI] Error on reading symetry axis info\n");
-		snakeDestroy(snake);
+		snakeDestroy(snake, 1);
 		return NULL;
-	} 
+	}
 
 	fclose(file);
 
@@ -124,14 +124,14 @@ void snakeCopy(Snake* destination, Snake* source)
 		destination->units[i] = source->units[i];
 }
 
-void snakeDestroy ( Snake* snake )
+void snakeDestroy ( Snake* snake, int deleteSolution)
 {
 	if(snake->tmpSteps != NULL)
 		free(snake->tmpSteps);
 	if(snake->units != NULL)
 		free(snake->units);
 	if(snake->solutions != NULL)
-		listSolutionDestroy(snake->solutions);
+		listSolutionDestroy(snake->solutions, deleteSolution);
 
 	if(snake->volume.state != NULL)
 	{
@@ -146,7 +146,7 @@ void snakeDestroy ( Snake* snake )
 		logWrite("[SNDES] Volume freed\n");
 	}
 
-	//free(snake);
+	free(snake);
 }
 
 void snakeAddSolution ( Snake* snake )

@@ -1,3 +1,5 @@
+Dans cette partie nous allons exposer les principes algorithmiques qui sous-tendent le fonctionnement du résolveur. Cette approche, bien que dénuée de détails techniques et autres soucis d’implémentation, proposera une réponse à nos différents objectifs tout en tenant compte de certaines des contraintes citées précédemment.  Nous nous baserons ici sur la résolution d’un cube 3x3x3 à l’aide du serpent présenté précédemment, le Cubra Orange.
+
 \section{Quelques définitions}
 
 Tout d’abord, deux éléments constituent la base de l’algorithme de résolution :\newline
@@ -25,7 +27,7 @@ Le volume final est définit par ses coordonnées, fixées, dans l’espace. Le 
 \end{figure}
 
 \clearpage
-\section{Construction d’un arbre n-aire}
+\section{Construction d’un arbre n-aire}\label{solveNode}
 La résolution s’effectue de manière linéaire, en considérant tour à tour chacune des unités du serpent. Le principe est de placer temporairement l’unité considérée à l’intérieur du volume final en fonction de l’emplacement et de la nature de l’unité précédente. On construit ainsi une branche d’un arbre n-aire qui est le cœur de l’algorithme de résolution. Chaque nœud correspond à une unité associée à un couple coordonnées-direction.
 
 Ici il est important de comprendre que ce travail s’effectue de telle sorte que chaque nouvelle unité soit nécessairement placée à l’intérieur du volume final. En tenant compte de cette contrainte et en fonction des emplacements choisis précédemment, on peut constater deux comportements pour une branche donnée. 
@@ -79,10 +81,13 @@ NB : on peut d’ores et déjà remarquer que les directions devant et haut von
 
 \clearpage
 \section{Problème des nœuds initiaux}
-Dans cette partie nous allons exposer la méthode employée pour 	placer la première unité dans le volume final. En effet, la démarche exposée jusqu’ici ne s’applique pas pour les premiers nœuds de l’arbre étant donné qu’elle dépend du nœud père. Ici l’enjeu est double puisqu’il faut également déterminer et éliminer les couples coordonnées-direction symétriques. Afin de simplifier la lecture, les couples coordonnées-direction seront appelés vecteurs dans ce qui va suivre. La figure 9 illustre en partie le problème des symétries sur la première face du cube. Dans cet exemple, l’unité marron amènera à la création d’un nœud et les trois autres unités devront être reconnues comme étant redondantes et sans intérêt pour le calcul des solutions. 
+Dans cette partie nous allons exposer la méthode employée pour 	placer la première unité dans le volume final. En effet, la démarche exposée jusqu’ici ne s’applique pas pour les premiers nœuds de l’arbre étant donné qu’elle dépend du nœud père. Ici l’enjeu est double puisqu’il faut également déterminer et éliminer les couples coordonnées-direction symétriques. Afin de simplifier la lecture, les couples coordonnées-direction seront appelés vecteurs dans ce qui va suivre. La figure~\ref{startingPoint} illustre en partie le problème des symétries sur la première face du cube. Dans cet exemple, l’unité marron amènera à la création d’un nœud et les trois autres unités devront être reconnues comme étant redondantes et sans intérêt pour le calcul des solutions. 
 
-
-Figure 9 - Quatre vecteurs initiaux redondants
-
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale=0.5,keepaspectratio=true]{img/startingPoint.png}
+ \caption{Quatre vecteurs initiaux redondants}
+ \label{startingPoint}
+\end{figure}
 
 La recherche des vecteurs initiaux se déroule en plusieurs étapes et se base sur les axes de symétrie horizontale, verticale et diagonale (en slash et antislash). Il faut d’abord déterminer, parmi ces axes, ceux que l’on peut appliquer aux faces du volume final. Cette information sera fournie dans un fichier contenant les caractéristiques du volume. Une fois les axes connus, nous allons traiter des tranches de volume les unes après les autres. Par tranche on entend l’ensemble des unités appartenant au même plan parallèle à (O ; x, y). Ensuite il convient de projeter orthogonalement le centre géométrique de la figure sur la face en cours de traitement. Une fois les coordonnées du projeté connues, on peut calculer les équations cartésiennes des axes de symétries et ainsi éliminer les vecteurs redondants. Aussi notons que les vecteurs avec une direction qui sort du volume ne seront pas retenus. En suivant ce principe, la recherche des vecteurs initiaux pour un volume cubique 3x3x3 amène à la création de six vecteurs au lieu des cent huit présents.

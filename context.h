@@ -27,6 +27,7 @@
 #include "snake.h"
 #include "lodepng.h"
 #include "player.h"
+#include "application.h"
 
 #define FULLSCREEN	0
 #define DRESX		800
@@ -61,6 +62,8 @@
 #define MAG_TRESHOLD	60
 #define MAG_STEP	5
 
+#define abs(X) ((X)<0?-(X):(X))
+
 unsigned char key_flags;
 unsigned char bhv_flags;
 unsigned char mouse_flags;
@@ -77,11 +80,13 @@ typedef struct context
 	GLFWwindow* window;
 	int screen_width;
 	int screen_height;
-	int running;
 	pthread_t render_thread;
-	GLuint volume_program;
 	GLuint snake_program;
+	GLuint snake_program_vs;
+	GLuint snake_program_fs;
 	GLuint picking_program;
+	GLuint picking_program_vs;
+	GLuint picking_program_fs;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
 	GLuint linktex;
@@ -90,7 +95,6 @@ typedef struct context
 	Object* link_mesh;
 	Camera* camera;
 	float ratio;
-	Snake* snake;
 	int drawpick;
 	int playmode;
 	int spread;

@@ -54,10 +54,13 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
+    int running;
 
     unsigned int pathExplored;
     double calculTime;
 } Application;
+
+Application* app;
 
 /**
  * @ingroup Application
@@ -65,6 +68,13 @@ typedef struct Application
  * @return L'application créé ou NULL en cas d'erreur
  */
 Application* applicationCreate();
+
+/**
+ * @ingroup Application
+ * @brief Supprime \a app de la mémoire
+ * @param app L'application à supprimer
+ */
+void applicationDestroy(Application* app);
 
 /**
  * @ingroup Application

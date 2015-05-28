@@ -1,0 +1,68 @@
+Procedure ResoudreNoeud(racine : Noeud, s : Serpent)
+Variables - noeud : Noeud // Le noeud courrant
+            resultatConstruction : entier
+
+Début
+| noeud <- racine
+| Tant que noeud := racine || racine->aJoué = 0
+| | Si noeud->aJoué = 0
+| | | resultatConstruction <- ConstructionDesFils(noeud, s)
+| | | Si resultatConstruction = 1 Alors
+| | | // Constrcution OK
+| | | | noeud <- noeud->enfantCourrant
+| | | Sinon si resultatConstruction = 2 Alors
+| | | // Construction OK et casse-tête résolu
+| | | | sauvegardeSolution(s)
+| | | Fin si
+| | Sinon // Le noeud n'a pas joué
+| | | serpent->volume.etat[noeud->étape.coord.x]
+| | |                     [noeud->étape.coord.y]
+| | |                     [noeud->étape.coord.z] <- LIBRE
+| | | Si noeud->frère := NIL
+| | | | noeud <- noeud->frère
+| | | Sinon
+| | | | noeud <- noeud->père
+| | | | remonterSerpent(s)
+| | | Fin si
+| | Fin si
+| Fin Tant que
+Fin
+
+Fonction ConstructionDesFils(noeud : Noeud, s : Serpent)
+Variables - nCoord : Coordonné
+            prochaineUnité : entier
+            fils : Noeud
+
+Début
+| nCoord <- CalculCoordonné(noeud->étape.coord, noeud->étape.dir)
+| Si CoordonnéValide(nCoord) ET
+| serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Libre Alors
+| | SerpentAjouterEtape(s, @(noeud->étape))
+| | serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Occupé
+| | noeud->aJoué = 1
+| | prochaineUnité = SerpentProchaineUnité(s)
+| | Si prochaineUnité = Extrémité Alors
+| | | fils <- Nouveau(Noued)
+| | | fils->étape.dir <- noeud->étape.dir
+| | | file->étape.coord <- nCoord
+| | | NoeudAjouterFils(noeud, fils)
+| | | Retourner 2
+| | Sinon si prochianeUnité = Droit
+| | | fils->étape.dir <- noeud->étape.dir
+| | | file->étape.coord <- nCoord
+| | | NoeudAjouterFils(noeud, fils)
+| | Sinon // C'est un angle
+| | | Pour i de 0 à 6
+| | | | Si TableVéritéAngle[noeud->étape.dir][i] = 1 Alors
+| | | | | fils <- Nouveau(Noeud)
+| | | | | fils->étape.dir <- i
+| | | | | fils->étape.coord <- nCoord
+| | | | | NoeudAjouterFils(noeud, fils)
+| | | | Fin si
+| | | Fin pour
+| | Fin si
+| | Retourner 1
+| Sinon
+| | Retourner -1
+| Fin si
+Fin

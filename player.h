@@ -4,12 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "context.h"
 #include "log.h"
 #include "object.h"
 #include "snake.h"
 #include "linmath.h"
-#include "resolver.h"
+
 
 
 typedef struct player
@@ -23,6 +22,8 @@ typedef struct player
 	int segStart;
 	int segEnd;
 } Player;
+
+#include "resolver.h"
 
 Player* gplayer;
 Player* gsolver;
