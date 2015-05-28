@@ -91,7 +91,6 @@ int getInput ( Context* context )
 {
 	static int magnet;
 
-	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
 	key_flags = M_NONE;
@@ -274,9 +273,7 @@ int getInput ( Context* context )
 		float accy = (last_ypos-gypos)*0.01f;
 		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
 		{
-			//TODO: meilleure detection du sens de rotation
-			//if	(accx>0 && accy>0) magnet += MAG_STEP;
-			//else if (accx<0) magnet -= MAG_STEP;
+			glfwSetInputMode(context->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			if ( abs(accx) > abs(accy) )
 			{
 				if (accx<0) magnet += MAG_STEP;
@@ -295,7 +292,8 @@ int getInput ( Context* context )
 			}
 			else playerFakeRotate(gplayer, gplayer->selected, app->snake, magnet);
 		}
-	}
+	} else glfwSetInputMode(context->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
@@ -487,9 +485,9 @@ void contextInit ( Context* context )
 	*/
 
 	vec3 vol_offset;
-	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x -1 )/2);
-	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y -1 )/2);
-	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z -1 )/2);
+	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
+	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y)/2);
+	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z)/2);
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 0.f;

@@ -66,12 +66,12 @@ void* renderer ( void *arg )
 		if (fps>60.0f)
 		{
 			time1.tv_sec = 0;
-			time1.tv_nsec = 1000;
+			time1.tv_nsec = 100000;
 			nanosleep (&time1, &time2);
 			continue;
 		}
 		else last_time = cur_time;
-		//printf ("%f\n", fps); display fps
+		printf ("%f\n", fps); // display fps
 		//! [4]
 
 		// Set OpenGl viewport to the entire window
