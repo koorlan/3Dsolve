@@ -64,26 +64,18 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
-<<<<<<< HEAD
     Menu *menu;
     int menuDepth;
-=======
     int running;
->>>>>>> 9281d89478d732f755f2b53b3812680da44a1b14
-
     unsigned int pathExplored;
     double calculTime;
 } Application;
 
-<<<<<<< HEAD
+
 //GLOBAL POINTER OMG OMG
 Application* app;
 
 
-=======
-Application* app;
-
->>>>>>> 9281d89478d732f755f2b53b3812680da44a1b14
 /**
  * @ingroup Application
  * @brief Crée une nouvelle application
