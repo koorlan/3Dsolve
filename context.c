@@ -679,12 +679,19 @@ void contextInit ( Context* context )
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.8f;
+	camera->angle[1] = 0.5f;
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
 	context->drawpick = 0;
-	//bhv_flags |= BHV_ROTATE;
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
+				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+				* sin(context->camera->angle[1]);
+
+	context->loading = 1;
 
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );

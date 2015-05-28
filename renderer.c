@@ -89,6 +89,16 @@ void* renderer ( void *arg )
 		else
 			curPlayer = gsolver;
 
+		if (0)//context->loading == 1)
+		{
+			context->camera->angle[0]+=0.02f;
+			context->camera->eye[0] = context->camera->target[0] + context->camera->distance
+						* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+			context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+						* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+			context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+						* sin(context->camera->angle[1]);
+		}
 
 		if ( context->spread == 1 && scoef > 0.6f )
 			scoef -= 0.01f;

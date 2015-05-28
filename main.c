@@ -217,6 +217,7 @@ int main ( int argc, char ** argv )
 	if(!noGraphics)
 	{
 		//Boucle principale
+		context->loading = 0;
 		while (app->running)
 		{
 			getInput(context);
