@@ -70,7 +70,18 @@ void playerFlatten ( Player* player, Snake* snake, int fromIndex )
 {
 
 	Dir dir = player->steps[fromIndex].dir;
-
+	Dir cstDir = dir;
+	Dir othDir = DNONE;
+	switch ( cstDir )
+	{
+		case UP		: othDir = RIGHT; break;
+		case DOWN	: othDir = LEFT; break;
+		case LEFT	: othDir = FRONT; break;
+		case RIGHT	: othDir = BACK; break;
+		case FRONT	: othDir = LEFT; break;
+		case BACK	: othDir = RIGHT; break;
+		default		: othDir = DNONE; break;
+	}
 
 	int i;
 	//for ( i = 0; i < snake->length; i++ )
@@ -78,10 +89,8 @@ void playerFlatten ( Player* player, Snake* snake, int fromIndex )
 	{
 		//direction
 		if ( snake->units[i] == CORNER )
-		{
-			dir = (dir==BACK?RIGHT:BACK);
-			//dir = rotationTable[(dir+2)%6][dir];
-		}
+			dir = ( dir == othDir ? cstDir : othDir );
+
 		player->steps[i].dir = dir;
 
 		//placement
@@ -103,15 +112,37 @@ void playerFlatten ( Player* player, Snake* snake, int fromIndex )
 void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 {
 
-	if (stepIndex<1) return;
-	Dir axe = player->steps[stepIndex-1].dir;
+	if (stepIndex < 0) return;
+
 	int i;
+	Dir axe;
+
+	if (stepIndex == 0)
+	{
+		//pas d'axe de rotation, toutes directions possibles
+		
+		Dir oldDir = player->steps[0].dir;
+		switch ( oldDir )
+		{
+			case UP		: axe = LEFT; break;	//->front
+			case DOWN	: axe = FRONT; break;	//->left
+			case LEFT	: axe = DOWN; break;	//->back
+			case RIGHT	: axe = FRONT; break;	//->down
+			case FRONT	: axe = UP; break;	//->right
+			case BACK	: axe = LEFT; break;	//->up
+			default		: axe = DNONE; break;	//->say what ?
+		}
+		player->steps[0].dir = rotationTable[player->steps[0].dir][axe];
+		stepIndex++;
+		magnet = 1;
+	}
+	else axe = player->steps[stepIndex-1].dir;
+
 	for ( i = stepIndex; i < snake->length; i++ )
 		if ( magnet > 0 )
 			player->steps[i].dir = rotationTable[player->steps[i].dir][axe];
 		else
 			player->steps[i].dir = rotationTable[player->steps[i].dir][(axe%2==0?axe+1:axe-1)];
-		
 
 	for ( i = stepIndex; i < snake->length; i++ )
 	{

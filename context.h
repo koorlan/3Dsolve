@@ -60,6 +60,8 @@
 #define MAG_TRESHOLD	60
 #define MAG_STEP	5
 
+#define abs(X) ((X)<0?-(X):(X))
+
 unsigned char key_flags;
 unsigned char bhv_flags;
 unsigned char mouse_flags;
