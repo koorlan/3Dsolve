@@ -1,0 +1,48 @@
+Dans ce chapitre, nous allons aborder les aspect technique liés au développement de notre application.
+
+\section{Le format de fichier ``.snake''}
+Les différents snakes proposés par l'application sont stockés dans des fichiers ``*.snake'' dans le répertoire ``Snakes''.
+
+\begin{lstlisting}[caption=Contenu du fichier snake.snake]
+ [Volume]
+  3;3;3
+  0;0;0;1
+  0;0;1;1
+  0;0;2;1
+  0;1;0;1
+  0;1;1;1
+  0;1;2;1
+ 
+  [ ... ]
+ 
+  2;1;1;1
+  2;1;2;1
+  2;2;0;1
+  2;2;1;1
+  2;2;2;1
+  [Snake]
+  27
+  0;1;2;2;2;1;2;2;1;2;2;2;1;2;1;2;2;2;2;1;2;1;2;1;2;1;0;
+  [Symetry]
+  1;1;1;1
+\end{lstlisting}
+
+\newpage
+La section \verb|[Volume]| permet de définir les caractéristiques du volume final, soit :
+\begin{itemize}
+ \item sa largeur (x);
+ \item sa hauteur (y);
+ \item sa profondeur (z);
+ \item l'état de chacun des sous-cubes le formant (x;y;z;State).
+\end{itemize}
+
+L'état des sous-cubes formant le volume final permet de définir des Snake Cube dont le volume final est plus complexe qu'un simple cube. La valeur signifie que le sous-cube doit être rempli par un des élément du snake afin de résoudre le casse-tête. La valeur -1 indique que ce sous-cube doit rester inoccupé.
+
+La section \verb|[Snake]| définit le nombre et l’enchaînement des unités formant le serpent. La valeur 0 indique que l'unité est une extrémité du serpent, la valeur 1 indique une unité de type ``droite'' et la valeur 2 une unité de type ``angle''.
+
+La section \verb|[Symetry]| permet quant à elle de définir quels sont les axes de symétrie à prendre en compte lors de la résolution du casse-tête.
+
+\section{L'utilisation des threads}
+Nous avons dès le départ pris le parti d'utiliser la technique du ``multithreading'' afin de séparer l’exécution de la fonction de rendu 3D et le reste de l'application. Nous avons fait ce choix dans le but de faciliter la gestion des animations et de manière générale pour ne pas rendu le rendu 3D trop dépendant des diverses fonctions de calcul.
+
+Plus tard dans le développement de l'application, nous avons également utiliser les ``thread'' afin de paralléliser le calcul des solutions dans le but d’améliorer le temps de calcul en particulier pour le Snake Cube de taille 4x4x4.

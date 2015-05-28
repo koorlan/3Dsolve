@@ -323,23 +323,9 @@ int increaseMenu(Menu *menu){
 
 
 int testMenuMesh(Menu *menu,int width, int height){
-  int i,j;
-  //float ratio = (float)width / (float)height;
+  int i;
   float mW = (menu->bbox[2] - menu->bbox[0] )/width ;
   float mH = (menu->bbox[3] - menu->bbox[1]) /height;
-  logWrite("[MENUTEST] menuW = %f , menuH = %f",mW,mH);
-  float * points = (float *) malloc (6 * 3 * sizeof(float));
-  float * uvs = malloc (6 * 2 * sizeof(float));
-  //set background menu vertex
-  points = (float []) {
-    mW/width,-mH/height,0.f,
-    -mW/width,-mH/height,0.f,
-    mW/width,mH/height,0.f,
-
-    mW/width,mH/height,0.f,
-    -mW/width,-mH/height,0.f,
-    -mW/width,mH/height,0.f
-  };
 
   menu->bboxRel[0] = -mW;
   menu->bboxRel[1] = mH ;
@@ -348,7 +334,7 @@ int testMenuMesh(Menu *menu,int width, int height){
 
 
   //Generate each mesh for items
-  float acc =0.f ;
+
   for (i = 0; i < menu->size ; i++){
     //menu->item[i]->mesh = objectLoad("stc/square.stc");
     mW = (menu->item[i]->bbox[2] - menu->item[i]->bbox[0])/width ;
@@ -368,5 +354,5 @@ int testMenuMesh(Menu *menu,int width, int height){
 }
 
 int menuCalcRelativeCoord(Menu *childMenu,Menu *parentMenu){
-
+  return 0;
 }

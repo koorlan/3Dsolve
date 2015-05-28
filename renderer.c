@@ -11,15 +11,8 @@ const float dir2lr[6][3] =
 {  0.f ,  1.f ,  0.f  }
 };
 
-const float dir2sc[6][3] =
-{
-{  0.f ,  1.f ,  0.f  },
-{  0.f ,  1.f ,  0.f  },
-{  1.f ,  0.f ,  0.f  },
-{  1.f ,  0.f ,  0.f  },
-{  0.f ,  0.f ,  1.f  },
-{  0.f ,  0.f ,  1.f  }
-};
+
+extern const float dir2vec[6][3];
 
 
 void* renderer ( void *arg )
@@ -58,15 +51,20 @@ void* renderer ( void *arg )
 	else
 		curPlayer = gsolver;
 
+
 	int i,j;
+
+	int solidCheck = 0;
+
 	float scoef = 1.f;
 	int cubesNb = context->snake->length;
+	int solidStart = 0;
+	int solidEnd = cubesNb;
 	//! [2]
 
 	//! [3] Renderer loop
 	while (context->running)
 	{
-
 		if (glfwWindowShouldClose (context->window)) context->running = 0;
 
 		//! [4] FPS limitation control
@@ -112,7 +110,6 @@ void* renderer ( void *arg )
 		{
 
 			//==========render cubes==========
-
 			glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glUseProgram (context->picking_program);
@@ -123,23 +120,23 @@ void* renderer ( void *arg )
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 
 			#ifdef __APPLE__
-			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+				glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
 			#else
-			glBindVertexArray (context->cube_mesh->vao_id);
+				glBindVertexArray (context->cube_mesh->vao_id);
 			#endif
-			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+
 			for ( i=0; i <= curPlayer->segEnd; i++ )
 			{
 				glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
 
 				mat4x4_identity ( WMat );
-
 				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
 				mat4x4_scale3d(WMat, WMat, scoef);
 				mat4x4_scale3d(WMat, WMat, 0.6f);
 
 				glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
+
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 			//==========render menu button==========
@@ -148,44 +145,22 @@ void* renderer ( void *arg )
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 
-			#ifdef __APPLE__
-			glBindVertexArrayAPPLE (app->menu->mesh->vao_id);
-			#else
-			glBindVertexArray (app->menu->mesh->vao_id);
-			#endif
+			Menu * currentMenu = NULL ;
+			Menu * menuCaller = NULL;
+			Menu * tmpMenu = NULL;
+			Item * itemCaller = NULL ;
+			currentMenu = app->menu;
 
-			float xoffset = -1.f  + app->menu->margin[0] - app->menu->bboxRel[0];
-			float yoffset = 1.f  - app->menu->bboxRel[1] - app->menu->margin[1];
-
-			mat4x4_identity(WMat);
-			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-			mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
-			mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
-
-			glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
-
-			accumulator = 0.f;
-			if(app->menu->type == COLUMN){
-				for ( i = 0; i < app->menu->size; i++) {
-					glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
-					mat4x4_identity(WMat);
-					mat4x4_scale3d(WMat, WMat, 1.f);
-					mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-					if (i == 0)
-						accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
-					else
-						accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
-						mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
-						mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
-						mat4x4_scale_aniso(WMat, WMat, 1.f, (app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1] * 2.0f) , 0.f);  //2.0f coef d'augmentation de la hitbox
-					glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
-					glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
-					accumulator -= (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
-				}
+			for (j = 0; j < app->menuDepth; j++) {
+				drawPickMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,  viewMat, perMat, PVMat, WMat, vpID2, pickcolorID,  wID2);
+				if(menuCaller == NULL && itemCaller == NULL) break;
+				tmpMenu = currentMenu;
+				currentMenu = menuCaller;
+				menuCaller = tmpMenu;
+				tmpMenu = NULL;
 			}
 			glFlush();
 			glFinish();
-
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
@@ -198,10 +173,12 @@ void* renderer ( void *arg )
 				gplayer->selected = (data[0]==255?-1:data[0]);
 			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
+
 			context->drawpick = 0;  //Comment for debug
 			////Draw for debug
 			//glfwSwapBuffers(context->window);
 			//continue;
+
 		}
 		//! [5]
 
@@ -215,57 +192,87 @@ void* renderer ( void *arg )
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-		for ( i=0; i < cubesNb; i++ )
+		for (	solidCheck = 0;
+			solidCheck <= (curPlayer->segEnd != cubesNb?1:0);
+			solidCheck++)
 		{
-			glUniform1f(timeID, glfwGetTime());
-			glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
-
-			mat4x4_identity ( WMat );
-			mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
-			mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-			mat4x4_scale3d(WMat, WMat, scoef);
-			if (curPlayer->selected == i )
-				mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
-			else mat4x4_scale3d(WMat, WMat, 0.97f);
-
-			glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-
-			if (curPlayer->selected == i )
-				mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
-
-			//pair/impair = blanc/noir
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-
-			#ifdef __APPLE__
-			glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
-			#else
-			glBindVertexArray (context->cube_mesh->vao_id);
-			#endif
-			glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-			glBindTexture(GL_TEXTURE_2D, context->linktex);
-
-			if ( i < cubesNb-1 && context->spread==1)
+			if (solidCheck == 0 && curPlayer->segEnd != cubesNb)
 			{
-
-				mat4x4_rotate(WMat, WMat,
-					dir2lr[curPlayer->steps[i].dir][0],
-					dir2lr[curPlayer->steps[i].dir][1],
-					dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
-				if (curPlayer->steps[i].dir == LEFT)
-					mat4x4_rotate_Y (WMat, WMat, -3.1415 * 0.5f);
-				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-
-				#ifdef __APPLE__
-				glBindVertexArrayAPPLE (context->link_mesh->vao_id);
-				#else
-				glBindVertexArray (context->link_mesh->vao_id);
-				#endif
-
-				glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+				solidStart = curPlayer->segEnd+1;
+				solidEnd = cubesNb;
+			}
+			else if (solidCheck == 1 && curPlayer->segEnd != cubesNb)
+			{
+				solidStart = 0;
+				solidEnd = curPlayer->segEnd+1;
+			}
+			else
+			{
+				solidStart = 0;
+				solidEnd = cubesNb;
 			}
 
+			for ( i=solidStart; i < solidEnd; i++ )
+			{
+				glUniform1f(timeID, glfwGetTime());
+
+				if ( i > curPlayer->segEnd ) glDisable (GL_DEPTH_TEST);
+				else glEnable (GL_DEPTH_TEST);
+
+				mat4x4_identity ( WMat );
+				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+				mat4x4_scale3d(WMat, WMat, scoef);
+				if (curPlayer->selected == i )
+					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
+				else mat4x4_scale3d(WMat, WMat, 0.97f);
+
+
+
+				if ( i < cubesNb-1)
+				{
+					mat4x4 WMat2;
+					mat4x4_dup (WMat2, WMat);
+					mat4x4_scale_aniso(WMat2, WMat2,
+						(dir2vec[curPlayer->steps[i].dir][0]==0?1:1/scoef),
+						(dir2vec[curPlayer->steps[i].dir][1]==0?1:1/scoef),
+						(dir2vec[curPlayer->steps[i].dir][2]==0?1:1/scoef));
+					mat4x4_rotate(WMat2, WMat2,
+						dir2lr[curPlayer->steps[i].dir][0],
+						dir2lr[curPlayer->steps[i].dir][1],
+						dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
+					if (curPlayer->steps[i].dir == LEFT)
+						mat4x4_rotate_Y (WMat2, WMat2, -3.1415 * 0.5f);
+					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat2[0][0] );
+					glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+					glBindTexture(GL_TEXTURE_2D, context->linktex);
+
+					#ifdef __APPLE__
+						glBindVertexArrayAPPLE (context->link_mesh->vao_id);
+					#else
+						glBindVertexArray (context->link_mesh->vao_id);
+					#endif
+					glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+				}
+				glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+
+				if (curPlayer->selected == i )
+					mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
+
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+				#ifdef __APPLE__
+					glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+				#else
+					glBindVertexArray (context->cube_mesh->vao_id);
+				#endif
+
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			}
 		}
+		glEnable (GL_DEPTH_TEST);
 
 		//==========view snake 2D==========
 		mat4x4_identity(viewMat);
@@ -273,9 +280,9 @@ void* renderer ( void *arg )
 		mat4x4_mul (PVMat, perMat, viewMat);
 		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 		#ifdef __APPLE__
-		glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+			glBindVertexArrayAPPLE (context->square_mesh->vao_id);
 		#else
-		glBindVertexArray (context->square_mesh->vao_id);
+			glBindVertexArray (context->square_mesh->vao_id);
 		#endif
 
 		glUniform1f(alphaID, 1.0f);
@@ -322,6 +329,7 @@ void* renderer ( void *arg )
 				tmpMenu = NULL;
 			}
 
+
 		//==========view Text==========
 		currentMenu = NULL ;
 		menuCaller = NULL;
@@ -335,6 +343,7 @@ void* renderer ( void *arg )
 			currentMenu = menuCaller;
 			menuCaller = tmpMenu;
 			tmpMenu = NULL;
+
 		}
 
 
@@ -347,7 +356,7 @@ void* renderer ( void *arg )
 	return NULL;
 }
 
-void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller ,mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,GLuint vpID,GLuint alphaID, GLuint wID){
+void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **itemCaller ,mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int alphaID, unsigned int wID){
 	float xoffset = 0.f;
 	float yoffset = 0.f;
 	float accumulator = 0.f;
@@ -411,8 +420,75 @@ void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item
 	}
 }
 
+void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int pickcolorID, unsigned int wID){
+	float xoffset = 0.f;
+	float yoffset = 0.f;
+	float accumulator = 0.f;
+	int i=0;
 
-void drawMenuText(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller){
+	#ifdef __APPLE__
+	glBindVertexArrayAPPLE (menu->mesh->vao_id);
+	#else
+	glBindVertexArray (menu->mesh->vao_id);
+	#endif
+
+
+
+	if(menu->type == COLUMN){
+		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+
+		if(*itemCaller != NULL && *menuCaller != NULL){
+			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			yoffset -= (*menuCaller)->margin[1];
+		}
+
+		mat4x4_identity(viewMat);
+		mat4x4_identity(perMat);
+		mat4x4_mul (PVMat, perMat, viewMat);
+		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+
+		#ifdef __APPLE__
+		glBindVertexArrayAPPLE (menu->mesh->vao_id);
+		#else
+		glBindVertexArray (menu->mesh->vao_id);
+		#endif
+
+		mat4x4_identity(WMat);
+		mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+		mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
+		mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
+
+		glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+		accumulator = 0.f;
+			for ( i = 0; i < menu->size; i++) {
+				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
+						*itemCaller = menu->item[i];
+						*menuCaller = menu->item[i]->menu;
+				}
+				glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
+				mat4x4_identity(WMat);
+				mat4x4_scale3d(WMat, WMat, 1.f);
+				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+				if (i == 0)
+					accumulator =  menu->bboxRel[1] - menu->item[i]->bboxRel[1] - 2*(menu->item[i]->margin[1]/context->screen_height);
+				else
+					accumulator -= 2*(menu->item[i]->margin[1]/context->screen_height);
+				mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
+				mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
+				mat4x4_scale_aniso(WMat, WMat, 1.f, (menu->item[i]->bboxRel[1]/menu->bboxRel[1] * 2.0f) , 0.f);  //2.0f coef d'augmentation de la hitbox
+				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
+				accumulator -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/context->screen_height);
+			}
+	}else if(menu->type == ROW){
+		//do stuff
+	}
+
+}
+
+
+void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCaller){
 	float accumulator = 0.f;
 	int i = 0;
 	float xoffset = 0.f;
@@ -433,7 +509,7 @@ void drawMenuText(struct context *context, Menu *menu,Menu **menuCaller,Item **i
 		}
 
 		accumulator = 0.f;
-		float accumulator = 0;
+
 		for ( i = 0;  i < menu->size; i++) {
 			if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
 					*itemCaller = menu->item[i];

@@ -101,18 +101,12 @@ int getInput ( Context* context )
 
 	if (resize_h!=-1 || resize_w!=-1)
 	{
-		int resize_method = 0;
-		if(context->screen_width == resize_w)
-			resize_method = 1; //resize hauteur....
 
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
 
-		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		//calcMenu(app->menu);
-		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
-		testMenuMesh(app->menu, context->screen_width	, context->screen_height);
+	//	testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 		resize_h = -1;
 		resize_w = -1;
@@ -121,6 +115,7 @@ int getInput ( Context* context )
 
 	if ((key_flags&K_UP)==K_UP)
 	{
+		gplayer->selected = 0;
 		playerFlatten ( gplayer, context->snake, 0 );
 	}
 	else if ((key_flags&K_PGUP)==K_PGUP)
@@ -130,7 +125,8 @@ int getInput ( Context* context )
 			if (gsolver->currentSolution->next!=NULL) gsolver->currentSolution = gsolver->currentSolution->next;
 			else gsolver->currentSolution = context->snake->solutions->head;
 			gsolver->selected = 0;
-			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+			gsolver->steps[0].dir = RIGHT;
+			playerFlatten (gsolver, context->snake, 0);
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -139,8 +135,6 @@ int getInput ( Context* context )
 		if (context->playmode == PM_RESOLVE)
 		{
 			gsolver->currentSolution = context->snake->solutions->head;
-			gsolver->selected = 0;
-			gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
 		}
 	}
 	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
@@ -154,7 +148,7 @@ int getInput ( Context* context )
 				break;
 		}
 
-		Dir curDir = DNONE;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
 		Dir prevDir = DNONE;
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
@@ -202,6 +196,8 @@ int getInput ( Context* context )
 	{
 		int i;
 
+		gsolver->steps[0].dir = context->snake->solutions->head->step[0].dir;
+
 		for ( i=gsolver->selected+1; i < context->snake->length; i++ )
 		{
 			if ( gsolver->selected < context->snake->length + 1) gsolver->selected++;
@@ -209,8 +205,8 @@ int getInput ( Context* context )
 				break;
 		}
 
-		Dir curDir = DNONE;
-		Dir prevDir = DNONE;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;
+		Dir prevDir = DNONE;//(gsolver->selected == 0 ? RIGHT : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
@@ -255,9 +251,6 @@ int getInput ( Context* context )
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-		playerRotate(gplayer, gplayer->selected, context->snake, 0);
-		playerRotate(gplayer, gplayer->selected, context->snake, 1);
-
 
 		if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
 			switch (app->menu->item[app->menu->selected]->descriptor.action){
@@ -273,10 +266,12 @@ int getInput ( Context* context )
 					logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
 					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == CLOSE){
 						app->menu->item[app->menu->selected]->menu->state = OPEN;
+						app->menuDepth ++;
 						break;
 					}
 					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == OPEN){
 						app->menu->item[app->menu->selected]->menu->state = CLOSE;
+						app->menuDepth --;
 						break;
 					}
 					break;
@@ -284,6 +279,13 @@ int getInput ( Context* context )
 					break;
 			}
 			app->menu->selected = -1;
+		}
+
+
+		if (gplayer->selected!=0)
+		{
+			playerRotate(gplayer, gplayer->selected, context->snake, 0);
+			playerRotate(gplayer, gplayer->selected, context->snake, 1);
 		}
 
 		magnet = 0;
@@ -302,8 +304,18 @@ int getInput ( Context* context )
 		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
 		{
 			//TODO: meilleure detection du sens de rotation
-			if (accx>0) magnet += MAG_STEP;
-			else if (accx<0) magnet -= MAG_STEP;
+			//if	(accx>0 && accy>0) magnet += MAG_STEP;
+			//else if (accx<0) magnet -= MAG_STEP;
+			if ( abs(accx) > abs(accy) )
+			{
+				if (accx<0) magnet += MAG_STEP;
+				else if (accx>0) magnet -= MAG_STEP;
+			}
+			else
+			{
+				if (accy>0) magnet += MAG_STEP;
+				else if (accy<0) magnet -= MAG_STEP;
+			}
 
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
@@ -431,6 +443,8 @@ void contextInit ( Context* context )
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation (GL_FUNC_ADD);
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE);
 	glEnable (GL_DEPTH_TEST);
@@ -485,6 +499,7 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->dwoodtex = textureID;
+
 
 	lodepng_decode32_file(&buffer, &width, &height, "textures/menu.png");
 	glGenTextures(1, &textureID);

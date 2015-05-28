@@ -8,7 +8,7 @@ ListSolution* listSolutionCreate()
   return listSolution;
 }
 
-void listSolutionDestroy(ListSolution* listSolution)
+void listSolutionDestroy(ListSolution* listSolution, int deleteSteps)
 {
     Solution *curr, *tmp;
 
@@ -17,6 +17,8 @@ void listSolutionDestroy(ListSolution* listSolution)
     {
         tmp = curr;
         curr = curr->next;
+        if(deleteSteps)
+            free(tmp->step);
         free(tmp);
         listSolution->size = listSolution->size - 1;
     }

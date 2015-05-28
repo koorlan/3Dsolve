@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <math.h>
 
-#include "renderer.h"
+
 #include "log.h"
 #include "shader.h"
 #include "object.h"
@@ -61,6 +61,8 @@
 #define MAG_TRESHOLD	60
 #define MAG_STEP	5
 
+#define abs(X) ((X)<0?-(X):(X))
+
 unsigned char key_flags;
 unsigned char bhv_flags;
 unsigned char mouse_flags;
@@ -98,6 +100,7 @@ typedef struct context
 	int spread;
 } Context;
 
+#include "renderer.h"
 
 void resizeCallback (GLFWwindow* window, int width, int height);
 void cursorCallback(GLFWwindow* window, double xpos, double ypos);
