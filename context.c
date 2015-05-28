@@ -73,6 +73,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_SPACE:
 					bhv_flags ^= BHV_ROTATE;
 					break;
+				case GLFW_KEY_H:
+					key_flags |= K_H;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -194,7 +196,7 @@ int getInput ( Context* context )
 
 
 	}
-	else if ((key_flags&K_RT)==K_RT && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
+	else if ((key_flags&K_RT)==K_RT && (key_flags&K_H)==K_H && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
 	{
 		int i;
 
@@ -249,8 +251,19 @@ int getInput ( Context* context )
 
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
+	{
 		playerCheckSolution(gplayer, context->snake->volume, context->snake->length);
-
+	}
+	else if((key_flags&K_H)==K_H && context->playmode == PM_PLAY)
+	{
+		playerHelp(gplayer, context->snake);
+		int i;
+		for (i=0;i<=gplayer->selected;i++)
+			mat4x4_translate(gplayer->realCubePos[i],
+				(float) gplayer->steps[i].coord.x,
+				(float) gplayer->steps[i].coord.y,
+				(float) gplayer->steps[i].coord.z);
+	}
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
 		playerRotate(gplayer, gplayer->selected, context->snake, 0);

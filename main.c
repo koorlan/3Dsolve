@@ -146,7 +146,7 @@ int main ( int argc, char ** argv )
 	time1.tv_nsec = 1000000;
 
 	contextInit ( context );
-	resolverSolveSnake(snake);
+	resolverSolveSnake(snake, NULL);
 
 	while (context->running)
 	{

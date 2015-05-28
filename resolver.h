@@ -146,7 +146,7 @@ typedef struct ThreadArgs
  * @brief Fonction principale dans la résolution du snake.
  * @param snake : le serpent à résoudre
  */
-void resolverSolveSnake(Snake *snake);
+void resolverSolveSnake(Snake *snake, Tree helpNode);
 
 void* resolverSolveNode(void* args);
 
@@ -221,6 +221,11 @@ int buildChildren(Tree currentNode, Snake * snake);
  * @see printCurrentNode
  */
 void printTree (Tree rootNode);
+
+
+
+int cptNode (Tree rootNode);
+
 
 /**
  * @ingroup Resolver
@@ -347,6 +352,8 @@ Tree createAllInitialVectors(Volume volume);
  * @return        1 si le vecteur est valide, 0 sinon
  */
 int validVectCube(Coord nCoord, Dir dir, int max);
+
+int resolverInitializeHelp(Snake *snake, Step fstStep);
 
 
 #endif // RESOLVER_H

@@ -216,7 +216,7 @@ void snakePrintSolutions(Snake *snake)
 	Solution *curr = NULL;
 	for (curr = snake->solutions->head; curr!= NULL ; curr = curr->next) {
 	 	for ( i = 0; i < snake->length; i++) {
-			printf("\n \033[33;01m %d \033[00m", i);
+			printf("\n \033[33;01m %d --> %d %d %d \033[00m", i, curr->step[i].coord.x, curr->step[i].coord.y, curr->step[i].coord.z);
 			switch (curr->step[i].dir)
 			{
 				case UP:
