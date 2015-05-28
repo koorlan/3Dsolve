@@ -37,8 +37,13 @@ void* renderer ( void *arg )
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
 
 	float last_time=127.f;
+	
+	#ifndef _WIN32
 	struct timespec time1;
+	time1.tv_sec = 0;
+	time1.tv_nsec = 100000;
 	struct timespec time2;
+	#endif
 	//! [1]
 
 	//! [2] Player initialization
@@ -66,9 +71,11 @@ void* renderer ( void *arg )
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
 		{
-			time1.tv_sec = 0;
-			time1.tv_nsec = 1000;
+			#ifdef _WIN32
+			Sleep(1);
+			#else
 			nanosleep (&time1, &time2);
+			#endif
 			continue;
 		}
 		else last_time = cur_time;

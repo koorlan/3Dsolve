@@ -199,10 +199,12 @@ int main ( int argc, char ** argv )
 	if(!noGraphics)
 		context->snake = snake;
 
+	#ifndef _WIN32
 	struct timespec time1;
 	struct timespec time2;
 	time1.tv_sec = 0;
 	time1.tv_nsec = 1000000;
+	#endif
 
 	if(!noGraphics)
 		contextInit ( context );
@@ -213,7 +215,11 @@ int main ( int argc, char ** argv )
 		while (context->running)
 		{
 			getInput(context);
-			nanosleep(&time1, &time2);
+			#ifdef _WIN32
+				Sleep(10);
+			#else
+				nanosleep(&time1, &time2);
+			#endif
 		}
 	}
 	/// [4]
