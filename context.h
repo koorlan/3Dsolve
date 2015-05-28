@@ -19,7 +19,7 @@
 #include <pthread.h>
 #include <math.h>
 
-#include "renderer.h"
+
 #include "log.h"
 #include "shader.h"
 #include "object.h"
@@ -51,7 +51,9 @@
 #define K_RST		0b00010000
 #define K_PGUP		0b00100000
 #define K_ENTER		0b01000000
-#define K_H			0b10000000
+
+#define K_H		0b10000000
+
 
 #define BHV_ROTATE	0b00000001
 #define BHV_SPREAD	0b00000010
@@ -90,6 +92,8 @@ typedef struct context
 	GLuint dwoodtex;
 	GLuint lwoodtex;
 	GLuint linktex;
+	GLuint menutex;
+	GLuint itemtex;
 	Object* cube_mesh;
 	Object* square_mesh;
 	Object* link_mesh;
@@ -100,6 +104,7 @@ typedef struct context
 	int spread;
 } Context;
 
+#include "renderer.h"
 
 void resizeCallback (GLFWwindow* window, int width, int height);
 void cursorCallback(GLFWwindow* window, double xpos, double ypos);

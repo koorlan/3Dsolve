@@ -13,7 +13,7 @@ const Dir rotationTable[6][6] =
 };
 
 //x,y,z
-const int dir2int[6][3] = 
+const int dir2int[6][3] =
 {
 { 0, 1, 0 },
 { 0,-1, 0 },
@@ -23,7 +23,7 @@ const int dir2int[6][3] =
 { 0, 0,-1 }
 };
 
-const float dir2vec[6][3] = 
+const float dir2vec[6][3] =
 {
 {  0.f ,  1.f ,  0.f  },
 {  0.f , -1.f ,  0.f  },
@@ -120,7 +120,7 @@ void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 	if (stepIndex == 0)
 	{
 		//pas d'axe de rotation, toutes directions possibles
-		
+
 		Dir oldDir = player->steps[0].dir;
 		switch ( oldDir )
 		{
@@ -155,7 +155,7 @@ void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 			(float) player->steps[i].coord.z);
 		mat4x4_identity(player->realCubeRot[i]);
 	}
-
+	playerCheckSolution(gplayer, app->snake->volume, app->snake->length);
 }
 void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet)
 {
@@ -167,11 +167,11 @@ void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet
 	Dir axeDir = player->steps[stepIndex-1].dir;
 	vec3 axe;
 	for (i=0;i<3;i++) axe[i] = dir2vec[axeDir][i];
-	
+
 	for ( i = stepIndex; i < snake->length; i++ )
 	{
 		mat4x4_identity (player->realCubeRot[i]);
-		
+
 		if (axeDir!=0 && axeDir!=1)
 			mat4x4_rotate ( player->realCubeRot[i], player->realCubeRot[i], axe[0], axe[1], axe[2], angle );
 		else
@@ -186,7 +186,7 @@ void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet
 				mat4x4_rotate ( tmat, tmat, axe[0], axe[1], axe[2], angle );
 			else
 				mat4x4_rotate ( tmat, tmat, axe[0], axe[1], axe[2], -angle );
-			mat4x4_translate_in_place ( tmat, dir2vec[player->steps[i-1].dir][0], 
+			mat4x4_translate_in_place ( tmat, dir2vec[player->steps[i-1].dir][0],
 							dir2vec[player->steps[i-1].dir][1],
 							dir2vec[player->steps[i-1].dir][2]);
 			if (axeDir!=0 && axeDir!=1)
@@ -218,7 +218,8 @@ int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volum
 		{
 			if(player->steps[i].coord.x == player->steps[j].coord.x && player->steps[i].coord.y == player->steps[j].coord.y
 			 && player->steps[i].coord.z == player->steps[j].coord.z)
-			{	printf("\033[31;01mPlayer didn't find the solution - cubes se chevauchent\033[00m\n");
+			{
+				//printf("\033[31;01mPlayer didn't find the solution - cubes se chevauchent\033[00m\n");
 				return -1;
 			}
 
@@ -249,7 +250,8 @@ int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volum
 		}
 	}
 	if(max->x-min->x > volume.max.x || max->y-min->y > volume.max.y || max->z-min->z > volume.max.z)
-	{	printf("\033[31;01mPlayer didn't find the solution - sort de la structure \033[00m\n");
+	{
+		//printf("\033[31;01mPlayer didn't find the solution - sort de la structure \033[00m\n");
 		return -1;
 	}
 	min->x = -(min->x);
@@ -275,12 +277,13 @@ int playerCheckSolution (Player *player, Volume volume, int length)
 		return -1;
 
 	for(i=0;i<length;i++)
-	{	
+	{
 		if(!(player->steps[i].coord.x + min.x < volume.max.x && player->steps[i].coord.y + min.y < volume.max.y && player->steps[i].coord.z + min.z < volume.max.z && volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] == FREE))
-		{	printf("\033[31;01mPlayer didn't find the solution\033[00m\n");
+		{
+			//printf("\033[31;01mPlayer didn't find the solution\033[00m\n");
 			return -1;
 		}
-	}	
+	}
 	printf("\033[36;01mPlayer found the solution\033[00m\n");
 	return 1;
 }
@@ -297,20 +300,20 @@ int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord 
 		}
 	}
 	for(i=0;i<player->selected + 1;i++)
-	{	
-		if(!(player->steps[i].coord.x + min.x < solSnake->volume.max.x && 
-			player->steps[i].coord.y + min.y < solSnake->volume.max.y && 
-			player->steps[i].coord.z + min.z < solSnake->volume.max.z && 
+	{
+		if(!(player->steps[i].coord.x + min.x < solSnake->volume.max.x &&
+			player->steps[i].coord.y + min.y < solSnake->volume.max.y &&
+			player->steps[i].coord.z + min.z < solSnake->volume.max.z &&
 			solSnake->volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] == FREE))
 		{	printf("\033[31;01mPlayer didn't find the solution - en dehors du vol ou chevauchement\033[00m\n");
-			
+
 			return -1;
 		}
-		else if(player->steps[i].coord.x + min.x < solSnake->volume.max.x && 
-			player->steps[i].coord.y + min.y < solSnake->volume.max.y && 
+		else if(player->steps[i].coord.x + min.x < solSnake->volume.max.x &&
+			player->steps[i].coord.y + min.y < solSnake->volume.max.y &&
 			player->steps[i].coord.z + min.z < solSnake->volume.max.z &&
 			solSnake->volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] == FREE)
-		{	
+		{
 			solSnake->volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] = FILL;
 			(*debugCpt) ++;
 		}
@@ -339,14 +342,14 @@ int playerHelp(Player *player, Snake * snake)
 		logError("[PHELP] Error on M alloc\n");
 		exit(-1);
 	}
-	if(player->selected ==0)
-		return -1;
-	solSnake->length = snake->length - player->selected - 1; 
+	//if(player->selected ==0)
+	//	return -1;
+	solSnake->length = snake->length - player->selected - 1;
 	solSnake->tmpSteps = NULL;
 	solSnake->units = NULL;
-	solSnake->solutions = NULL; 
+	solSnake->solutions = NULL;
 	solSnake->volume.state = NULL;
-	
+
 	/* initialize a new volume */
 	solSnake->volume.max.x = snake->volume.max.x;
 	solSnake->volume.max.y = snake->volume.max.y;
@@ -365,7 +368,7 @@ int playerHelp(Player *player, Snake * snake)
 
 	for(i = 0; i < solSnake->volume.max.x; i++)
 	{	for(j = 0; j < solSnake->volume.max.y; j++)
-		{	
+		{
 			solSnake->volume.state[i][j] = malloc(solSnake->volume.max.z * sizeof(VolumeState));
 			if(solSnake->volume.state[i][j] == NULL)
 			{
@@ -374,10 +377,10 @@ int playerHelp(Player *player, Snake * snake)
 			}
 		}
 	}
-	
+
 	if(playerFindMinMax(&min, &max, player->selected + 1, player, snake->volume) == -1)
-	{	
-		return -1; 
+	{
+		return -1;
 	}
 
 	/* Initialize a new string of units */
@@ -389,9 +392,9 @@ int playerHelp(Player *player, Snake * snake)
 			exit(-1);
 		}
 	}
-	else 
-	{	
-		return -1; 
+	else
+	{
+		return -1;
 	}
 	for(i=0; i< solSnake->length; i++)
 		solSnake->units[i] = snake->units[i+player->selected+1];
@@ -402,7 +405,7 @@ int playerHelp(Player *player, Snake * snake)
 	solSnake->tmpSteps = malloc(solSnake->length * sizeof(Step));
 	memset(solSnake->tmpSteps, 0,solSnake->length * sizeof(Step));
 
-	
+
 	int dx, ddx, ddy, ddz, dy, dz;
 	dx = solSnake->volume.max.x-(max.x+min.x) -1;
 	dy = solSnake->volume.max.y-(max.y+min.y) -1;
@@ -420,11 +423,11 @@ int playerHelp(Player *player, Snake * snake)
 		for(j=0;j<=dy; j++)
 		{
 			for(k=0;k<=dz; k++)
-			{	
+			{
 				min.x = ddx + i;
 				min.y = ddy + j;
 				min.z = ddz + k;
-				
+
 				fstStep.coord.x = player->steps[player->selected].coord.x + min.x;
 				fstStep.coord.y = player->steps[player->selected].coord.y + min.y;
 				fstStep.coord.z = player->steps[player->selected].coord.z + min.z;
@@ -435,16 +438,17 @@ int playerHelp(Player *player, Snake * snake)
 				logWrite("[PHELP] solSnake -> length = %d \nNb of FILL units in the volume %d\n", solSnake->length, debugCpt);
 				resolverInitializeHelp(solSnake, fstStep);
 				if(solSnake->solutions->head != NULL)
-				{	
+				{
 					i=0;
 					solSnake->solutions->head->step[i].coord.x -= min.x;
 					solSnake->solutions->head->step[i].coord.y -= min.y;
 					solSnake->solutions->head->step[i].coord.z -= min.z;
 					copyStep(&(player->steps[player->selected+1]), solSnake->solutions->head->step[i]);
 					player->selected++;
+					if (solSnake->units[i]==CORNER) return 1;
 					i++;
-					while(solSnake->units[i] != CORNER && i < solSnake->length)
-					{	
+					while(solSnake->units[i-1] != CORNER && i < solSnake->length)
+					{
 						//memcpy(&(solSnake->solutions->head->step[i].coord), translateCoord(solSnake->solutions->head->step[i], min, -1), sizeof(Coord));
 						solSnake->solutions->head->step[i].coord.x -= min.x;
 						solSnake->solutions->head->step[i].coord.y -= min.y;
@@ -452,13 +456,12 @@ int playerHelp(Player *player, Snake * snake)
 						copyStep(&(player->steps[player->selected+1]), solSnake->solutions->head->step[i]);
 						player->selected++;
 						i++;
-						
+
 					}
-					return 1;	
-				}	
+					return 1;
+				}
 			}
 		}
-	}	
-	return -1; 
-} 
-
+	}
+	return -1;
+}

@@ -40,7 +40,7 @@ int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volum
 //retourne 1 si le joueur a trouvé une solution, -1 sinon
 int playerCheckSolution (Player *player, Volume volume, int length);
 
-int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord max, int *debugCpt); 	
+int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord max, int *debugCpt);
 
 int playerHelp(Player *player, Snake * snake);
 

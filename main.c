@@ -125,13 +125,15 @@ int main ( int argc, char ** argv )
 	}
 	/// [1]
 
+
 	char* filePath = malloc(50);
 	strncpy(filePath, "Snakes/snake.snake", 19);
 	int maxThreadNb = 1;
 	int noGraphics = 0;
 	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
 
-	app = applicationCreate();
+  app = applicationCreate();
+
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -158,41 +160,177 @@ int main ( int argc, char ** argv )
 		}
 
 		//Menu test;
-		int i ;
-		mymenu = NULL;
-		initMenu(&mymenu);
-		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-
+		int i;
 		Item *tmpitem;
-		for ( i = 0;  i <2; i++) {
-			initItem(&(tmpitem));
-			setItemType(tmpitem, ITEM);
-			//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-			setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
-			setItemDescriptor(tmpitem,(struct Descriptor)
-				{	.name="Default Text",
+
+		//init the first menu
+		initMenu(&(app->menu));
+		app->menu->type = COLUMN;
+		//app->menu->item[0]->menu
+		setMenuMargin(app->menu,(float []) {0.02f, 0.02f, 0.02f, 0.02f} );
+			for ( i = 0;  i <3; i++) {
+				initItem(&(tmpitem));
+				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
+				switch (i){
+					case 0:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+							{	.name="App",
+								.font=LoadFont("fonts/Libertine.ttf"),
+								.fontSize = 20,
+								.minFontSize = DEFAULT_MIN_FONT_SIZE,
+								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+								.action= MENU});
+						break;
+					case 1:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+							{	.name="Load Snake",
+								.font=LoadFont("fonts/Libertine.ttf"),
+								.fontSize = 20,
+								.minFontSize = DEFAULT_MIN_FONT_SIZE,
+								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+								.action= LOADSNAKE});
+						break;
+
+					case 2:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+							{	.name="Solution",
+								.font=LoadFont("fonts/Libertine.ttf"),
+								.fontSize = 20,
+								.minFontSize = DEFAULT_MIN_FONT_SIZE,
+								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+								.action= MENU});
+						break;
+				}
+				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+				addItemToMenu(app->menu,tmpitem);
+			}
+			calcMenu(app->menu);
+			app->menu->state = OPEN;
+			app->menu->mesh = objectLoad("stc/menu.stc");
+			testMenuMesh(app->menu,context->screen_width,context->screen_height);
+
+
+		//APP menu
+			initMenu(&(app->menu->item[0]->menu));
+			app->menu->item[0]->menu->type = COLUMN;
+			//setMenuMargin(app->menu->item[0]->menu,(float []) {0.0f, 0.0f, 0.0f, 0.0f} );
+			for ( i = 0;  i <5; i++) {
+				initItem(&(tmpitem));
+				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
+				switch (i){
+					case 0:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+							{	.name="Exit",
+								.font=LoadFont("fonts/Libertine.ttf"),
+								.fontSize = 20,
+								.minFontSize = DEFAULT_MIN_FONT_SIZE,
+								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+								.action= EXIT});
+						break;
+					case 1:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+							{	.name="Back",
+								.font=LoadFont("fonts/Libertine.ttf"),
+								.fontSize = 20,
+								.minFontSize = DEFAULT_MIN_FONT_SIZE,
+								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+								.action= BACKAPP});
+						break;
+					case 2:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+						{	.name="Control",
+						.font=LoadFont("fonts/Libertine.ttf"),
+						.fontSize = 20,
+						.minFontSize = DEFAULT_MIN_FONT_SIZE,
+						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+						.action= CONTROL});
+					break;
+					case 3:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+						{	.name="About",
+						.font=LoadFont("fonts/Libertine.ttf"),
+						.fontSize = 20,
+						.minFontSize = DEFAULT_MIN_FONT_SIZE,
+						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+						.action= ABOUT});
+					break;
+					case 4:
+						setItemDescriptor(tmpitem,(struct Descriptor)
+						{	.name="Options",
+						.font=LoadFont("fonts/Libertine.ttf"),
+						.fontSize = 20,
+						.minFontSize = DEFAULT_MIN_FONT_SIZE,
+						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+						.action= MENU});
+					break;
+				}
+				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+				addItemToMenu(app->menu->item[0]->menu,tmpitem);
+			}
+			app->menu->item[0]->menu->state = CLOSE;
+			app->menu->item[0]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[0]->menu);
+			testMenuMesh(app->menu->item[0]->menu,context->screen_width,context->screen_height);
+
+			//OPTION menu
+			initMenu(&(app->menu->item[0]->menu->item[4]->menu));
+			app->menu->item[0]->menu->item[4]->menu->type = COLUMN;
+			//setMenuMargin(app->menu->item[0]->menu,(float []) {0.0f, 0.0f, 0.0f, 0.0f} );
+			for ( i = 0;  i <2; i++) {
+				initItem(&(tmpitem));
+				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
+				switch (i){
+					case 0:
+					setItemDescriptor(tmpitem,(struct Descriptor)
+					{	.name="MouseSpeed",
 					.font=LoadFont("fonts/Libertine.ttf"),
 					.fontSize = 20,
 					.minFontSize = DEFAULT_MIN_FONT_SIZE,
 					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
 					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-					.action= OPEN});
-			ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
-			addItemToMenu(mymenu,tmpitem);
-		}
+					.action= EXIT});
+					break;
+					case 1:
+					setItemDescriptor(tmpitem,(struct Descriptor)
+					{	.name="TOINARD",
+					.font=LoadFont("fonts/Libertine.ttf"),
+					.fontSize = 20,
+					.minFontSize = DEFAULT_MIN_FONT_SIZE,
+					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+					.color=(struct Color){.r=1.0f,.g=1.0f,.b=0.0f,.a=1.0f},
+					.action= EXIT});
+					break;
 
-		//setItemDescriptor(mymenu->item[3],(struct Descriptor)
-		//	{	.name="Custom Text",
-		//		.font=LoadFont("fonts/Fipps-Regular.otf"),
-		//		.fontSize = 25,
-		//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
-		//		.action= OPEN});
-		//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
-		//test relative fontSize
-		calcMenu(mymenu);
-		//End test menu
-		/// [3]
+				}
+				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+				addItemToMenu(app->menu->item[0]->menu->item[4]->menu,tmpitem);
+			}
+			app->menu->item[0]->menu->item[4]->menu->state = CLOSE;
+			app->menu->item[0]->menu->item[4]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[0]->menu->item[4]->menu);
+			testMenuMesh(app->menu->item[0]->menu->item[4]->menu,context->screen_width,context->screen_height);
+
+
+			app->menuDepth =1;
+
+
+			//End test menu
 	}
+
+
+
+	/// [3]
 
 	/// [4] Application running
 
@@ -206,6 +344,7 @@ int main ( int argc, char ** argv )
 
 
 	gplayer = playerInit ( app->snake );
+	gplayer->selected = 0;
 	gsolver = playerInit ( app->snake );
 	gsolver->currentSolution = app->snake->solutions->head;
 
