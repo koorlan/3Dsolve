@@ -108,17 +108,7 @@ int getInput ( Context* context )
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
-		pthread_mutex_lock(app->menu->mutex);
-		if(resize_method){
-		//	app->menu->scale[0] = 1.f*(1/(context->ratio/((float)DRESX/(float)DRESY)));
-		//	app->menu->scale[1] = (float)context->screen_height/DRESY;
-			app->menu->scale[2] = 1.f;
-		} else {
-			app->menu->scale[0] = 1.f ;
-			app->menu->scale[1] = 1.f;
-			app->menu->scale[2] = 1.f;
-		}
-		pthread_mutex_unlock(app->menu->mutex);
+
 		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
 		//calcMenu(app->menu);
 		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
@@ -280,7 +270,7 @@ int getInput ( Context* context )
 			nanosleep(&waitResult,NULL);
 			if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
 				switch (app->menu->item[app->menu->selected]->descriptor.action){
-					case CLOSE:
+					case RESET:
 						logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
 						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
 						break;
@@ -290,7 +280,10 @@ int getInput ( Context* context )
 						break;
 					case OPEN:
 						logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
-						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
+						//if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->state == CLOSED){
+						//	app->menu->item[app->menu->selected]->state = OPEN
+						//}
+
 						break;
 					default:
 						break;

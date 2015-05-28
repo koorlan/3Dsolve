@@ -366,3 +366,7 @@ int testMenuMesh(Menu *menu,int width, int height){
   }
   return 1;
 }
+
+int menuCalcRelativeCoord(Menu *childMenu,Menu *parentMenu){
+
+}

@@ -51,7 +51,22 @@ typedef enum MenuType {ROW, COLUMN} MenuType;
  *
  * @var Action::TEST
  */
-typedef enum Action {NONE, OPEN, CLOSE, TEST} Action;
+typedef enum Action {NONE, MENU,RESET, TEST} Action;
+
+/**
+ * @ingroup Menu
+ * @enum State
+ * @brief Définit un état pour un menu.
+ *
+ * @var Action::NONE
+ * Aucune action
+ * @var Action::OPEN
+ *
+ * @var Action::CLOSE
+ *
+ * @var Action::TEST
+ */
+typedef enum State {OPEN, CLOSE} State;
 
 /**
  * @ingroup Menu
@@ -168,6 +183,7 @@ typedef struct Item
  * en particulier.
  */
 struct Menu{
+  State state;
   MenuType type;
   float margin[4];
   float bbox[4];
@@ -381,4 +397,5 @@ int increaseMenu(Menu *menu);
 
 
 int testMenuMesh(Menu *menu,int width, int height);
+int menuCalcRelativeCoord(Menu *childMenu,Menu *parentMenu);
 #endif //MENU_H

@@ -108,7 +108,7 @@ int main ( int argc, char ** argv )
 	setMenuMargin(app->menu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
 	Item *tmpitem;
 
-	for ( i = 0;  i <20; i++) {
+	for ( i = 0;  i <3; i++) {
 
 		initItem(&(tmpitem));
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
@@ -132,8 +132,9 @@ int main ( int argc, char ** argv )
 						.minFontSize = DEFAULT_MIN_FONT_SIZE,
 						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
 						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-						.action= OPEN});
+						.action= MENU});
 				break;
+				setItemMenu(tmpitem,app->menu);
 			case 2:
 				setItemDescriptor(tmpitem,(struct Descriptor)
 					{	.name="CLOSE LOLILO",
@@ -142,7 +143,7 @@ int main ( int argc, char ** argv )
 						.minFontSize = DEFAULT_MIN_FONT_SIZE,
 						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
 						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-						.action= CLOSE});
+						.action= RESET});
 				break;
 			default:
 				setItemDescriptor(tmpitem,(struct Descriptor)
@@ -159,6 +160,7 @@ int main ( int argc, char ** argv )
 		addItemToMenu(app->menu,tmpitem);
 	}
 	calcMenu(app->menu);
+	app->menuDepth =1;
 	app->menu->mesh = objectLoad("stc/menu.stc");
 	testMenuMesh(app->menu,context->screen_width,context->screen_height);
 
