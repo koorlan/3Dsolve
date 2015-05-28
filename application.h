@@ -68,7 +68,7 @@ Application* applicationCreate();
 
 /**
  * @ingroup Application
- * @brief Supprime \aapp de la mémoire
+ * @brief Supprime \a app de la mémoire
  * @param app L'application à supprimer
  */
 void applicationDestroy(Application* app);
