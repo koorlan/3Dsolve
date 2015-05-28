@@ -36,6 +36,7 @@ FTGLfont *myfont;
 #define abs(X) ((X)<0?-(X):(X))
 
 void* renderer ( void *arg );
+void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,GLuint vpID,GLuint alphaID, GLuint wID);
 
 
 

@@ -134,7 +134,7 @@ int main ( int argc, char ** argv )
 						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
 						.action= MENU});
 				break;
-				setItemMenu(tmpitem,app->menu);
+
 			case 2:
 				setItemDescriptor(tmpitem,(struct Descriptor)
 					{	.name="CLOSE LOLILO",
@@ -160,8 +160,11 @@ int main ( int argc, char ** argv )
 		addItemToMenu(app->menu,tmpitem);
 	}
 	calcMenu(app->menu);
-	app->menuDepth =1;
+	app->menuDepth =2;
+	app->menu->state = OPEN;
 	app->menu->mesh = objectLoad("stc/menu.stc");
+	app->menu->item[1]->menu = app->menu;
+	app->menu->item[1]->menu->state = OPEN;
 	testMenuMesh(app->menu,context->screen_width,context->screen_height);
 
 
