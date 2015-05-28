@@ -154,11 +154,12 @@ void* renderer ( void *arg )
 			glBindVertexArray (app->menu->mesh->vao_id);
 			#endif
 
-			float xoffset = -1.f  + app->menu->margin[0];
+			float xoffset = -1.f  + app->menu->margin[0] - app->menu->bboxRel[0];
 			float yoffset = 1.f  - app->menu->bboxRel[1] - app->menu->margin[1];
 
 			mat4x4_identity(WMat);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+			mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
 			mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
 
 			glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
@@ -171,12 +172,12 @@ void* renderer ( void *arg )
 					mat4x4_scale3d(WMat, WMat, 1.f);
 					mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 					if (i == 0)
-					accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
+						accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
 					else
-					accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
-					mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
-					mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
-					mat4x4_scale_aniso(WMat, WMat, 1.f, app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1] * 2.f, 0.f); //2.f est le coef de grossisement de la hitbox
+						accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
+						mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
+						mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
+						mat4x4_scale_aniso(WMat, WMat, 1.f, (app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1] * 2.0f) , 0.f);  //2.0f coef d'augmentation de la hitbox
 					glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
 					glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
 					accumulator -= (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
@@ -197,7 +198,7 @@ void* renderer ( void *arg )
 				gplayer->selected = (data[0]==255?-1:data[0]);
 			printf ("cube %d gplayer->selected\n", gplayer->selected);
 
-			context->drawpick = 0;
+			context->drawpick = 0;  //Comment for debug
 			////Draw for debug
 			//glfwSwapBuffers(context->window);
 			//continue;
@@ -318,13 +319,11 @@ void* renderer ( void *arg )
 			if(app->menu->type == COLUMN){
 				xoffset = -1.f  + app->menu->margin[0] - app->menu->bboxRel[0];
 				yoffset = 1.f  - app->menu->bboxRel[1] - app->menu->margin[1];
-				r_angle =  0.f;
 
 				glBindTexture(GL_TEXTURE_2D, context->menutex);
 				mat4x4_identity(WMat);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 				mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
-				mat4x4_rotate_Z(WMat, WMat, -r_angle);
 
 				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0,app->menu->mesh->nb_faces);
@@ -334,12 +333,13 @@ void* renderer ( void *arg )
 						mat4x4_scale3d(WMat, WMat, 1.f);
 						mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 						if (i == 0)
-				      		accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
+				      accumulator =  app->menu->bboxRel[1] - app->menu->item[i]->bboxRel[1] - 2*(app->menu->item[i]->margin[1]/context->screen_height);
 				    else
 				      accumulator -= 2*(app->menu->item[i]->margin[1]/context->screen_height);
 				    mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
 						mat4x4_scale_aniso(WMat, WMat, app->menu->bboxRel[0], app->menu->bboxRel[1] , 0.f);
 						mat4x4_scale_aniso(WMat, WMat, 1.f, (app->menu->item[i]->bboxRel[1]/app->menu->bboxRel[1]) , 0.f);
+
 						glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 						if(i == app->menu->selected){
 							glBindTexture(GL_TEXTURE_2D, context->itemtex);
@@ -412,21 +412,26 @@ void* renderer ( void *arg )
 
 
 			//ftglRenderFont(app->menu->item[0]->descriptor.font,"test", FTGL_RENDER_ALL);
+			float accumulator = 0;
 			for ( i = 0;  i < app->menu->size; i++) {
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
-				//mat4x4_identity(WMat);
-				//mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-				//mat4x4_scale_aniso(WMat, WMat,app->menu->item[i]->bbox[0]/app->menu->bboxRel[0],app->menu->item[i]->bbox[1]/app->menu->bboxRel[1] , 0.f);
-				float bboxratio = app->menu->item[i]->bboxRel[2]/app->menu->item[i]->bboxRel[1];
-				printf("SALOPE : %f %f %f \n", app->menu->item[i]->bboxRel[2], app->menu->item[i]->bboxRel[1],bboxratio);
-				glScalef(abs(1.f- app->menu->item[i]->bboxRel[2]),abs(1.f-app->menu->item[i]->bboxRel[1]),WMat[2][2]);
-			//  glColor4f (app->menu->item[i]->descriptor.color.r, app->menu->item[i]->descriptor.color.g,app->menu->item[i]->descriptor.color.b,app->menu->item[i]->descriptor.color.a);
-			glColor4f (1.f,1.f,1.f,1.f);
-			//	glTranslatef(app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[1] + app->menu->item[i]->descriptor.bbox[4]),0.f);
-			  accumulator += app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
+				glTranslatef( (-1.f  + app->menu->margin[0] ) *(context->screen_width/2),
+											(1.f  -  app->menu->margin[1])*(context->screen_height/2),0.f);  //go to the top left of the menu
+
+				accumulator += app->menu->item[i]->margin[1] + (app->menu->item[i]->bbox[3]-app->menu->item[i]->bbox[1]);
+				glTranslatef(app->menu->item[i]->margin[0],-accumulator,0.f);
+				accumulator += app->menu->item[i]->margin[3] ;
+				glScalef(abs(1.f- app->menu->item[i]->bboxRel[2]),abs(1.f-app->menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
+
+				glColor4f (app->menu->item[i]->descriptor.color.r, app->menu->item[i]->descriptor.color.g,app->menu->item[i]->descriptor.color.b,app->menu->item[i]->descriptor.color.a);
+				glColor4f (1.f,1.f,1.f,1.f);//temporary here for debug
+
+				//accumulator += -(app->menu->item[i]->margin[1] + app->menu->item[i]->descriptor.bbox[4]);
+
+			  accumulator += 0.f;//app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
 			  ftglRenderFont(app->menu->item[i]->descriptor.font, app->menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-				//glTranslatef(-app->menu->item[i]->descriptor.bbox[0],-(app->menu->item[i]->margin[3] + abs(app->menu->item[i]->descriptor.bbox[1]) ),0.f);
+				accumulator += 0.f;//-(app->menu->item[i]->margin[3] + abs(app->menu->item[i]->descriptor.bbox[1]) );
 
 			}
 

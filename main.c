@@ -108,11 +108,11 @@ int main ( int argc, char ** argv )
 	setMenuMargin(app->menu,(float []) {0.2f, 0.2f, 0.2f, 0.2f} );
 	Item *tmpitem;
 
-	for ( i = 0;  i <5; i++) {
+	for ( i = 0;  i <20; i++) {
 
 		initItem(&(tmpitem));
 		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-		setItemMargin(tmpitem,(float[]){10.f,10.f,10.f,10.f});
+		setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
 		switch (i){
 			case 0:
 				setItemDescriptor(tmpitem,(struct Descriptor)

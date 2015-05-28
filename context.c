@@ -120,7 +120,7 @@ int getInput ( Context* context )
 		}
 		pthread_mutex_unlock(app->menu->mutex);
 		//setMenuMargin(app->menu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		calcMenu(app->menu);
+		//calcMenu(app->menu);
 		//reshapeMenu(app->menu, context->screen_width	, context->screen_height);
 		testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
