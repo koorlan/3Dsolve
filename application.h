@@ -54,10 +54,13 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
+    int running;
 
     unsigned int pathExplored;
     double calculTime;
 } Application;
+
+Application* app;
 
 /**
  * @ingroup Application

@@ -22,19 +22,20 @@ void* renderer ( void *arg )
 
 	glfwMakeContextCurrent ( context->window );
 
-	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
-	mat4x4 WMat;
-	mat4x4 PVMat;
-	mat4x4 viewMat;
-	mat4x4 perMat;
+	//
 	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
 	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
 	GLuint wID = glGetUniformLocation(context->snake_program, "W");
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
 	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
+	mat4x4 WMat;
+	mat4x4 PVMat;
+	mat4x4 viewMat;
+	mat4x4 perMat;
 
+	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 	float last_time=127.f;
 	struct timespec time1;
 	struct timespec time2;
@@ -42,10 +43,8 @@ void* renderer ( void *arg )
 
 	//! [2] Player initialization
 	Player* curPlayer;
-	if (context->playmode == PM_PLAY)
-		curPlayer = gplayer;
-	else
-		curPlayer = gsolver;
+	if (context->playmode == PM_PLAY) curPlayer = gplayer;
+	else curPlayer = gsolver;
 
 	int i;
 	int solidCheck = 0;
@@ -53,13 +52,14 @@ void* renderer ( void *arg )
 	int cubesNb = context->snake->length;
 	int solidStart = 0;
 	int solidEnd = cubesNb;
+	float xoffset = -(context->snake->length*0.3333333f);
+	float yoffset = -0.75f * 20.f;
+	float r_angle =  -M_PI/4;
 	//! [2]
 
 	//! [3] Renderer loop
-	while (context->running)
+	while (app->running && !glfwWindowShouldClose (context->window))
 	{
-		if (glfwWindowShouldClose (context->window)) context->running = 0;
-
 		//! [4] FPS limitation control
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
@@ -134,7 +134,8 @@ void* renderer ( void *arg )
 			//if (data[0] == gplayer->selected)
 			//	playerRotate(gplayer, gplayer->selected, context->snake);
 			gplayer->selected = (data[0]==255?-1:data[0]);
-			printf ("cube %d gplayer->selected\n", gplayer->selected);
+			//if (gplayer->selected != -1)
+			//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
 			context->drawpick = 0;
 
@@ -229,17 +230,13 @@ void* renderer ( void *arg )
 		glBindVertexArray (context->square_mesh->vao_id);
 		glUniform1f(alphaID, 1.0f);
 
-		float xoffset = -(context->snake->length*0.3333333f);
-		float yoffset = -0.75f * 20.f;
-		float r_angle =  -M_PI/4;
 		for ( i=0; i <= context->snake->length-1; i++ )
 		{
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
-			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-			mat4x4_scale3d(WMat, WMat, 0.05f);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.05f, 0.05f, 0.f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 			mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
@@ -306,6 +303,7 @@ void* renderer ( void *arg )
 
 		glfwSwapBuffers (context->window);
 	}
+	app->running = 0;
 	//! [3]
 
 	logWrite ("[RENDR] Renderer stopped\n");

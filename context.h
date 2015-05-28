@@ -27,6 +27,7 @@
 #include "snake.h"
 #include "lodepng.h"
 #include "player.h"
+#include "application.h"
 
 #define FULLSCREEN	0
 #define DRESX		800
@@ -78,7 +79,6 @@ typedef struct context
 	GLFWwindow* window;
 	int screen_width;
 	int screen_height;
-	int running;
 	pthread_t render_thread;
 	GLuint volume_program;
 	GLuint snake_program;

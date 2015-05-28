@@ -503,16 +503,8 @@ void contextInit ( Context* context )
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
-
 	context->drawpick = 0;
 	//bhv_flags |= BHV_ROTATE;
-
-	context->running = 1;
-	context->playmode = PM_PLAY;
-
-	gplayer = playerInit ( context->snake );
-	gsolver = playerInit ( context->snake );
-	gsolver->currentSolution = context->snake->solutions->head;
 
 	glfwMakeContextCurrent ( NULL );
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
@@ -520,7 +512,6 @@ void contextInit ( Context* context )
 
 void contextDestroy ( Context * context )
 {
-	context->running = 0;
 	pthread_join ( context->render_thread, NULL );
 	logWrite ("[CNTXT] Graphic thread terminated\n");
 	glfwMakeContextCurrent ( NULL );

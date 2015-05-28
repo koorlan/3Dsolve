@@ -27,6 +27,7 @@
 #include "player.h"
 #include "fonts.h"
 #include "menu.h"
+#include "application.h"
 
 FTGLfont *myfont;
 

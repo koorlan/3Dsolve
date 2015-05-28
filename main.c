@@ -72,7 +72,7 @@ int main ( int argc, char ** argv )
 	}
 	/// [1]
 
-	Application* app = applicationCreate();
+	app = applicationCreate();
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -145,10 +145,17 @@ int main ( int argc, char ** argv )
 	time1.tv_sec = 0;
 	time1.tv_nsec = 1000000;
 
-	contextInit ( context );
-	resolverSolveSnake(snake);
+	context->playmode = PM_PLAY;
+	gplayer = playerInit ( context->snake );
+	gsolver = playerInit ( context->snake );
+	gsolver->currentSolution = context->snake->solutions->head;
 
-	while (context->running)
+	contextInit ( context );
+
+	resolverSolveSnake(snake); //à mettre en action du menu (?)
+
+	//Boucle principale
+	while (app->running)
 	{
 		getInput(context);
 		nanosleep(&time1, &time2);
@@ -156,6 +163,9 @@ int main ( int argc, char ** argv )
 	/// [4]
 
 	/// [5] Cleanning
+
+	playerDestroy( gplayer );
+	playerDestroy( gsolver );
 	contextDestroy ( context );
 	snakeDestroy ( snake );
 	/// [5]
