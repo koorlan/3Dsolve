@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "context.h"
 #include "log.h"
 #include "object.h"
 #include "snake.h"

@@ -14,6 +14,7 @@ Application* applicationCreate()
     app->solver = NULL;
     app->pathExplored = 0;
     app->calculTime = 0;
+    app->running = 1;
 
     return app;
 }

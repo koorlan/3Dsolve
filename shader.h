@@ -17,7 +17,6 @@
 GLuint shaderLoad (char * file, GLenum type);
 int shaderCompile (GLuint shader_id);
 GLuint shaderCreateProgram(GLuint vertex_shader_id, GLuint fragment_shader_id);
-int shaderDestroy(GLuint shader_id);
 int shaderProgramDestroy(GLuint shader_program_id, GLuint vs_id, GLuint fs_id);
 void shaderPrintInfo (GLuint shader_index);
 void shaderPrintProgramInfo (GLuint shader_program);
