@@ -10,6 +10,7 @@
 #include "linmath.h"
 
 
+
 typedef struct player
 {
 	Step* steps;
@@ -22,6 +23,8 @@ typedef struct player
 	int segEnd;
 } Player;
 
+#include "resolver.h"
+
 Player* gplayer;
 Player* gsolver;
 
@@ -30,5 +33,15 @@ void playerFlatten ( Player* player, Snake* snake, int fromIndex );
 void playerRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 void playerFakeRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 void playerDestroy ( Player* player );
+
+//calcule les cordonnées min et max du volume
+int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volume volume);
+
+//retourne 1 si le joueur a trouvé une solution, -1 sinon
+int playerCheckSolution (Player *player, Volume volume, int length);
+
+int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord max, int *debugCpt); 	
+
+int playerHelp(Player *player, Snake * snake);
 
 #endif //PLAYER_H

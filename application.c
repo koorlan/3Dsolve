@@ -62,7 +62,9 @@ void applicationFindSnakes(Application* app)
         closedir(d);
     }
 
+
     // DEBUG
     for(i = 0; i < app->snakeNumber; i++)
         logWrite("Snake n°%d : %s\n", i, app->snakeNames[i]);
+
 }

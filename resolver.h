@@ -161,7 +161,8 @@ typedef struct ThreadArgs
  * @param maxThreadNb le nombre maximal de thread que la fonction est autorisée
  * à utiliser pour résoudre le snake.
  */
-void resolverSolveSnake(Snake *snake, int maxThreadNb);
+void resolverSolveSnake(Snake *snake, Tree helpNode, int maxThreadNb);
+
 
 /**
  * @ingroup Resolver
@@ -248,6 +249,11 @@ int buildChildren(Tree currentNode, Snake * snake);
  * @see printCurrentNode
  */
 void printTree (Tree rootNode);
+
+
+
+int cptNode (Tree rootNode);
+
 
 /**
  * @ingroup Resolver
@@ -374,6 +380,8 @@ Tree createAllInitialVectors(Volume volume);
  * @return        1 si le vecteur est valide, 0 sinon
  */
 int validVectCube(Coord nCoord, Dir dir, int max);
+
+int resolverInitializeHelp(Snake *snake, Step fstStep);
 
 
 #endif // RESOLVER_H
