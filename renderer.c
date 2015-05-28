@@ -175,7 +175,7 @@ void* renderer ( void *arg )
 			//if (data[0] == gplayer->selected)
 			//	playerRotate(gplayer, gplayer->selected, context->snake);
 			if( (data[1]==255?-1:data[1]) != -1)
-				app->menu->selected = (data[1]==255?-1:data[1]);
+				currentMenu->selected = (data[1]==255?-1:data[1]);
 			else
 				gplayer->selected = (data[0]==255?-1:data[0]);
 

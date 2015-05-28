@@ -251,26 +251,36 @@ int getInput ( Context* context )
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-
-		if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
-			switch (app->menu->item[app->menu->selected]->descriptor.action){
+		int i;
+		Menu *currentMenu = NULL;
+		currentMenu = app->menu;
+		for ( i = 0; i < app->menuDepth; i++) {
+			if(currentMenu->item[i]->menu != NULL && currentMenu->item[i]->menu->state == OPEN)	currentMenu = currentMenu->item[currentMenu->opened]->menu;
+		}
+		if (currentMenu->selected != -1 && currentMenu->selected < currentMenu->size){
+			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
-					logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
-					printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
+					logWrite("[MENU] Close Trigger (item %d)\n",currentMenu->selected);
+					printf("[MENU] Close Trigger (item %d)\n",currentMenu->selected );
+					break;
+				case EXIT:
+					logWrite("[MENU] Close Trigger EXIT (item %d)\n",currentMenu->selected);
+					printf("[MENU] Close Trigger EXIT(item %d)\n",currentMenu->selected );
 					break;
 				case TEST:
-					logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
-					printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
+					logWrite("[MENU] Test Trigger (item %d)\n",currentMenu->selected);
+					printf("[MENU] Close Trigger (item %d)\n",currentMenu->selected );
 					break;
 				case MENU:
-					logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
-					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == CLOSE){
-						app->menu->item[app->menu->selected]->menu->state = OPEN;
+					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
+						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
+						currentMenu->opened = currentMenu->selected;
 						app->menuDepth ++;
 						break;
 					}
-					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == OPEN){
-						app->menu->item[app->menu->selected]->menu->state = CLOSE;
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
+						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
 						app->menuDepth --;
 						break;
 					}

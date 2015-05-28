@@ -193,6 +193,7 @@ struct Menu{
   Object *mesh;
   float scale[3];
   int selected;
+  int opened;
   pthread_mutex_t *mutex;
 };
 
