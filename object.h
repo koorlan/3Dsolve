@@ -18,6 +18,7 @@
 
 #define M_TRIS 0
 #define M_QUADS 1
+#define M_OBJ 50
 #define M_RGB 0
 #define M_RGBA 1
 

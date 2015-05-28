@@ -200,5 +200,10 @@ void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet
 
 void playerDestroy ( Player* player )
 {
+	if (player==NULL) return;
+	free(player->steps);
+	free(player->realCubePos);
+	free(player->realCubeRot);
+	free(player->flatCubePos);
 	free (player);
 }

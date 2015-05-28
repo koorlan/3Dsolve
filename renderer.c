@@ -24,12 +24,7 @@ void* renderer ( void *arg )
 
 	glfwMakeContextCurrent ( context->window );
 
-	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 
-	mat4x4 WMat;
-	mat4x4 PVMat;
-	mat4x4 viewMat;
-	mat4x4 perMat;
 	GLuint vpID = glGetUniformLocation(context->snake_program, "VP");
 	GLuint vpID2 = glGetUniformLocation(context->picking_program, "VP");
 	GLuint wID = glGetUniformLocation(context->snake_program, "W");
@@ -37,19 +32,27 @@ void* renderer ( void *arg )
 	GLuint pickcolorID = glGetUniformLocation(context->picking_program, "colorID");
 	GLuint timeID = glGetUniformLocation(context->snake_program, "time");
 	GLuint alphaID = glGetUniformLocation(context->snake_program, "alpha");
+	mat4x4 WMat;
+	mat4x4 PVMat;
+	mat4x4 viewMat;
+	mat4x4 perMat;
 
+	context->ratio = ((float)context->screen_width)/(float)context->screen_height;
 	float last_time=127.f;
-	float accumulator;
-	struct timespec time1;
-	struct timespec time2;
+
+
+	#ifndef _WIN32
+		struct timespec time1;
+		time1.tv_sec = 0;
+		time1.tv_nsec = 100000;
+		struct timespec time2;
+	#endif
 	//! [1]
 
 	//! [2] Player initialization
 	Player* curPlayer;
-	if (context->playmode == PM_PLAY)
-		curPlayer = gplayer;
-	else
-		curPlayer = gsolver;
+	if (context->playmode == PM_PLAY) curPlayer = gplayer;
+	else curPlayer = gsolver;
 
 
 	int i,j;
@@ -57,24 +60,27 @@ void* renderer ( void *arg )
 	int solidCheck = 0;
 
 	float scoef = 1.f;
-	int cubesNb = context->snake->length;
+	int cubesNb = app->snake->length;
 	int solidStart = 0;
 	int solidEnd = cubesNb;
+	float xoffset = -(app->snake->length*0.3333333f);
+	float yoffset = -0.75f * 20.f;
+	float r_angle =  -M_PI/4;
 	//! [2]
 
 	//! [3] Renderer loop
-	while (context->running)
+	while (app->running && !glfwWindowShouldClose (context->window))
 	{
-		if (glfwWindowShouldClose (context->window)) context->running = 0;
-
 		//! [4] FPS limitation control
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
 		if (fps>60.0f)
 		{
-			time1.tv_sec = 0;
-			time1.tv_nsec = 1000;
+			#ifdef _WIN32
+			Sleep(1);
+			#else
 			nanosleep (&time1, &time2);
+			#endif
 			continue;
 		}
 		else last_time = cur_time;
@@ -99,7 +105,7 @@ void* renderer ( void *arg )
 		curPlayer->segEnd = cubesNb;
 		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
 			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
-				if ( context->snake->units[i] == CORNER)
+				if ( app->snake->units[i] == CORNER)
 				{
 					curPlayer->segEnd = i;
 					break;
@@ -165,13 +171,17 @@ void* renderer ( void *arg )
 			unsigned char data[4];
 			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
 					GL_RGBA, GL_UNSIGNED_BYTE, data);
+
 			//if (data[0] == gplayer->selected)
 			//	playerRotate(gplayer, gplayer->selected, context->snake);
 			if( (data[1]==255?-1:data[1]) != -1)
 				app->menu->selected = (data[1]==255?-1:data[1]);
 			else
 				gplayer->selected = (data[0]==255?-1:data[0]);
-			printf ("cube %d gplayer->selected\n", gplayer->selected);
+
+			//if (gplayer->selected != -1)
+			//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
+
 
 
 			context->drawpick = 0;  //Comment for debug
@@ -287,17 +297,13 @@ void* renderer ( void *arg )
 
 		glUniform1f(alphaID, 1.0f);
 
-		float xoffset = -(context->snake->length*0.3333333f);
-		float yoffset = -0.75f * 20.f;
-		float r_angle =  -M_PI/4;
-		for ( i=0; i <= context->snake->length-1; i++ )
+		for ( i=0; i <= app->snake->length-1; i++ )
 		{
 			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 
 			mat4x4_identity(WMat);
-			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio, 1.f, 0.f);
-			mat4x4_scale3d(WMat, WMat, 0.05f);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.05f, 0.05f, 0.f);
 			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 			mat4x4_rotate_Z(WMat, WMat, -r_angle);
 			mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
@@ -349,6 +355,7 @@ void* renderer ( void *arg )
 
 		glfwSwapBuffers (context->window);
 	}
+	app->running = 0;
 	//! [3]
 
 	logWrite ("[RENDR] Renderer stopped\n");

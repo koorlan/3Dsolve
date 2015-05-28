@@ -133,20 +133,19 @@ int main ( int argc, char ** argv )
 	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
 
   app = applicationCreate();
-	applicationFindSnakes(app);
 
+	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
 
-	Snake* snake = snakeInit(filePath);
+	app->snake = snakeInit(filePath);
 	free(filePath);
 
-	if(snake == NULL)
+	if(app->snake == NULL)
 	{
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
 	}
-	app->snake = snake;
 	/// [2]
 
 	/// [3] Context and menu initialization
@@ -294,29 +293,42 @@ int main ( int argc, char ** argv )
 	/// [3]
 
 	/// [4] Application running
-	if(!noGraphics)
-		context->snake = snake;
 
+	#ifndef _WIN32
 	struct timespec time1;
 	struct timespec time2;
 	time1.tv_sec = 0;
 	time1.tv_nsec = 1000000;
+	#endif
+
+	context->playmode = PM_PLAY;
+	gplayer = playerInit ( app->snake );
+	gsolver = playerInit ( app->snake );
+	gsolver->currentSolution = app->snake->solutions->head;
 
 	if(!noGraphics)
 		contextInit ( context );
-	resolverSolveSnake(snake, maxThreadNb);
+	resolverSolveSnake(app->snake, maxThreadNb);
 
 	if(!noGraphics)
 	{
-		while (context->running)
+		//Boucle principale
+		while (app->running)
 		{
 			getInput(context);
-			nanosleep(&time1, &time2);
+			#ifdef _WIN32
+				Sleep(10);
+			#else
+				nanosleep(&time1, &time2);
+			#endif
 		}
 	}
 	/// [4]
 
 	/// [5] Cleanning
+
+	playerDestroy( gplayer );
+	playerDestroy( gsolver );
 	if(!noGraphics)
 		contextDestroy ( context );
 	applicationDestroy(app);
