@@ -344,6 +344,7 @@ int main ( int argc, char ** argv )
 
 	context->playmode = PM_PLAY;
 	gplayer = playerInit ( app->snake );
+	gplayer->selected = 0;
 	gsolver = playerInit ( app->snake );
 	gsolver->currentSolution = app->snake->solutions->head;
 
