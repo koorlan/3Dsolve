@@ -316,7 +316,6 @@ void* renderer ( void *arg )
 			for (j = 0; j < app->menuDepth; j++) {
 				drawMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,  viewMat, perMat, PVMat, WMat, vpID, alphaID,  wID);
 				if(menuCaller == NULL && itemCaller == NULL) break;
-				//printf("HAHA\n" );
 				tmpMenu = currentMenu;
 				currentMenu = menuCaller;
 				menuCaller = tmpMenu;
@@ -324,51 +323,20 @@ void* renderer ( void *arg )
 			}
 
 		//==========view Text==========
-		if (!pthread_mutex_trylock(app->menu->mutex)){
-			glUseProgram (0);
-			glViewport (0, 0, context->screen_width, context->screen_height);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-
-
-
-			accumulator = 0.f;
-			glColor4f (1.f,1.f,1.f,1.f);
-
-			//glTranslatef( (-1.f  + app->menu->margin[0]) + app->menu->bboxRel[0] , (1.f -  app->menu->margin[1]),0.f);
-
-
-
-			//ftglRenderFont(app->menu->item[0]->descriptor.font,"test", FTGL_RENDER_ALL);
-			float accumulator = 0;
-			for ( i = 0;  i < app->menu->size; i++) {
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
-				glTranslatef( (-1.f  + app->menu->margin[0] ) *(context->screen_width/2),
-											(1.f  -  app->menu->margin[1])*(context->screen_height/2),0.f);  //go to the top left of the menu
-
-				accumulator += app->menu->item[i]->margin[1] + (app->menu->item[i]->bbox[3]-app->menu->item[i]->bbox[1]);
-				glTranslatef(app->menu->item[i]->margin[0],-accumulator,0.f);
-				accumulator += app->menu->item[i]->margin[3] ;
-				glScalef(abs(1.f- app->menu->item[i]->bboxRel[2]),abs(1.f-app->menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
-
-				glColor4f (app->menu->item[i]->descriptor.color.r, app->menu->item[i]->descriptor.color.g,app->menu->item[i]->descriptor.color.b,app->menu->item[i]->descriptor.color.a);
-				glColor4f (1.f,1.f,1.f,1.f);//temporary here for debug
-
-				//accumulator += -(app->menu->item[i]->margin[1] + app->menu->item[i]->descriptor.bbox[4]);
-
-			  accumulator += 0.f;//app->menu->item[i]->descriptor.bbox[4] - app->menu->item[i]->descriptor.bbox[1]  + app->menu->item[i]->margin[1] + app->menu->item[i]->margin[3];
-			  ftglRenderFont(app->menu->item[i]->descriptor.font, app->menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-				accumulator += 0.f;//-(app->menu->item[i]->margin[3] + abs(app->menu->item[i]->descriptor.bbox[1]) );
-
-			}
-
-
-			pthread_mutex_unlock(app->menu->mutex);
+		currentMenu = NULL ;
+		menuCaller = NULL;
+		tmpMenu = NULL;
+		itemCaller = NULL ;
+		currentMenu = app->menu;
+		for (j = 0; j < app->menuDepth; j++) {
+			drawMenuText(context,currentMenu,&menuCaller,&itemCaller);
+			if(menuCaller == NULL && itemCaller == NULL) break;
+			tmpMenu = currentMenu;
+			currentMenu = menuCaller;
+			menuCaller = tmpMenu;
+			tmpMenu = NULL;
 		}
+
 
 		glfwSwapBuffers (context->window);
 	}
@@ -380,10 +348,10 @@ void* renderer ( void *arg )
 }
 
 void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller ,mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,GLuint vpID,GLuint alphaID, GLuint wID){
-	float xoffset;
-	float yoffset;
-	float accumulator;
-	int i;
+	float xoffset = 0.f;
+	float yoffset = 0.f;
+	float accumulator = 0.f;
+	int i=0;
 
 	#ifdef __APPLE__
 	glBindVertexArrayAPPLE (menu->mesh->vao_id);
@@ -398,10 +366,9 @@ void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item
 		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			printf("ItemCaller %lx Menucaller %lx\n",itemCaller,menuCaller );
-			xoffset += (*menuCaller)->margin[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
 			yoffset -= (*menuCaller)->margin[1];
-		}else printf("AHAHHAA \n" );
+		}
 
 		glBindTexture(GL_TEXTURE_2D, context->menutex);
 		mat4x4_identity(WMat);
@@ -413,10 +380,8 @@ void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item
 		accumulator = 0.f;
 			for ( i = 0; i < menu->size; i++) {
 				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
-
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;
-
 				}
 				mat4x4_identity(WMat);
 				mat4x4_scale3d(WMat, WMat, 1.f);
@@ -442,41 +407,54 @@ void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item
 				accumulator -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/context->screen_height);
 			}
 	}else if(menu->type == ROW){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
-
-		glBindTexture(GL_TEXTURE_2D, context->menutex);
-		mat4x4_identity(WMat);
-		mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-		mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
+		//do stuff
+	}
+}
 
 
-		glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
+void drawMenuText(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller){
+	float accumulator = 0.f;
+	int i = 0;
+	float xoffset = 0.f;
+	float yoffset = 0.f;
+
+	if (!pthread_mutex_trylock(menu->mutex)){
+		glUseProgram (0);
+		glViewport (0, 0, context->screen_width, context->screen_height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		if(*itemCaller != NULL && *menuCaller != NULL){
+			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			yoffset -= (*menuCaller)->margin[1];
+		}
+
 		accumulator = 0.f;
-			for ( i = 0; i < menu->size; i++) {
-				mat4x4_identity(WMat);
-				mat4x4_scale3d(WMat, WMat, 1.f);
-				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-				if (i == 0)
-							accumulator = 0.f;
-				else
-					accumulator += 2*(menu->item[i]->margin[0]/context->screen_width);
-				mat4x4_translate_in_place( WMat, accumulator ,0.f , 0);
-				mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
-				mat4x4_scale_aniso(WMat, WMat, (menu->item[i]->bboxRel[0]/menu->bboxRel[0]),1.f , 0.f);
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-				if(i == menu->selected){
-					glBindTexture(GL_TEXTURE_2D, context->itemtex);
-					//glDrawArrays(GL_TRIANGLES, 0, menu->mesh->nb_faces);
-					glBindTexture(GL_TEXTURE_2D, context->menutex);
-					accumulator += menu->item[i]->bboxRel[3] + 0.3f;//(menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/context->screen_height);
-					continue;
-				}
-				glBindTexture(GL_TEXTURE_2D, context->itemtex);
-				//glDrawArrays(GL_TRIANGLES, 0, menu->mesh->nb_faces);
-				accumulator += menu->item[i]->bboxRel[2] - menu->item[i]->bboxRel[0] + 2*(menu->item[i]->margin[2]/context->screen_width);// (app->menu->item[i]->bboxRel[1] - app->menu->item[i]->bboxRel[3]) + 2*(app->menu->item[i]->margin[3]/context->screen_height);
+		float accumulator = 0;
+		for ( i = 0;  i < menu->size; i++) {
+			if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
+					*itemCaller = menu->item[i];
+					*menuCaller = menu->item[i]->menu;
 			}
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef( (xoffset ) *(context->screen_width/2),
+										(yoffset )*(context->screen_height/2),0.f);
+			glTranslatef( (-1.f  + menu->margin[0] ) *(context->screen_width/2),
+										(1.f  -  menu->margin[1] )*(context->screen_height/2),0.f);  //go to the top left of the menu
+			accumulator += menu->item[i]->margin[1] + (menu->item[i]->bbox[3]-menu->item[i]->bbox[1]);
+			glTranslatef(menu->item[i]->margin[0],-accumulator,0.f);
+			accumulator += menu->item[i]->margin[3] ;
+			glScalef(abs(1.f- menu->item[i]->bboxRel[2]),abs(1.f-menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
+			glColor4f (menu->item[i]->descriptor.color.r, menu->item[i]->descriptor.color.g,menu->item[i]->descriptor.color.b,menu->item[i]->descriptor.color.a);
+			ftglRenderFont(menu->item[i]->descriptor.font, menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
+		}
+
+
+		pthread_mutex_unlock(menu->mutex);
 	}
 
 }

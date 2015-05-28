@@ -20,7 +20,7 @@ Application* applicationCreate()
 
 void applicationFindSnakes(Application* app)
 {
-    #ifdef _WIN32
+  /*  #ifdef _WIN32
         char* path = ".\\Snakes\\";
         struct _finddata_t c_file;
         long   hFile;
@@ -33,26 +33,32 @@ void applicationFindSnakes(Application* app)
         printf("File name %-12s\n", c_file.name);
 
 
-        /* find the rest of the files */
+        // find the rest of the files
         while(_findnext(hFile, &c_file) == 0)
         {
             printf(" %-12s %.24s  %9ld\n", c_file.name, ctime(&(c_file.time_write)), c_file.size);
         }
         _findclose(hFile);
-    #else
+    #else*/
+      logWrite("Alors ?\n");
         DIR *d;
         struct dirent *dir;
         d = opendir("./Snakes");
         if(d)
         {
+          logWrite("Dir openened\n");
           while ((dir = readdir(d)) != NULL)
           {
+            logWrite("Found %s\n", dir->d_name);
               if(dir->d_type == DT_REG && strstr(dir->d_name, ".snake") != NULL)
                 app->snakeNumber++;
           }
-          closedir(d);
+          //closedir(d);
         }
-        d = opendir("./Snakes");
+        else
+          logError("Opendir failed\n");
+        //d = opendir("./Snakes");
+        rewinddir(d);
         int i = 0;
         int length;
         app->snakeNames = malloc(app->snakeNumber * sizeof(char*));
@@ -74,7 +80,8 @@ void applicationFindSnakes(Application* app)
         // DEBUG
         for(i = 0; i < app->snakeNumber; i++)
         {
-            printf("Snake n°%d : %s\n", i, app->snakeNames[i]);
+            //printf("Snake n°%d : %s\n", i, app->snakeNames[i]);
+            logWrite("Snake n°%d : %s\n", i, app->snakeNames[i]);
         }
-    #endif
+    //#endif
 }

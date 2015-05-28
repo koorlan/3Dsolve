@@ -257,6 +257,35 @@ int getInput ( Context* context )
 	{
 		playerRotate(gplayer, gplayer->selected, context->snake, 0);
 		playerRotate(gplayer, gplayer->selected, context->snake, 1);
+
+
+		if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
+			switch (app->menu->item[app->menu->selected]->descriptor.action){
+				case RESET:
+					logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
+					printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
+					break;
+				case TEST:
+					logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
+					printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
+					break;
+				case MENU:
+					logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
+					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == CLOSE){
+						app->menu->item[app->menu->selected]->menu->state = OPEN;
+						break;
+					}
+					if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->menu->state == OPEN){
+						app->menu->item[app->menu->selected]->menu->state = CLOSE;
+						break;
+					}
+					break;
+				default:
+					break;
+			}
+			app->menu->selected = -1;
+		}
+
 		magnet = 0;
 		mouse_flags ^= M_RLEFTONCE;
 	}
@@ -266,30 +295,6 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
-			struct timespec waitResult = (struct timespec) {0,100000000};
-			nanosleep(&waitResult,NULL);
-			if (app->menu->selected != -1 && app->menu->selected < app->menu->size){
-				switch (app->menu->item[app->menu->selected]->descriptor.action){
-					case RESET:
-						logWrite("[MENU] Close Trigger (item %d)\n",app->menu->selected);
-						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
-						break;
-					case TEST:
-						logWrite("[MENU] Test Trigger (item %d)\n",app->menu->selected);
-						printf("[MENU] Close Trigger (item %d)\n",app->menu->selected );
-						break;
-					case OPEN:
-						logWrite("[MENU] Open Trigger (item %d)\n",app->menu->selected);
-						//if(app->menu->item[app->menu->selected]->menu != NULL && app->menu->item[app->menu->selected]->state == CLOSED){
-						//	app->menu->item[app->menu->selected]->state = OPEN
-						//}
-
-						break;
-					default:
-						break;
-				}
-
-			}
 				mouse_flags ^= M_LEFTONCE;
 		}
 		float accx = (last_xpos-gxpos)*0.01f;

@@ -28,7 +28,6 @@
 #include "fonts.h"
 #include "menu.h"
 
-FTGLfont *myfont;
 
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f
@@ -37,7 +36,7 @@ FTGLfont *myfont;
 
 void* renderer ( void *arg );
 void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,GLuint vpID,GLuint alphaID, GLuint wID);
-
+void drawMenuText(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller);
 
 
 #endif //RENDERERS_H

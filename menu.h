@@ -51,7 +51,7 @@ typedef enum MenuType {ROW, COLUMN} MenuType;
  *
  * @var Action::TEST
  */
-typedef enum Action {NONE, MENU,RESET, TEST} Action;
+typedef enum Action {NONE, MENU,RESET, TEST,BACKAPP,EXIT,CONTROL,ABOUT,OPTION,LOADSNAKE,SOLUTION,GENSOL,LOADSOL,NEXTSOL,PREVSOL,EXPAND} Action;
 
 /**
  * @ingroup Menu
