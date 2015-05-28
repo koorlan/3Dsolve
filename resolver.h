@@ -146,7 +146,7 @@ typedef struct ThreadArgs
  * @brief Fonction principale dans la résolution du snake.
  * @param snake : le serpent à résoudre
  */
-void resolverSolveSnake(Snake *snake);
+void resolverSolveSnake(Snake *snake, int maxThreadNb);
 
 void* resolverSolveNode(void* args);
 
