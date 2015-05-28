@@ -116,12 +116,37 @@ int getInput ( Context* context )
 
 	}
 
-	if ((key_flags&K_UP)==K_UP)
+	if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
+	{
+		gsolver->selected = 0;
+		gsolver->steps[0].dir = RIGHT;
+		playerFlatten (gsolver, app->snake, 0);
+		int i;
+		for (i=0;i<app->snake->length;i++)
+		{
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
+		}
+
+	}
+	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_PLAY)
 	{
 		gplayer->selected = 0;
-		playerFlatten ( gplayer, app->snake, 0 );
+		gplayer->steps[0].dir = RIGHT;
+		playerFlatten (gplayer, app->snake, 0);
+		int i;
+		for (i=0;i<app->snake->length;i++)
+		{
+			mat4x4_translate(gplayer->realCubePos[i],
+				(float) gplayer->steps[i].coord.x,
+				(float) gplayer->steps[i].coord.y,
+				(float) gplayer->steps[i].coord.z);
+		}
+
 	}
-	else if ((key_flags&K_PGUP)==K_PGUP)
+	else if ((key_flags&K_PGUP)==K_PGUP )
 	{
 		if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
 		{
@@ -138,6 +163,20 @@ int getInput ( Context* context )
 		if (context->playmode == PM_RESOLVE)
 		{
 			gsolver->currentSolution = app->snake->solutions->head;
+		}
+		else
+		{
+			int i;
+			for (i=0; i<app->snake->length;i++)
+			{
+				gplayer->steps[i].dir = gsolver->steps[i].dir;
+				gplayer->steps[i].coord.x = gsolver->steps[i].coord.x;
+				gplayer->steps[i].coord.y = gsolver->steps[i].coord.y;
+				gplayer->steps[i].coord.z = gsolver->steps[i].coord.z;
+				mat4x4_dup (gplayer->realCubePos[i], gsolver->realCubePos[i]);
+				mat4x4_dup (gplayer->realCubeRot[i], gsolver->realCubeRot[i]);
+				gplayer->selected = gsolver->selected;
+			}
 		}
 	}
 	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
