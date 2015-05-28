@@ -374,7 +374,6 @@ int getInput ( Context* context )
 					gplayer->steps[i].dir = prevDir;
 			}
 
-
 			gplayer->steps[i].coord.x = (gplayer->steps[i-1].coord.x+dir2int[gplayer->steps[i-1].dir][0]);
 			gplayer->steps[i].coord.y = (gplayer->steps[i-1].coord.y+dir2int[gplayer->steps[i-1].dir][1]);
 			gplayer->steps[i].coord.z = (gplayer->steps[i-1].coord.z+dir2int[gplayer->steps[i-1].dir][2]);
