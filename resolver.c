@@ -12,7 +12,8 @@ const int cornerTruthTable[6][6] =
 
 pthread_mutex_t buildMutex = PTHREAD_MUTEX_INITIALIZER;
 
-void resolverSolveSnake(Snake *snake, int nbThread)
+
+void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
 {
     // Let's resolve <snake>
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
@@ -21,22 +22,34 @@ void resolverSolveSnake(Snake *snake, int nbThread)
     long unsigned int exploredWayNb = 0;
 
     int initialVectorNb = 0;
-    Tree rootNode = findInitialVectors(snake, &initialVectorNb);
-    //Tree rootNode = createAllInitialVectors(snake->volume);
 
-    logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
-
+    Tree rootNode;
+    if( helpNode == NULL )
+    {  rootNode = findInitialVectors(snake, &initialVectorNb);
+      //Tree rootNode = createAllInitialVectors(snake->volume);
+      logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
+    }
+    else 
+    {
+      rootNode = helpNode;
+      initialVectorNb = cptNode(rootNode);
+      nbThread = initialVectorNb;
+    }
     if(initialVectorNb <= 0)
     {
-        logError("[RESOL] No initial vector !\n");
-        return;
+      logError("[RESOL] No initial vector !\n");
+      return;
     }
+    printSnake(*snake);
 
     Tree currentNode = rootNode->currentChild;
 
     int i = 0;
 
     /* Création des threads de calcul */
+    if(initialVectorNb < nbThread)
+        nbThread = initialVectorNb;
+
     ThreadArgs* args[nbThread];
 
     pthread_t* threads = malloc(nbThread * sizeof(pthread_t));
@@ -393,6 +406,17 @@ void printTree (Tree rootNode)
   }
 }
 
+int cptNode (Tree rootNode)
+{ int cptNode = 0;
+  Tree tmpNode = rootNode->currentChild;
+  while(tmpNode!=NULL)
+  {
+    cptNode++;
+    tmpNode=tmpNode->brother;
+  }
+  return cptNode;
+}
+
 void printLine (Line line)
 {
   printf("A : (%lf %lf, %lf)\tB : (%lf, %lf, %lf)\nd : %lfx + %lfy = %lf\n", \
@@ -739,12 +763,12 @@ Coord calcCoord(Coord coord,Dir dir){
     case FRONT:
       nCoord.x = coord.x + 0;
       nCoord.y = coord.y + 0;
-      nCoord.z = coord.z - 1;
+      nCoord.z = coord.z + 1;
       break;
     case BACK:
       nCoord.x = coord.x + 0;
       nCoord.y = coord.y + 0;
-      nCoord.z = coord.z + 1;
+      nCoord.z = coord.z - 1;
       break;
     default :
       logError("[RESOL] Error in direction value\n");
@@ -784,11 +808,108 @@ int validVectCube(Coord nCoord, Dir dir, int max)
 {
   if(nCoord.z == 0 || nCoord.z == max || (nCoord.x != 0 && nCoord.x != max && nCoord.y != 0 && nCoord.y != 0))
     return 1;
-
   Coord vectCoord;
   vectCoord = calcCoord(nCoord, dir);
   if(vectCoord.x == 0 || vectCoord.y == 0 )
     return 0;
   else
     return 1;
+}
+
+int resolverInitializeHelp(Snake *snake, Step fstStep)
+{
+  Tree rootNode = initTree(); 
+  Tree currentNode = malloc(sizeof(NodeTree));
+
+
+  if (currentNode == NULL)
+  { 
+    logError("[RESOL] Error of memory allocation\n");
+    exit(-1);
+  }
+
+  copyStep(&(currentNode->step), fstStep);
+
+  currentNode->brother = NULL ;
+  currentNode->currentChild = NULL;
+  currentNode->parent = rootNode;
+  currentNode->hasPlayed = 0;
+  rootNode->currentChild =currentNode;
+  int i = 0;
+
+  Unit nextUnit;
+  Tree newChild;
+
+  Coord nCoord = calcCoord(currentNode->step.coord, currentNode->step.dir);
+
+  if(validCoord(nCoord, snake->volume.max) && snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
+  {
+    
+      snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FILL;
+      snake->currentUnit=-1;
+      nextUnit = snakeGetNextUnit(snake);
+      switch (nextUnit)
+      {
+        case EDGE:
+            currentNode->hasPlayed = 1;
+            currentNode->currentChild = NULL;
+            newChild = malloc(sizeof(NodeTree));
+            newChild->parent = currentNode;
+            newChild->brother = NULL;
+            newChild->hasPlayed = 1;
+            newChild->currentChild = NULL;
+            newChild->step.dir = currentNode->step.dir;
+            newChild->step.coord.x = nCoord.x;
+            newChild->step.coord.y = nCoord.y;
+            newChild->step.coord.z = nCoord.z;
+            currentNode->currentChild = newChild;
+            return 2;
+        break;
+        case STRAIGHT:
+          newChild = malloc(sizeof(NodeTree));
+          newChild->parent = currentNode;
+          newChild->brother = currentNode->currentChild;
+          newChild->hasPlayed = 0;
+          newChild->currentChild = NULL;
+          newChild->step.dir = currentNode->step.dir;
+          newChild->step.coord.x = nCoord.x;
+          newChild->step.coord.y = nCoord.y;
+          newChild->step.coord.z = nCoord.z;
+          currentNode->currentChild = newChild;
+          break;
+        case CORNER:
+          for ( i = 0; i < 6; i++)
+          {
+            if(cornerTruthTable[currentNode->step.dir][i])
+            {
+                newChild = malloc(sizeof(NodeTree));
+
+                newChild->parent = currentNode;
+                newChild->brother = currentNode->currentChild;
+                newChild->hasPlayed = 0;
+                newChild->currentChild = NULL;
+
+                newChild->step.dir = i;
+                newChild->step.coord.x = nCoord.x;
+                newChild->step.coord.y = nCoord.y;
+                newChild->step.coord.z = nCoord.z;
+
+                currentNode->currentChild = newChild;
+              }
+          }
+          break;
+      default:
+        break;
+      }
+  }
+  else
+  {
+      return -1;
+  }
+  rootNode->currentChild = currentNode->currentChild;
+
+  free(currentNode);
+  currentNode = NULL;
+  resolverSolveSnake(snake, rootNode, 1);
+  return 0;
 }

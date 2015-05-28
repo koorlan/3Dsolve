@@ -73,6 +73,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_SPACE:
 					bhv_flags ^= BHV_ROTATE;
 					break;
+				case GLFW_KEY_H:
+					key_flags |= K_H;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -90,7 +92,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 int getInput ( Context* context )
 {
 	static int magnet;
-
 	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
@@ -192,7 +193,7 @@ int getInput ( Context* context )
 
 
 	}
-	else if ((key_flags&K_RT)==K_RT && gsolver->currentSolution != NULL)
+	else if ((key_flags&K_RT)==K_RT && (key_flags&K_H)==K_H && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
 	{
 		int i;
 
@@ -248,7 +249,20 @@ int getInput ( Context* context )
 		}
 
 	}
-
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
+	{
+		playerCheckSolution(gplayer, app->snake->volume, app->snake->length);
+	}
+	else if((key_flags&K_H)==K_H && context->playmode == PM_PLAY)
+	{
+		playerHelp(gplayer, app->snake);
+		int i;
+		for (i=0;i<=gplayer->selected;i++)
+			mat4x4_translate(gplayer->realCubePos[i],
+				(float) gplayer->steps[i].coord.x,
+				(float) gplayer->steps[i].coord.y,
+				(float) gplayer->steps[i].coord.z);
+	}
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
 		int i;
@@ -330,6 +344,7 @@ int getInput ( Context* context )
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
 				playerRotate(gplayer, gplayer->selected, app->snake, magnet);
+
 				magnet = 0;
 			}
 			else playerFakeRotate(gplayer, gplayer->selected, app->snake, magnet);

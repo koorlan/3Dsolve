@@ -41,28 +41,25 @@ void applicationFindSnakes(Application* app)
     {
         while ((dir = readdir(d)) != NULL)
         {
-          if(dir->d_type == DT_REG && strstr(dir->d_name, ".snake") != NULL)
-            i++;
-        }
-        //closedir(d);
-        app->snakeNumber = i;
-        i = 0;
-        app->snakeNames = malloc(app->snakeNumber * sizeof(char*));
-        rewinddir(d);
-        while ((dir = readdir(d)) != NULL)
-        {
             if(dir->d_type == DT_REG && strstr(dir->d_name, ".snake") != NULL)
             {
-              length = strlen(dir->d_name) + 1;
-              app->snakeNames[i] = malloc(length * sizeof(char));
-              strncpy(app->snakeNames[i], dir->d_name, length);
-              i++;
+                if(i == 0)
+                    app->snakeNames = malloc(sizeof(char*));
+                else
+                    app->snakeNames = realloc(app->snakeNames, (i + 1)*sizeof(char*));
+                length = strlen(dir->d_name) + 1;
+                app->snakeNames[i] = malloc(length * sizeof(char));
+                strncpy(app->snakeNames[i], dir->d_name, length);
+                i++;
             }
         }
+        app->snakeNumber = i;
         closedir(d);
     }
+
 
     // DEBUG
     for(i = 0; i < app->snakeNumber; i++)
         logWrite("Snake n°%d : %s\n", i, app->snakeNames[i]);
+
 }
