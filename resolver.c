@@ -47,6 +47,9 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
     int i = 0;
 
     /* Création des threads de calcul */
+    if(initialVectorNb < nbThread)
+        nbThread = initialVectorNb;
+
     ThreadArgs* args[nbThread];
 
     pthread_t* threads = malloc(nbThread * sizeof(pthread_t));
