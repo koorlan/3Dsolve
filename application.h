@@ -71,6 +71,13 @@ Application* applicationCreate();
 
 /**
  * @ingroup Application
+ * @brief Supprime \a app de la mémoire
+ * @param app L'application à supprimer
+ */
+void applicationDestroy(Application* app);
+
+/**
+ * @ingroup Application
  * @brief Parcours le dossier "Snakes" de l'application à la recherche des snakes disponibles.
  *
  * Cette fonction remplit les champs Application::snakeNames et Application::snakeNumber

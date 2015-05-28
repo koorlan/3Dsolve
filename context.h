@@ -80,9 +80,12 @@ typedef struct context
 	int screen_width;
 	int screen_height;
 	pthread_t render_thread;
-	GLuint volume_program;
 	GLuint snake_program;
+	GLuint snake_program_vs;
+	GLuint snake_program_fs;
 	GLuint picking_program;
+	GLuint picking_program_vs;
+	GLuint picking_program_fs;
 	GLuint dwoodtex;
 	GLuint lwoodtex;
 	GLuint linktex;
@@ -91,7 +94,6 @@ typedef struct context
 	Object* link_mesh;
 	Camera* camera;
 	float ratio;
-	Snake* snake;
 	int drawpick;
 	int playmode;
 	int spread;

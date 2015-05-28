@@ -170,7 +170,7 @@ Object * objectLoad(const char * file)
 
 		logWrite ("[OBJCT] VAO %d created bound to VBO %d and VBO %d\n", vao, points_vbo, uvs_vbo);
 	}
-	else if (object->method == 50)
+	else if (object->method == M_OBJ)
 	{
 
 		float baseverts[4096];
@@ -281,5 +281,8 @@ Object * objectLoad(const char * file)
 
 int objectDestroy(Object * object)
 {
+	glDeleteVertexArrays(1, &(object->vao_id));
+	//glDeleteBuffers(1, &object->vbo_id);
+	free(object);
 	return 0;
 }

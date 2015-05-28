@@ -67,8 +67,10 @@ ListSolution* listSolutionCreate();
  * @ingroup ListSolution
  * @brief Détruit proprement un liste de solution
  * @param listSolution la liste à détruire.
+ * @param deleteSteps si mis à 1, indique qu'il faut libérer de la mémoire
+ * les tableau de solution. Sinon, seul la liste (le conteneur) est libéré
  */
-void listSolutionDestroy(ListSolution* listSolution);
+void listSolutionDestroy(ListSolution* listSolution, int deleteSteps);
 
 /**
  * @ingroup ListSolution

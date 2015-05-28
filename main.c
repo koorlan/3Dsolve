@@ -62,6 +62,59 @@
 #include "menu.h"
 #include "application.h"
 
+char* help = "SolidSnake\n\tUtilise par défault le snake \"Snakes/snake.snake\" et 1 thread de calcul.\n\n"\
+"Options disponibles :\n --help\n\t Affiche l'aide\n --snake [path]\n\t Permet de choisir un autre snake"\
+" que celui par défaut en indiquant son chemin\n --threadNb [nombre]\n\t Permet de choisir le nombre de thread de"\
+" calcul à utiliser.\n --noGraphics\n\t Permet de ne pas démarrer le context de rendu 3D (utilisé à des fins de debug)"\
+". Note, si l'option --noGraphics est utilisé, l'application ne pourra pas calculer le temps de résolution.\n";
+
+void checkArguments(int argc, char** argv, int* threadNb, char* snakeFile, int* noGraphics)
+{
+	int currentArgIndex;
+	char* currentArg;
+	for(currentArgIndex = 1; currentArgIndex < argc; currentArgIndex++)
+	{
+		currentArg = argv[currentArgIndex];
+		if(strncmp(currentArg, "--help", 6) == 0)
+		{
+			printf("%s", help);
+			exit(EXIT_SUCCESS);
+		}
+		else if(strncmp(currentArg, "--snake", 7) == 0)
+		{
+			currentArgIndex++;
+			if(currentArgIndex < argc &&
+			strstr(argv[currentArgIndex], ".snake") != NULL)
+				strncpy(snakeFile, argv[currentArgIndex], 50);
+			else
+			{
+				printf("%s", help);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if(strncmp(currentArg, "--threadNb", 10) == 0)
+		{
+			int tmp;
+			currentArgIndex++;
+			if(currentArgIndex < argc &&
+			sscanf(argv[currentArgIndex], "%d", &tmp) == 1)
+				*threadNb = tmp;
+			else
+			{
+				printf("%s", help);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if(strncmp(currentArg, "--noGraphics", 12) == 0)
+			*noGraphics = 1;
+		else
+		{
+			printf("%s", help);
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
 int main ( int argc, char ** argv )
 {
 	/// [1] Init log system
@@ -72,20 +125,21 @@ int main ( int argc, char ** argv )
 	}
 	/// [1]
 
+	char* filePath = malloc(50);
+	strncpy(filePath, "Snakes/snake.snake", 19);
+	int maxThreadNb = 1;
+	int noGraphics = 0;
+	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
+
 	app = applicationCreate();
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
-	char* filePath = malloc(50);
-	if(argc == 2)
-		strncpy(filePath, argv[1], 50);
-	else
-		strncpy(filePath, "Snakes/snake.snake", 50);
 
-	Snake* snake = snakeInit(filePath);
+	app->snake = snakeInit(filePath);
 	free(filePath);
 
-	if(snake == NULL)
+	if(app->snake == NULL)
 	{
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
@@ -93,52 +147,54 @@ int main ( int argc, char ** argv )
 	/// [2]
 
 	/// [3] Context and menu initialization
-	Context* context = contextCreate ();
-	if ( !context )
+	Context* context;
+	if(!noGraphics)
 	{
-		logError ("[MAIN.] Could not create context\n");
-		return EXIT_FAILURE;
+		context = contextCreate ();
+		if ( !context )
+		{
+			logError ("[MAIN.] Could not create context\n");
+			return EXIT_FAILURE;
+		}
+
+		//Menu test;
+		int i ;
+		mymenu = NULL;
+		initMenu(&mymenu);
+		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
+
+		Item *tmpitem;
+		for ( i = 0;  i <2; i++) {
+			initItem(&(tmpitem));
+			setItemType(tmpitem, ITEM);
+			//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+			setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
+			setItemDescriptor(tmpitem,(struct Descriptor)
+				{	.name="Default Text",
+					.font=LoadFont("fonts/Libertine.ttf"),
+					.fontSize = 20,
+					.minFontSize = DEFAULT_MIN_FONT_SIZE,
+					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+					.action= OPEN});
+			ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+			addItemToMenu(mymenu,tmpitem);
+		}
+
+		//setItemDescriptor(mymenu->item[3],(struct Descriptor)
+		//	{	.name="Custom Text",
+		//		.font=LoadFont("fonts/Fipps-Regular.otf"),
+		//		.fontSize = 25,
+		//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
+		//		.action= OPEN});
+		//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
+		//test relative fontSize
+		calcMenu(mymenu);
+		//End test menu
+		/// [3]
 	}
-
-	//Menu test;
-	int i ;
-	mymenu = NULL;
-	initMenu(&mymenu);
-	setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-
-	Item *tmpitem;
-	for ( i = 0;  i <2; i++) {
-		initItem(&(tmpitem));
-		setItemType(tmpitem, ITEM);
-		//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-		setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
-		setItemDescriptor(tmpitem,(struct Descriptor)
-			{	.name="Default Text",
-				.font=LoadFont("fonts/Libertine.ttf"),
-				.fontSize = 20,
-				.minFontSize = DEFAULT_MIN_FONT_SIZE,
-				.maxFontSize = DEFAULT_MAX_FONT_SIZE,
-				.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-				.action= OPEN});
-		ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
-		addItemToMenu(mymenu,tmpitem);
-	}
-
-	//setItemDescriptor(mymenu->item[3],(struct Descriptor)
-	//	{	.name="Custom Text",
-	//		.font=LoadFont("fonts/Fipps-Regular.otf"),
-	//		.fontSize = 25,
-	//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
-	//		.action= OPEN});
-	//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
-	//test relative fontSize
-	calcMenu(mymenu);
-	//End test menu
-	/// [3]
-
 
 	/// [4] Application running
-	context->snake = snake;
 
 	struct timespec time1;
 	struct timespec time2;
@@ -146,19 +202,22 @@ int main ( int argc, char ** argv )
 	time1.tv_nsec = 1000000;
 
 	context->playmode = PM_PLAY;
-	gplayer = playerInit ( context->snake );
-	gsolver = playerInit ( context->snake );
-	gsolver->currentSolution = context->snake->solutions->head;
+	gplayer = playerInit ( app->snake );
+	gsolver = playerInit ( app->snake );
+	gsolver->currentSolution = app->snake->solutions->head;
 
-	contextInit ( context );
+	if(!noGraphics)
+		contextInit ( context );
+	resolverSolveSnake(app->snake, maxThreadNb);
 
-	resolverSolveSnake(snake); //à mettre en action du menu (?)
-
-	//Boucle principale
-	while (app->running)
+	if(!noGraphics)
 	{
-		getInput(context);
-		nanosleep(&time1, &time2);
+		//Boucle principale
+		while (app->running)
+		{
+			getInput(context);
+			nanosleep(&time1, &time2);
+		}
 	}
 	/// [4]
 
@@ -166,8 +225,9 @@ int main ( int argc, char ** argv )
 
 	playerDestroy( gplayer );
 	playerDestroy( gsolver );
-	contextDestroy ( context );
-	snakeDestroy ( snake );
+	if(!noGraphics)
+		contextDestroy ( context );
+	applicationDestroy(app);
 	/// [5]
 
 	logWrite ("[MAIN.] Terminated\n");

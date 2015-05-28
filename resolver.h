@@ -134,20 +134,47 @@ typedef struct Line
  */
 typedef NodeTree * Tree;
 
+/**
+ * @ingroup Resolver
+ * @struct ThreadArgs
+ * @brief Structure utilisé pour passer les paramètres aux thread de calcul.
+ *
+ * @var ThreadArgs::rootNode
+ * Le noeud à partir duquel le thread doit chercher les solutions
+ * @var ThreadArgs::snake
+ * Le snake à résoudre
+ * @var ThreadArgs::exploredWayNb
+ * Pointeur sur entier qui sera valuer par le thread afin d'informer le
+ * thread principal du nombre de chemin explorés.
+ */
 typedef struct ThreadArgs
 {
     Tree rootNode;
     Snake* snake;
-    pthread_mutex_t mutex;
+	int exploredWayNb;
 } ThreadArgs;
 
 /**
  * @ingroup Resolver
  * @brief Fonction principale dans la résolution du snake.
- * @param snake : le serpent à résoudre
+ * @param snake le serpent à résoudre
+ * @param maxThreadNb le nombre maximal de thread que la fonction est autorisée
+ * à utiliser pour résoudre le snake.
  */
-void resolverSolveSnake(Snake *snake);
+void resolverSolveSnake(Snake *snake, int maxThreadNb);
 
+/**
+ * @ingroup Resolver
+ * @brief Cette fonction cherche les solutions à partir du noeud qui lui est
+ * passé en paramètre.
+ *
+ * Cette fonction est la fonction principale des thread de calcul. Elle tente
+ * de résoudre le serpent à partir du noued qui lui est donné en paramètre. Les
+ * informations sont remontées au thread principal via les pointeurs présents
+ * dans la structure ThreadArgs
+ * @param args  les arguments du thread
+ * @see ThreadArgs
+ */
 void* resolverSolveNode(void* args);
 
 /**
