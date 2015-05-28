@@ -185,10 +185,10 @@ void* renderer ( void *arg )
 
 			logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
 
-			//context->drawpick = 0;  //Comment for debug
+			context->drawpick = 0;  //Comment for debug
 			////Draw for debug
-			glfwSwapBuffers(context->window);
-			continue;
+			//glfwSwapBuffers(context->window);
+			//continue;
 
 		}
 		//! [5]

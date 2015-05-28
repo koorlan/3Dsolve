@@ -398,7 +398,7 @@ int getInput ( Context* context )
 
 		int accumulator = 0;
 
-		if( app->itemSelected > 0)
+		if( app->itemSelected >= 0)
 		{
 			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {

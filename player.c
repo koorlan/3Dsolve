@@ -209,7 +209,6 @@ void playerDestroy ( Player* player )
 }
 
 
-
 int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volume volume)
 {	int i, j;
 
