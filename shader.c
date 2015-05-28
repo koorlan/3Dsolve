@@ -105,15 +105,12 @@ void shaderPrintProgramInfo (GLuint shader_program)
 	logWrite ("[SHADR] program info log for GL index %u:\n%s\n", shader_program, log);
 }
 
-int shaderDestroy(GLuint shader_id)
-{
-    glDeleteShader(shader_id);
-	return 1;
-}
 int shaderProgramDestroy(GLuint shader_program_id, GLuint vs_id, GLuint fs_id)
 {
-    glDetachShader(shader_program_id, fs_id);
-    glDetachShader(shader_program_id, vs_id);
+	glDetachShader(shader_program_id, fs_id);
+	glDetachShader(shader_program_id, vs_id);
 	glDeleteProgram(shader_program_id);
+	glDeleteShader(fs_id);
+	glDeleteShader(vs_id);
 	return 1;
 }

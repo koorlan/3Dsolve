@@ -14,6 +14,7 @@ Application* applicationCreate()
     app->solver = NULL;
     app->pathExplored = 0;
     app->calculTime = 0;
+    app->running = 1;
 
     return app;
 }
@@ -56,7 +57,9 @@ void applicationFindSnakes(Application* app)
         closedir(d);
     }
 
+
     // DEBUG
     for(i = 0; i < app->snakeNumber; i++)
         logWrite("Snake n°%d : %s\n", i, app->snakeNames[i]);
+
 }
