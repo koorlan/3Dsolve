@@ -204,13 +204,17 @@ int main ( int argc, char ** argv )
 	#endif
 
 
-	context->playmode = PM_PLAY;
+
 	gplayer = playerInit ( app->snake );
 	gsolver = playerInit ( app->snake );
 	gsolver->currentSolution = app->snake->solutions->head;
 
 	if(!noGraphics)
+	{
+		context->playmode = PM_PLAY;
 		contextInit ( context );
+	}
+
 	resolverSolveSnake(app->snake, NULL, maxThreadNb);
 
 	if(!noGraphics)

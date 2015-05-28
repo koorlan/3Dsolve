@@ -110,6 +110,12 @@ Structures de données</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Fonctions</h2></td></tr>
+<tr class="memitem:ga6bdd12f5379556ea419ee3e215e19970"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_application.html">Application</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___application.html#ga6bdd12f5379556ea419ee3e215e19970">applicationCreate</a> ()</td></tr>
+<tr class="memdesc:ga6bdd12f5379556ea419ee3e215e19970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une nouvelle application.  <a href="#ga6bdd12f5379556ea419ee3e215e19970">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga6bdd12f5379556ea419ee3e215e19970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5508eba2a2487982278e064b4cb3b6aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___application.html#ga5508eba2a2487982278e064b4cb3b6aa">applicationDestroy</a> (<a class="el" href="struct_application.html">Application</a> *app)</td></tr>
+<tr class="memdesc:ga5508eba2a2487982278e064b4cb3b6aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime <em>app</em> de la mémoire.  <a href="#ga5508eba2a2487982278e064b4cb3b6aa">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga5508eba2a2487982278e064b4cb3b6aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8539e671d5894da3c638fb0da66684b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___application.html#ga8539e671d5894da3c638fb0da66684b5">applicationFindSnakes</a> (<a class="el" href="struct_application.html">Application</a> *app)</td></tr>
 <tr class="memdesc:ga8539e671d5894da3c638fb0da66684b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parcours le dossier "Snakes" de l'application à la recherche des snakes disponibles.  <a href="#ga8539e671d5894da3c638fb0da66684b5">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga8539e671d5894da3c638fb0da66684b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +123,48 @@ Fonctions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
 <p>Contrôle l'application. </p>
 <h2 class="groupheader">Documentation des fonctions</h2>
+<a class="anchor" id="ga6bdd12f5379556ea419ee3e215e19970"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_application.html">Application</a>* applicationCreate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Crée une nouvelle application. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>L'application créé ou NULL en cas d'erreur </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga5508eba2a2487982278e064b4cb3b6aa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void applicationDestroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_application.html">Application</a> *&#160;</td>
+          <td class="paramname"><em>app</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Supprime <em>app</em> de la mémoire. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">app</td><td>L'application à supprimer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="ga8539e671d5894da3c638fb0da66684b5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -147,7 +195,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Jeudi 28 Mai 2015 17:35:59 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

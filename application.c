@@ -41,7 +41,7 @@ void applicationFindSnakes(Application* app)
     {
         while ((dir = readdir(d)) != NULL)
         {
-            if(dir->d_type == DT_REG && strstr(dir->d_name, ".snake") != NULL)
+            if(strstr(dir->d_name, ".snake") != NULL)
             {
                 if(i == 0)
                     app->snakeNames = malloc(sizeof(char*));

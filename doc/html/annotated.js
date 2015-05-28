@@ -17,5 +17,6 @@ var annotated =
     [ "Snake", "struct_snake.html", "struct_snake" ],
     [ "Solution", "struct_solution.html", "struct_solution" ],
     [ "Step", "struct_step.html", "struct_step" ],
+    [ "ThreadArgs", "struct_thread_args.html", "struct_thread_args" ],
     [ "Volume", "struct_volume.html", "struct_volume" ]
 ];

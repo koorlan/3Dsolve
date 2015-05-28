@@ -3,6 +3,7 @@ var searchData=
   ['c',['c',['../struct_line.html#ae0323a9039add2978bf5b49550572c7c',1,'Line']]],
   ['calccoord',['calcCoord',['../group___resolver.html#gae921c0ecef95e3d4e77dc39d3f9587a8',1,'calcCoord(Coord coord, Dir dir):&#160;resolver.c'],['../group___resolver.html#gae921c0ecef95e3d4e77dc39d3f9587a8',1,'calcCoord(Coord coord, Dir dir):&#160;resolver.c']]],
   ['calcmenu',['calcMenu',['../group___menu.html#gad33d22d10250d6b6836ae3b73a1de2f4',1,'calcMenu(Menu *menu):&#160;menu.c'],['../group___menu.html#gad33d22d10250d6b6836ae3b73a1de2f4',1,'calcMenu(Menu *menu):&#160;menu.c']]],
+  ['calcultime',['calculTime',['../struct_application.html#a7f3aaa4b1c8ca5e1b4ba6d61866fd917',1,'Application']]],
   ['camera',['camera',['../structcamera.html',1,'']]],
   ['color',['Color',['../struct_color.html',1,'']]],
   ['context',['context',['../structcontext.html',1,'']]],

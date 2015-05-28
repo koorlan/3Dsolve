@@ -151,9 +151,9 @@ Fonctions</h2></td></tr>
 <tr class="memitem:ga7c3579e6168f011c051fdae235738d95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___snake.html#ga7c3579e6168f011c051fdae235738d95">snakeInit</a> (char *templatePath)</td></tr>
 <tr class="memdesc:ga7c3579e6168f011c051fdae235738d95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise un snake en lisant les donnée depuis le fichier spécifier par &lt;templatePath&gt;  <a href="#ga7c3579e6168f011c051fdae235738d95">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga7c3579e6168f011c051fdae235738d95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27143e996b70c545bd57cd7ef8fa07f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___snake.html#ga27143e996b70c545bd57cd7ef8fa07f7">snakeDestroy</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
-<tr class="memdesc:ga27143e996b70c545bd57cd7ef8fa07f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime snake de la mémoire.  <a href="#ga27143e996b70c545bd57cd7ef8fa07f7">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga27143e996b70c545bd57cd7ef8fa07f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86f331645848e654dfb67d419cd7bbef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___snake.html#ga86f331645848e654dfb67d419cd7bbef">snakeDestroy</a> (<a class="el" href="struct_snake.html">Snake</a> *snake, int deleteSolution)</td></tr>
+<tr class="memdesc:ga86f331645848e654dfb67d419cd7bbef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime snake de la mémoire.  <a href="#ga86f331645848e654dfb67d419cd7bbef">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga86f331645848e654dfb67d419cd7bbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga95970724c4bfc4ab94758d955f48adb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___snake.html#ga95970724c4bfc4ab94758d955f48adb7">snakeAddSolution</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
 <tr class="memdesc:ga95970724c4bfc4ab94758d955f48adb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copie la solution trouvé (<a class="el" href="struct_snake.html#a99a4f4239fb1568fe35d9a081c9b2660">Snake::tmpSteps</a>) dans la liste des solution (<a class="el" href="struct_snake.html#a97be9d71c3998b7a3a97e9403e375979">Snake::solutions</a>)  <a href="#ga95970724c4bfc4ab94758d955f48adb7">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga95970724c4bfc4ab94758d955f48adb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,7 +236,7 @@ Fonctions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga27143e996b70c545bd57cd7ef8fa07f7"></a>
+<a class="anchor" id="ga86f331645848e654dfb67d419cd7bbef"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -244,8 +244,18 @@ Fonctions</h2></td></tr>
           <td class="memname">void snakeDestroy </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
-          <td class="paramname"><em>snake</em></td><td>)</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>deleteSolution</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -254,6 +264,7 @@ Fonctions</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">snake</td><td>Le snake à détruir </td></tr>
+    <tr><td class="paramname">deleteSolution</td><td>Si mis à 1, indique qu'il faut libérer de la mémoire les solutions. Si mis à 0, les solution sont conservé en mémoire (utile lors de la destruction des serpents utilisé par les threads) </td></tr>
   </table>
   </dd>
 </dl>
@@ -394,7 +405,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Jeudi 28 Mai 2015 17:35:59 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

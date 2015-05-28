@@ -105,35 +105,42 @@ $(document).ready(function(){initNavTree('player_8h_source.html','');});
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;log.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;object.h&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;snake.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;linmath.h&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structplayer.html">   13</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structplayer.html">player</a></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="struct_step.html">Step</a>* steps;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">int</span> selected;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* currentSolution;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;} <a class="code" href="structplayer.html">Player</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="code" href="structplayer.html">Player</a>* gplayer;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="code" href="structplayer.html">Player</a>* gsolver;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="code" href="structplayer.html">Player</a>* playerInit ( <a class="code" href="struct_snake.html">Snake</a>* snake );</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">void</span> playerFlatten ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> fromIndex );</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> playerRotate ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> way );</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> playerDestroy ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a> );</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif //PLAYER_H</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structplayer.html">   14</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structplayer.html">player</a></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="struct_step.html">Step</a>* steps;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">int</span> selected;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* currentSolution;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    mat4x4* realCubePos;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    mat4x4* realCubeRot;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    vec3* flatCubePos;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">int</span> segStart;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">int</span> segEnd;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;} <a class="code" href="structplayer.html">Player</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<a class="code" href="structplayer.html">Player</a>* gplayer;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="structplayer.html">Player</a>* gsolver;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<a class="code" href="structplayer.html">Player</a>* playerInit ( <a class="code" href="struct_snake.html">Snake</a>* snake );</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> playerFlatten ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> fromIndex );</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> playerRotate ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> magnet );</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> playerFakeRotate ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> magnet );</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> playerDestroy ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a> );</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif //PLAYER_H</span></div>
 <div class="ttc" id="struct_step_html"><div class="ttname"><a href="struct_step.html">Step</a></div><div class="ttdoc">Définit une étape de résolution. </div><div class="ttdef"><b>Definition:</b> snake.h:96</div></div>
 <div class="ttc" id="struct_snake_html"><div class="ttname"><a href="struct_snake.html">Snake</a></div><div class="ttdoc">Définit le snake à résoudre. </div><div class="ttdef"><b>Definition:</b> snake.h:161</div></div>
 <div class="ttc" id="struct_solution_html"><div class="ttname"><a href="struct_solution.html">Solution</a></div><div class="ttdoc">Définit un élement d&#39;une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:38</div></div>
-<div class="ttc" id="structplayer_html"><div class="ttname"><a href="structplayer.html">player</a></div><div class="ttdef"><b>Definition:</b> player.h:13</div></div>
+<div class="ttc" id="structplayer_html"><div class="ttname"><a href="structplayer.html">player</a></div><div class="ttdef"><b>Definition:</b> player.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>player.h</b></li>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Jeudi 28 Mai 2015 17:35:59 pour SolidSnake par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
