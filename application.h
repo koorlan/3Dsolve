@@ -66,6 +66,7 @@ typedef struct Application
     Player* solver;
     Menu *menu;
     int menuDepth;
+    int itemSelected;
     int running;
     unsigned int pathExplored;
     double calculTime;

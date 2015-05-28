@@ -265,35 +265,71 @@ int getInput ( Context* context )
 	}
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-		int i;
+		int i = 0,
+				j = 0,
+				closedMenu = 0;
 		Menu *currentMenu = NULL;
+		Menu *menuToClose = NULL;
 		currentMenu = app->menu;
+
+		int accumulator = 0;
+
+		if( app->itemSelected > 0)
+		{
+			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {
-			if(currentMenu->item[i]->menu != NULL && currentMenu->item[i]->menu->state == OPEN)	currentMenu = currentMenu->item[currentMenu->opened]->menu;
+			accumulator += currentMenu->size;
+			logWrite("accumulator %d \n",accumulator);
+			if(app->itemSelected >= accumulator){
+				if(currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size)
+					currentMenu = currentMenu->item[currentMenu->opened]->menu;
+				else
+					break;
+			}
+			else{
+				logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
+				currentMenu->selected = app->itemSelected - accumulator + currentMenu->size;
+				if (currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size){
+					menuToClose = currentMenu->item[currentMenu->opened]->menu;
+				for ( j = i+1; j < app->menuDepth; j++) {
+					if(currentMenu->selected == currentMenu->opened)
+						break;
+					menuToClose->state = CLOSE;
+					closedMenu ++;
+					if (menuToClose->opened >= 0 && menuToClose->opened < menuToClose->size){
+						menuToClose = menuToClose->item[menuToClose->opened]->menu;
+					}
+				}
+				app->menuDepth -= closedMenu;
+				}
+				break;
+			}
 		}
-		if (currentMenu->selected != -1 && currentMenu->selected < currentMenu->size){
+		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
 					logWrite("[MENU] Close Trigger (item %d)\n",currentMenu->selected);
-					printf("[MENU] Close Trigger (item %d)\n",currentMenu->selected );
+
 					break;
 				case EXIT:
-					logWrite("[MENU] Close Trigger EXIT (item %d)\n",currentMenu->selected);
-					printf("[MENU] Close Trigger EXIT(item %d)\n",currentMenu->selected );
+					logWrite("[MENU] EXIT Trigger EXIT (item %d)\n",currentMenu->selected);
+					app->running = 0;
 					break;
-				case TEST:
-					logWrite("[MENU] Test Trigger (item %d)\n",currentMenu->selected);
-					printf("[MENU] Close Trigger (item %d)\n",currentMenu->selected );
+				case LOADSNAKE:
+					logWrite("[MENU] LOADSNAKE Trigger (item %d)\n",currentMenu->selected);
+
 					break;
 				case MENU:
 					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
+						logWrite("[MENU] OPEN A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
 						currentMenu->opened = currentMenu->selected;
 						app->menuDepth ++;
 						break;
 					}
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
+						logWrite("[MENU] CLOSE A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
 						app->menuDepth --;
 						break;
@@ -302,9 +338,10 @@ int getInput ( Context* context )
 				default:
 					break;
 			}
-			app->menu->selected = -1;
+			currentMenu->opened = currentMenu->selected;
+			currentMenu->selected = -1;
 		}
-
+	}
 
 		if (gplayer->selected!=0)
 		{

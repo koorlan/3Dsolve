@@ -156,9 +156,9 @@ void* renderer ( void *arg )
 			Menu * tmpMenu = NULL;
 			Item * itemCaller = NULL ;
 			currentMenu = app->menu;
-
+			int id = 0;
 			for (j = 0; j < app->menuDepth; j++) {
-				drawPickMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,  viewMat, perMat, PVMat, WMat, vpID2, pickcolorID,  wID2);
+				drawPickMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,&id, viewMat, perMat, PVMat, WMat, vpID2, pickcolorID,  wID2);
 				if(menuCaller == NULL && itemCaller == NULL) break;
 				tmpMenu = currentMenu;
 				currentMenu = menuCaller;
@@ -175,14 +175,15 @@ void* renderer ( void *arg )
 			//if (data[0] == gplayer->selected)
 			//	playerRotate(gplayer, gplayer->selected, context->snake);
 			if( (data[1]==255?-1:data[1]) != -1)
-				currentMenu->selected = (data[1]==255?-1:data[1]);
-			else
+				app->itemSelected = (data[1]==255?-1:data[1]);
+			else{
+				app->itemSelected = -1;
 				gplayer->selected = (data[0]==255?-1:data[0]);
-
+			}
 			//if (gplayer->selected != -1)
 			//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
-
+			logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
 
 			context->drawpick = 0;  //Comment for debug
 			////Draw for debug
@@ -411,7 +412,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 				mat4x4_scale_aniso(WMat, WMat, 1.f, (menu->item[i]->bboxRel[1]/menu->bboxRel[1]) , 0.f);
 
 				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-				if(i == menu->selected){
+				if(i == menu->opened){
 					glBindTexture(GL_TEXTURE_2D, context->itemtex);
 					glDrawArrays(GL_TRIANGLES, 0, menu->mesh->nb_faces);
 					glBindTexture(GL_TEXTURE_2D, context->menutex);
@@ -427,7 +428,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 	}
 }
 
-void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int pickcolorID, unsigned int wID){
+void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller,int *id,mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int pickcolorID, unsigned int wID){
 	float xoffset = 0.f;
 	float yoffset = 0.f;
 	float accumulator = 0.f;
@@ -473,7 +474,8 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;
 				}
-				glUniform3f(pickcolorID,255.f, ((float)i)/255.f, 0.f);
+				glUniform3f(pickcolorID,255.f, (float)((*id))/255.f, 0.f);
+				*id += 1 ;
 				mat4x4_identity(WMat);
 				mat4x4_scale3d(WMat, WMat, 1.f);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);

@@ -282,6 +282,46 @@ int main ( int argc, char ** argv )
 			calcMenu(app->menu->item[0]->menu);
 			testMenuMesh(app->menu->item[0]->menu,context->screen_width,context->screen_height);
 
+			//OPTION menu
+			initMenu(&(app->menu->item[0]->menu->item[4]->menu));
+			app->menu->item[0]->menu->item[4]->menu->type = COLUMN;
+			//setMenuMargin(app->menu->item[0]->menu,(float []) {0.0f, 0.0f, 0.0f, 0.0f} );
+			for ( i = 0;  i <2; i++) {
+				initItem(&(tmpitem));
+				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
+				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
+				switch (i){
+					case 0:
+					setItemDescriptor(tmpitem,(struct Descriptor)
+					{	.name="MouseSpeed",
+					.font=LoadFont("fonts/Libertine.ttf"),
+					.fontSize = 20,
+					.minFontSize = DEFAULT_MIN_FONT_SIZE,
+					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+					.action= EXIT});
+					break;
+					case 1:
+					setItemDescriptor(tmpitem,(struct Descriptor)
+					{	.name="TOINARD",
+					.font=LoadFont("fonts/Libertine.ttf"),
+					.fontSize = 20,
+					.minFontSize = DEFAULT_MIN_FONT_SIZE,
+					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
+					.color=(struct Color){.r=1.0f,.g=1.0f,.b=0.0f,.a=1.0f},
+					.action= EXIT});
+					break;
+
+				}
+				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+				addItemToMenu(app->menu->item[0]->menu->item[4]->menu,tmpitem);
+			}
+			app->menu->item[0]->menu->item[4]->menu->state = CLOSE;
+			app->menu->item[0]->menu->item[4]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[0]->menu->item[4]->menu);
+			testMenuMesh(app->menu->item[0]->menu->item[4]->menu,context->screen_width,context->screen_height);
+
+
 			app->menuDepth =1;
 
 
