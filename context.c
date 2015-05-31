@@ -174,6 +174,7 @@ int getInput ( Context* context )
 		if (context->playmode == PM_RESOLVE)
 		{
 			gsolver->currentSolution = app->snake->solutions->head;
+			playerFlatten(gplayer, app->snake, 0 );
 		}
 		else
 		{
@@ -202,13 +203,16 @@ int getInput ( Context* context )
 		}
 
 		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
-		Dir prevDir = DNONE;
+		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
 			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
-			prevDir = ( curDir != prevDir ? curDir : prevDir );
-			curDir = gsolver->steps[i].dir;
+			if (gsolver->selected!=0)
+			{
+				prevDir = ( curDir != prevDir ? curDir : prevDir );
+				curDir = gsolver->steps[i].dir;
+			}
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
@@ -338,13 +342,16 @@ int getInput ( Context* context )
 		}
 
 		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;
-		Dir prevDir = DNONE;//(gsolver->selected == 0 ? RIGHT : DNONE);
+		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
 			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
-			prevDir = ( curDir != prevDir ? curDir : prevDir );
-			curDir = gsolver->steps[i].dir;
+			if (gsolver->selected!=0)
+			{
+				prevDir = ( curDir != prevDir ? curDir : prevDir );
+				curDir = gsolver->steps[i].dir;
+			}
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
@@ -490,6 +497,8 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
+					app->state = AS_HOME;
+					sleep(1);
 					// Chargement d'un nouveau snake
 					logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
@@ -499,7 +508,8 @@ int getInput ( Context* context )
 					logWrite("[MENU] Loading Snake : %s\n", snakePath);
 					Snake* newSnake = snakeInit(snakePath);
 					free(snakePath);
-					//currentMenu->state = CLOSE;
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
 					if(newSnake != NULL)
 					{
 						snakeDestroy(app->snake, 1);
@@ -513,6 +523,7 @@ int getInput ( Context* context )
 						gsolver = playerInit(app->snake);
 						gsolver->currentSolution = app->snake->solutions->head;
 					}
+					app->state = AS_GAME;
 					break;
 				case LOADSOL:
 				newSolution = app->snake->solutions->head;
