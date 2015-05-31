@@ -507,7 +507,7 @@ int getInput ( Context* context )
 					{
 						snakeDestroy(app->snake, 1);
 						app->snake = newSnake;
-						resolverSolveSnake(app->snake, NULL, 1);
+						resolverSolveSnake(app->snake, NULL);
 
 						playerDestroy(gplayer);
 						gplayer = playerInit ( app->snake );

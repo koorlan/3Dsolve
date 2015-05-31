@@ -13,7 +13,7 @@ const int cornerTruthTable[6][6] =
 pthread_mutex_t buildMutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
+void resolverSolveSnake(Snake *snake, Tree helpNode)
 {
     // Let's resolve <snake>
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
@@ -21,6 +21,7 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
     double startTime = glfwGetTime();
     long unsigned int exploredWayNb = 0;
 
+    int nbThread = app->maxThread;
     int initialVectorNb = 0;
 
     Tree rootNode;
@@ -47,7 +48,9 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
     int i = 0;
 
     /* Création des threads de calcul */
-    if(initialVectorNb < nbThread)
+    if(nbThread == -1)
+        nbThread = initialVectorNb;
+    else if(initialVectorNb < nbThread)
         nbThread = initialVectorNb;
 
     ThreadArgs* args[nbThread];
@@ -910,6 +913,6 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   free(currentNode);
   currentNode = NULL;
-  resolverSolveSnake(snake, rootNode, 1);
+  resolverSolveSnake(snake, rootNode);
   return 0;
 }

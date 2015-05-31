@@ -75,6 +75,7 @@ typedef struct Application
     unsigned int pathExplored;
     double calculTime;
     int state;
+    int maxThread;
 } Application;
 
 Application* app;
