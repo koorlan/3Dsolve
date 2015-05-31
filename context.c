@@ -72,7 +72,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					key_flags |= K_ENTER;
 					break;
 				case GLFW_KEY_SPACE:
-					bhv_flags ^= BHV_ROTATE;
+					key_flags |= K_SPACE;
 					break;
 			}
 		break;
@@ -112,7 +112,8 @@ int getInput ( Context* context )
 
 	}
 
-	if ( app->state == AS_HOME && key_flags!=0)
+	if ( (app->state == AS_HOME || app->state == AS_ABOUT || app->state == AS_HELP )
+			&& (key_flags!=0 || (mouse_flags!=0 && mouse_flags!=M_MOVE)) )
 	{
 		key_flags = K_NONE;
 		app->state = AS_GAME;
@@ -120,6 +121,10 @@ int getInput ( Context* context )
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
+	}
+	else if ( (key_flags&K_SPACE)==K_SPACE )
+	{
+		bhv_flags ^= BHV_ROTATE;
 	}
 	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
 	{

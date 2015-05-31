@@ -66,6 +66,10 @@ void* renderer ( void *arg )
 	float xoffset = -(app->snake->length*0.3333333f);
 	float yoffset = -0.75f * 20.f;
 	float r_angle =  -M_PI/4;
+	FTGLfont* titleFont = LoadFont ("fonts/recharge bd.ttf");
+	ftglSetFontFaceSize(titleFont, 100, 72);
+	FTGLfont* pressFont = LoadFont ("fonts/recharge bd.ttf");
+	ftglSetFontFaceSize(pressFont, 22, 72);
 	//! [2]
 
 	//! [3] Renderer loop
@@ -101,17 +105,6 @@ void* renderer ( void *arg )
 			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			// Afficher texte ici
-			
-			glUseProgram (0);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			//ftglRenderFont( , "SNAKE", FTGL_RENDER_ALL);
-			
-
 			// Eye-candy
 			glUseProgram (context->snake_program);
 			mat4x4_identity(viewMat);
@@ -145,12 +138,85 @@ void* renderer ( void *arg )
 
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
+
+			// Afficher texte ici
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glColor4f (0.8f, 0.8f, 0.8f,1.f);
+			glTranslatef (-250.f, 100.f,0.f);
+			ftglRenderFont( titleFont, "3Dsolve", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (-275.f, -220.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f - (0.35f*(1+cos(4*glfwGetTime()))));
+			ftglRenderFont( pressFont, "Appuyez sur une touche pour continuer", FTGL_RENDER_ALL);
+
 		break;
 		case AS_LOAD:
+
+			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+						// Eye-candy
+			glUseProgram (context->snake_program);
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+			glUniform1f(alphaID, 1.0f);
+			glEnable (GL_DEPTH_TEST);
+			mat4x4_look_at(viewMat, (vec3){0.000001f,15.f,0.f},
+						(vec3){0.f,0.f,0.f},
+						(vec3){0.f,1.f,0.f});
+			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
+				glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
+
+			for ( i=0; i <= 16; i++ )
+			{
+				mat4x4_identity ( WMat );
+				mat4x4_rotate_Y ( WMat, WMat, ((float)i) * (M_PI/8) + (0.25*glfwGetTime()) );
+				mat4x4_translate_in_place ( WMat, 10.f, 0, 0);
+				mat4x4_scale3d(WMat, WMat, 2 + cos(((float)i) * (M_PI/8)+ 2 * glfwGetTime()));
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			}
+
+			
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef (-100.f, 0.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f - (0.35f*(1+cos(4*glfwGetTime()))));
+			ftglRenderFont( pressFont, "Chargement...", FTGL_RENDER_ALL);
+
 		break;
 		case AS_HELP:
+
+			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		break;
 		case AS_ABOUT:
+
+			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		break;
 		case AS_GAME:
 

@@ -33,6 +33,7 @@
 #include "fonts.h"
 #include "menu.h"
 #include "application.h"
+#include "fonts.h"
 
 //extern struct context;
 
