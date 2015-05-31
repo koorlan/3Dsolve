@@ -11,6 +11,8 @@ const float dir2lr[6][3] =
 {  0.f ,  1.f ,  0.f  }
 };
 
+#include "homecubes.h"
+
 
 extern const float dir2vec[6][3];
 
@@ -56,9 +58,7 @@ void* renderer ( void *arg )
 
 
 	int i,j;
-
 	int solidCheck = 0;
-
 	float scoef = 1.f;
 	int cubesNb = app->snake->length;
 	int solidStart = 0;
@@ -87,202 +87,98 @@ void* renderer ( void *arg )
 		//printf ("%f\n", fps); // display fps
 		//! [4]
 
+
 		// Set OpenGl viewport to the entire window
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
-		if (context->playmode == PM_PLAY)
-			curPlayer = gplayer;
-		else
-			curPlayer = gsolver;
 
-		if (0)//context->loading == 1)
+		switch (app->state)
 		{
-			context->camera->angle[0]+=0.02f;
-			context->camera->eye[0] = context->camera->target[0] + context->camera->distance
-						* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-			context->camera->eye[2] = context->camera->target[1] + context->camera->distance
-						* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-			context->camera->eye[1] = context->camera->target[2] + context->camera->distance
-						* sin(context->camera->angle[1]);
-		}
+		case AS_HOME:
 
-		if ( context->spread == 1 && scoef > 0.6f )
-			scoef -= 0.01f;
-		else if ( context->spread == 0 && scoef < 1.f )
-			scoef += 0.01f;
+			// Affichage de l'écran d'accueil
 
-		//! [5] Color picking (cube selection)
-		curPlayer->segEnd = cubesNb;
-		if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
-			for ( i=curPlayer->selected+1; i < cubesNb; i++ )
-				if ( app->snake->units[i] == CORNER)
-				{
-					curPlayer->segEnd = i;
-					break;
-				}
-		// The selected segment goes from gplayer->selected to segEnd
-
-		if ( context->drawpick == 1 )
-		{
-
-			//==========render cubes==========
-			glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
+			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glUseProgram (context->picking_program);
-			mat4x4_look_at(viewMat, context->camera->eye,
-					context->camera->target, context->camera->up);
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+			glUniform1f(alphaID, 1.0f);
+
+			// Afficher texte ici
+
+
+			glUseProgram (context->snake_program);
+			glEnable (GL_DEPTH_TEST);
+			mat4x4_look_at(viewMat, (vec3){3,4.5,3},
+						(vec3){0,1.5,0},
+						(vec3){0,1,0});
 			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
-			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
-
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 			#ifdef __APPLE__
 				glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
 			#else
 				glBindVertexArray (context->cube_mesh->vao_id);
 			#endif
 
-			for ( i=0; i <= curPlayer->segEnd; i++ )
+			for ( i=0; i <= 27; i++ )
 			{
-				glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
-
 				mat4x4_identity ( WMat );
-				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
-				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-				mat4x4_scale3d(WMat, WMat, scoef);
-				mat4x4_scale3d(WMat, WMat, 0.6f);
-
-				glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
-
-				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-			}
-			//==========render menu button==========
-			mat4x4_identity(viewMat);
-			mat4x4_identity(perMat);
-			mat4x4_mul (PVMat, perMat, viewMat);
-			glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
-
-			Menu * currentMenu = NULL ;
-			Menu * menuCaller = NULL;
-			Menu * tmpMenu = NULL;
-			Item * itemCaller = NULL ;
-			currentMenu = app->menu;
-			int id = 0;
-			for (j = 0; j < app->menuDepth; j++) {
-				drawPickMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,&id, viewMat, perMat, PVMat, WMat, vpID2, pickcolorID,  wID2);
-				if(menuCaller == NULL && itemCaller == NULL) break;
-				tmpMenu = currentMenu;
-				currentMenu = menuCaller;
-				menuCaller = tmpMenu;
-				tmpMenu = NULL;
-			}
-			glFlush();
-			glFinish();
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			unsigned char data[4];
-			glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
-					GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-			//if (data[0] == gplayer->selected)
-			//	playerRotate(gplayer, gplayer->selected, context->snake);
-			if( (data[1]==255?-1:data[1]) != -1)
-				app->itemSelected = (data[1]==255?-1:data[1]);
-			else{
-				app->itemSelected = -1;
-				gplayer->selected = (data[0]==255?-1:data[0]);
-			}
-			//if (gplayer->selected != -1)
-			//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
-
-			logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
-
-			context->drawpick = 0;  //Comment for debug
-			////Draw for debug
-			//glfwSwapBuffers(context->window);
-			//continue;
-
-		}
-		//! [5]
-
-		//==========view cubes==========
-		glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram (context->snake_program);
-		mat4x4_look_at(viewMat, context->camera->eye,
-				context->camera->target, context->camera->up);
-		mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
-		mat4x4_mul (PVMat, perMat, viewMat);
-		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-
-		for (	solidCheck = 0;
-			solidCheck <= (curPlayer->segEnd != cubesNb?1:0);
-			solidCheck++)
-		{
-			if (solidCheck == 0 && curPlayer->segEnd != cubesNb)
-			{
-				solidStart = curPlayer->segEnd+1;
-				solidEnd = cubesNb;
-			}
-			else if (solidCheck == 1 && curPlayer->segEnd != cubesNb)
-			{
-				solidStart = 0;
-				solidEnd = curPlayer->segEnd+1;
-			}
-			else
-			{
-				solidStart = 0;
-				solidEnd = cubesNb;
-			}
-
-			for ( i=solidStart; i < solidEnd; i++ )
-			{
-				glUniform1f(timeID, glfwGetTime());
-
-				if ( i > curPlayer->segEnd ) glDisable (GL_DEPTH_TEST);
-				else glEnable (GL_DEPTH_TEST);
-
-				mat4x4_identity ( WMat );
-				mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
-				mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
-				mat4x4_scale3d(WMat, WMat, scoef);
-				if (curPlayer->selected == i )
-					mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
-				else mat4x4_scale3d(WMat, WMat, 0.97f);
-
-
-
-				if ( i < cubesNb-1)
-				{
-					mat4x4 WMat2;
-					mat4x4_dup (WMat2, WMat);
-					mat4x4_scale_aniso(WMat2, WMat2,
-						(dir2vec[curPlayer->steps[i].dir][0]==0?1:1/scoef),
-						(dir2vec[curPlayer->steps[i].dir][1]==0?1:1/scoef),
-						(dir2vec[curPlayer->steps[i].dir][2]==0?1:1/scoef));
-					mat4x4_rotate(WMat2, WMat2,
-						dir2lr[curPlayer->steps[i].dir][0],
-						dir2lr[curPlayer->steps[i].dir][1],
-						dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
-					if (curPlayer->steps[i].dir == LEFT)
-						mat4x4_rotate_Y (WMat2, WMat2, -3.1415 * 0.5f);
-					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat2[0][0] );
-					glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
-					glBindTexture(GL_TEXTURE_2D, context->linktex);
-
-					#ifdef __APPLE__
-						glBindVertexArrayAPPLE (context->link_mesh->vao_id);
-					#else
-						glBindVertexArray (context->link_mesh->vao_id);
-					#endif
-					glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
-				}
-				glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+				mat4x4_rotate_Y ( WMat, WMat, 0.1f*glfwGetTime());
+				mat4x4_translate_in_place ( WMat, homeCube[i][0], homeCube[i][1], homeCube[i][2]);
+				mat4x4_scale3d(WMat, WMat, 0.8f);
 				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-
-				if (curPlayer->selected == i )
-					mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
 
 				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+			}
+		break;
+		case AS_LOAD:
+		break;
+		case AS_HELP:
+		break;
+		case AS_ABOUT:
+		break;
+		case AS_GAME:
+
+			if (context->playmode == PM_PLAY)
+				curPlayer = gplayer;
+			else
+				curPlayer = gsolver;
+
+
+			if ( context->spread == 1 && scoef > 0.6f )
+				scoef -= 0.01f;
+			else if ( context->spread == 0 && scoef < 1.f )
+				scoef += 0.01f;
+
+
+			//calcul du "segment" de snake auquel appartient le cube selectionné
+			curPlayer->segEnd = cubesNb;
+			if (curPlayer->selected!=-1 && curPlayer->selected!=cubesNb)
+				for ( i=curPlayer->selected+1; i < cubesNb; i++ )
+					if ( app->snake->units[i] == CORNER)
+					{
+						curPlayer->segEnd = i;
+						break;
+					}
+
+			//! [5] Color picking (selection d'un cube a la souris)
+			if ( context->drawpick == 1 )
+			{
+
+				glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
+				glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				glUseProgram (context->picking_program);
+				mat4x4_look_at(viewMat, context->camera->eye,
+						context->camera->target, context->camera->up);
+				mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
+				mat4x4_mul (PVMat, perMat, viewMat);
+				glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
 
 				#ifdef __APPLE__
 					glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
@@ -290,81 +186,236 @@ void* renderer ( void *arg )
 					glBindVertexArray (context->cube_mesh->vao_id);
 				#endif
 
-				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+				for ( i=0; i <= curPlayer->segEnd; i++ )
+				{
+					glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
+
+					mat4x4_identity ( WMat );
+					mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+					mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+					mat4x4_scale3d(WMat, WMat, scoef);
+					mat4x4_scale3d(WMat, WMat, 0.6f);
+
+					glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
+
+					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+				}
+				//==========render menu button==========
+				mat4x4_identity(viewMat);
+				mat4x4_identity(perMat);
+				mat4x4_mul (PVMat, perMat, viewMat);
+				glUniformMatrix4fv(vpID2, 1, GL_FALSE, &PVMat[0][0]);
+
+				Menu * currentMenu = NULL ;
+				Menu * menuCaller = NULL;
+				Menu * tmpMenu = NULL;
+				Item * itemCaller = NULL ;
+				currentMenu = app->menu;
+				int id = 0;
+				for (j = 0; j < app->menuDepth; j++) {
+					drawPickMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,&id, viewMat, perMat, PVMat, WMat, vpID2, pickcolorID,  wID2);
+					if(menuCaller == NULL && itemCaller == NULL) break;
+					tmpMenu = currentMenu;
+					currentMenu = menuCaller;
+					menuCaller = tmpMenu;
+					tmpMenu = NULL;
+				}
+				glFlush();
+				glFinish();
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				unsigned char data[4];
+				glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
+						GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+				//if (data[0] == gplayer->selected)
+				//	playerRotate(gplayer, gplayer->selected, context->snake);
+				if( (data[1]==255?-1:data[1]) != -1)
+					app->itemSelected = (data[1]==255?-1:data[1]);
+				else{
+					app->itemSelected = -1;
+					gplayer->selected = (data[0]==255?-1:data[0]);
+				}
+				//if (gplayer->selected != -1)
+				//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
+
+				logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
+
+				context->drawpick = 0;  //Comment for debug
+				////Draw for debug
+				//glfwSwapBuffers(context->window);
+				//continue;
+
 			}
-		}
-		glEnable (GL_DEPTH_TEST);
+			//! [5]
 
-		//==========view snake 2D==========
-		mat4x4_identity(viewMat);
-		mat4x4_identity(perMat);
-		mat4x4_mul (PVMat, perMat, viewMat);
-		glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
-		#ifdef __APPLE__
-			glBindVertexArrayAPPLE (context->square_mesh->vao_id);
-		#else
-			glBindVertexArray (context->square_mesh->vao_id);
-		#endif
-
-		glUniform1f(alphaID, 1.0f);
-
-		for ( i=0; i <= app->snake->length-1; i++ )
-		{
-			if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-			else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-
-			mat4x4_identity(WMat);
-			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.05f, 0.05f, 0.f);
-			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
-			mat4x4_rotate_Z(WMat, WMat, -r_angle);
-			mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
-			if (i==curPlayer->selected)
-				mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
-			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
-
-			glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
-		}
-
-		//==========view Menu template==========
-
-		 	mat4x4_identity(viewMat);
-			mat4x4_identity(perMat);
+			//==========view cubes==========
+			glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glUseProgram (context->snake_program);
+			mat4x4_look_at(viewMat, context->camera->eye,
+					context->camera->target, context->camera->up);
+			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
-			Menu * currentMenu = NULL ;
-			Menu * menuCaller = NULL;
-			Menu * tmpMenu = NULL;
-			Item * itemCaller = NULL ;
+			for (	solidCheck = 0;
+				solidCheck <= (curPlayer->segEnd != cubesNb?1:0);
+				solidCheck++)
+			{
+				if (solidCheck == 0 && curPlayer->segEnd != cubesNb)
+				{
+					solidStart = curPlayer->segEnd+1;
+					solidEnd = cubesNb;
+				}
+				else if (solidCheck == 1 && curPlayer->segEnd != cubesNb)
+				{
+					solidStart = 0;
+					solidEnd = curPlayer->segEnd+1;
+				}
+				else
+				{
+					solidStart = 0;
+					solidEnd = cubesNb;
+				}
+
+				for ( i=solidStart; i < solidEnd; i++ )
+				{
+					glUniform1f(timeID, glfwGetTime());
+
+					if ( i > curPlayer->segEnd ) glDisable (GL_DEPTH_TEST);
+					else glEnable (GL_DEPTH_TEST);
+
+					mat4x4_identity ( WMat );
+					mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
+					mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
+					mat4x4_scale3d(WMat, WMat, scoef);
+					if (curPlayer->selected == i )
+						mat4x4_scale3d(WMat, WMat, 0.8f + (0.2f * abs(cos(4*(glfwGetTime())))));
+					else mat4x4_scale3d(WMat, WMat, 0.97f);
+
+
+
+					if ( i < cubesNb-1)
+					{
+						mat4x4 WMat2;
+						mat4x4_dup (WMat2, WMat);
+						mat4x4_scale_aniso(WMat2, WMat2,
+							(dir2vec[curPlayer->steps[i].dir][0]==0?1:1/scoef),
+							(dir2vec[curPlayer->steps[i].dir][1]==0?1:1/scoef),
+							(dir2vec[curPlayer->steps[i].dir][2]==0?1:1/scoef));
+						mat4x4_rotate(WMat2, WMat2,
+							dir2lr[curPlayer->steps[i].dir][0],
+							dir2lr[curPlayer->steps[i].dir][1],
+							dir2lr[curPlayer->steps[i].dir][2], 3.1415 * 0.5f);
+						if (curPlayer->steps[i].dir == LEFT)
+							mat4x4_rotate_Y (WMat2, WMat2, -3.1415 * 0.5f);
+						glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat2[0][0] );
+						glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+						glBindTexture(GL_TEXTURE_2D, context->linktex);
+
+						#ifdef __APPLE__
+							glBindVertexArrayAPPLE (context->link_mesh->vao_id);
+						#else
+							glBindVertexArray (context->link_mesh->vao_id);
+						#endif
+						glDrawArrays(GL_TRIANGLES, 0, context->link_mesh->nb_faces);
+					}
+					glUniform1f(alphaID, (i > curPlayer->segEnd?0.2f:1.0f));
+					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+
+					if (curPlayer->selected == i )
+						mat4x4_scale3d(WMat, WMat, 1/(0.8f + (0.2f * abs(cos(4*(glfwGetTime()))))));
+
+					if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+					#ifdef __APPLE__
+						glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+					#else
+						glBindVertexArray (context->cube_mesh->vao_id);
+					#endif
+
+					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+				}
+			}
+			glEnable (GL_DEPTH_TEST);
+
+			//==========view snake 2D==========
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+			glUniform1f(alphaID, 1.0f);
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->square_mesh->vao_id);
+			#else
+				glBindVertexArray (context->square_mesh->vao_id);
+			#endif
+
+
+			for ( i=0; i <= app->snake->length-1; i++ )
+			{
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+
+				mat4x4_identity(WMat);
+				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.05f, 0.05f, 0.f);
+				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+				mat4x4_rotate_Z(WMat, WMat, -r_angle);
+				mat4x4_translate_in_place( WMat, curPlayer->flatCubePos[i][0], curPlayer->flatCubePos[i][2], 0);
+				if (i==curPlayer->selected)
+					mat4x4_scale3d(WMat, WMat, ((0.9f*abs(cos(4*glfwGetTime())))) );
+				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+
+				glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
+			}
+
+			//==========view Menu template==========
+
+			 	mat4x4_identity(viewMat);
+				mat4x4_identity(perMat);
+				mat4x4_mul (PVMat, perMat, viewMat);
+				glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+
+				Menu * currentMenu = NULL ;
+				Menu * menuCaller = NULL;
+				Menu * tmpMenu = NULL;
+				Item * itemCaller = NULL ;
+				currentMenu = app->menu;
+				for (j = 0; j < app->menuDepth; j++) {
+					drawMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,  viewMat, perMat, PVMat, WMat, vpID, alphaID,  wID);
+					if(menuCaller == NULL && itemCaller == NULL) break;
+					tmpMenu = currentMenu;
+					currentMenu = menuCaller;
+					menuCaller = tmpMenu;
+					tmpMenu = NULL;
+				}
+
+
+			//==========view Text==========
+			currentMenu = NULL ;
+			menuCaller = NULL;
+			tmpMenu = NULL;
+			itemCaller = NULL ;
 			currentMenu = app->menu;
 			for (j = 0; j < app->menuDepth; j++) {
-				drawMenuTemplate(context,currentMenu,&menuCaller,&itemCaller,  viewMat, perMat, PVMat, WMat, vpID, alphaID,  wID);
+				drawMenuText(context,currentMenu,&menuCaller,&itemCaller);
 				if(menuCaller == NULL && itemCaller == NULL) break;
 				tmpMenu = currentMenu;
 				currentMenu = menuCaller;
 				menuCaller = tmpMenu;
 				tmpMenu = NULL;
+
 			}
 
-
-		//==========view Text==========
-		currentMenu = NULL ;
-		menuCaller = NULL;
-		tmpMenu = NULL;
-		itemCaller = NULL ;
-		currentMenu = app->menu;
-		for (j = 0; j < app->menuDepth; j++) {
-			drawMenuText(context,currentMenu,&menuCaller,&itemCaller);
-			if(menuCaller == NULL && itemCaller == NULL) break;
-			tmpMenu = currentMenu;
-			currentMenu = menuCaller;
-			menuCaller = tmpMenu;
-			tmpMenu = NULL;
-
+		break;
+		default:
+		break;
 		}
 
-
+		//Actualisation de l'ecran
 		glfwSwapBuffers (context->window);
+
 	}
 	app->running = 0;
 	//! [3]
@@ -515,7 +566,6 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 
 	if (!pthread_mutex_trylock(menu->mutex)){
 		glUseProgram (0);
-		glViewport (0, 0, context->screen_width, context->screen_height);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);

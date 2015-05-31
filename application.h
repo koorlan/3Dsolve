@@ -18,6 +18,13 @@
 #include "player.h"
 #include "menu.h"
 
+
+#define AS_HOME		0
+#define AS_GAME		1
+#define AS_HELP		2
+#define AS_ABOUT	3
+#define AS_LOAD		4
+
 /**
  * @defgroup Application Application
  *
@@ -70,6 +77,7 @@ typedef struct Application
     int running;
     unsigned int pathExplored;
     double calculTime;
+    int state;
 } Application;
 
 

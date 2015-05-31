@@ -152,6 +152,12 @@ int getInput ( Context* context )
 			gsolver->selected = 0;
 			gsolver->steps[0].dir = RIGHT;
 			playerFlatten (gsolver, app->snake, 0);
+			int i;
+			for (i=0; i<app->snake->length;i++)
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -774,8 +780,6 @@ void contextInit ( Context* context )
 				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
 	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
 				* sin(context->camera->angle[1]);
-
-	context->loading = 1;
 
 	glfwMakeContextCurrent ( NULL );
 

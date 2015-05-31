@@ -132,7 +132,7 @@ int main ( int argc, char ** argv )
 	int noGraphics = 0;
 	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
 
-  app = applicationCreate();
+	app = applicationCreate();
 
 	applicationFindSnakes(app);
 
@@ -355,7 +355,6 @@ int main ( int argc, char ** argv )
 	if(!noGraphics)
 	{
 		//Boucle principale
-		context->loading = 0;
 		while (app->running)
 		{
 			getInput(context);
