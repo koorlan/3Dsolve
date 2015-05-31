@@ -229,12 +229,14 @@ int applicationInitMainMenu(Application *app,int width, int height){
     //  ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
       addItemToMenu(app->menu->item[2]->menu,tmpitem);
     }
-    app->menu->item[2]->menu->size = i;
+
     app->menu->item[2]->menu->state = CLOSE;
     app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
     calcMenu(app->menu->item[2]->menu);
     calcMenuMesh(app->menu->item[2]->menu,width,height);
-
+    app->menu->item[2]->menu->size = app->snake->solutions->size;
+    calcMenu(app->menu->item[2]->menu);
+    calcMenuMesh(app->menu->item[2]->menu,width,height);
 
     app->menuDepth =1;
     return 1;
