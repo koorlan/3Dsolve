@@ -86,32 +86,32 @@ int applicationInitMainMenu(Application *app,int width, int height){
         case 0:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="App",
-              .font=LoadFont("fonts/Libertine.ttf"),
+              .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
               .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-              .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+              .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= MENU});
           break;
         case 1:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="Load Snake",
-              .font=LoadFont("fonts/Libertine.ttf"),
+              .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
               .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-              .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+              .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= MENU});
           break;
 
         case 2:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="Solution",
-              .font=LoadFont("fonts/Libertine.ttf"),
+              .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
               .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-              .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+              .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= MENU});
           break;
       }
@@ -136,41 +136,41 @@ int applicationInitMainMenu(Application *app,int width, int height){
         case 0:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="Exit",
-              .font=LoadFont("fonts/Libertine.ttf"),
+              .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
               .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-              .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+              .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= EXIT});
           break;
         case 1:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="Back",
-              .font=LoadFont("fonts/Libertine.ttf"),
+              .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
               .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-              .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+              .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= BACKAPP});
           break;
         case 2:
           setItemDescriptor(tmpitem,(struct Descriptor)
-          {	.name="Control",
-          .font=LoadFont("fonts/Libertine.ttf"),
+          {	.name="Help",
+          .font=LoadFont("fonts/Tahoma.ttf"),
           .fontSize = 20,
           .minFontSize = DEFAULT_MIN_FONT_SIZE,
           .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-          .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-          .action= CONTROL});
+          .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
+          .action= HELP});
         break;
         case 3:
           setItemDescriptor(tmpitem,(struct Descriptor)
           {	.name="About",
-          .font=LoadFont("fonts/Libertine.ttf"),
+          .font=LoadFont("fonts/Tahoma.ttf"),
           .fontSize = 20,
           .minFontSize = DEFAULT_MIN_FONT_SIZE,
           .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-          .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+          .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
           .action= ABOUT});
         break;
       }
@@ -190,11 +190,11 @@ int applicationInitMainMenu(Application *app,int width, int height){
       setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
       setItemDescriptor(tmpitem,(struct Descriptor)
       {	.name=app->snakeNames[i],
-        .font=LoadFont("fonts/Libertine.ttf"),
+        .font=LoadFont("fonts/Tahoma.ttf"),
         .fontSize = 20,
         .minFontSize = DEFAULT_MIN_FONT_SIZE,
         .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-        .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+        .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
         .action= LOADSNAKE});
 
       ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
@@ -218,11 +218,11 @@ int applicationInitMainMenu(Application *app,int width, int height){
       strcat(snakeSolution,buf);
       setItemDescriptor(tmpitem,(struct Descriptor)
       {	.name=snakeSolution,
-        .font=LoadFont("fonts/Libertine.ttf"),
+        .font=LoadFont("fonts/Tahoma.ttf"),
         .fontSize = 20,
         .minFontSize = DEFAULT_MIN_FONT_SIZE,
         .maxFontSize = DEFAULT_MAX_FONT_SIZE,
-        .color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+        .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
         .action= LOADSOL});
 
       ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);

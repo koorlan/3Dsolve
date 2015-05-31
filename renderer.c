@@ -60,9 +60,7 @@ void* renderer ( void *arg )
 	int i,j;
 	int solidCheck = 0;
 	float scoef = 1.f;
-	int cubesNb = app->snake->length;
 	int solidStart = 0;
-	int solidEnd = cubesNb;
 	float xoffset = -(app->snake->length*0.3333333f);
 	float yoffset = -0.75f * 20.f;
 	float r_angle =  -M_PI/4;
@@ -75,6 +73,8 @@ void* renderer ( void *arg )
 	//! [3] Renderer loop
 	while (app->running && !glfwWindowShouldClose (context->window))
 	{
+		int cubesNb = app->snake->length;
+		int solidEnd = cubesNb;
 		//! [4] FPS limitation control
 		float cur_time = glfwGetTime ();
 		float fps = 1/((cur_time-last_time));
