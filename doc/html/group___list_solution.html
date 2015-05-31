@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>SolidSnake: ListSolution</title>
+<title>3DSolve: ListSolution</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div class="container-fluid">
     <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
     </div>
 </div>
 <!-- end header part -->
@@ -116,9 +116,9 @@ Fonctions</h2></td></tr>
 <tr class="memitem:ga2a33a1e12cb6a4cdc699c242516b8b42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_list_solution.html">ListSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___list_solution.html#ga2a33a1e12cb6a4cdc699c242516b8b42">listSolutionCreate</a> ()</td></tr>
 <tr class="memdesc:ga2a33a1e12cb6a4cdc699c242516b8b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une liste de solution vide.  <a href="#ga2a33a1e12cb6a4cdc699c242516b8b42">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga2a33a1e12cb6a4cdc699c242516b8b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga66904260e8081ae4e5bd4f15a51b63b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___list_solution.html#ga66904260e8081ae4e5bd4f15a51b63b3">listSolutionDestroy</a> (<a class="el" href="struct_list_solution.html">ListSolution</a> *listSolution)</td></tr>
-<tr class="memdesc:ga66904260e8081ae4e5bd4f15a51b63b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détruit proprement un liste de solution.  <a href="#ga66904260e8081ae4e5bd4f15a51b63b3">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga66904260e8081ae4e5bd4f15a51b63b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga124ebbfdde9474394007660875d2c48c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___list_solution.html#ga124ebbfdde9474394007660875d2c48c">listSolutionDestroy</a> (<a class="el" href="struct_list_solution.html">ListSolution</a> *listSolution, int deleteSteps)</td></tr>
+<tr class="memdesc:ga124ebbfdde9474394007660875d2c48c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détruit proprement un liste de solution.  <a href="#ga124ebbfdde9474394007660875d2c48c">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga124ebbfdde9474394007660875d2c48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga08c28cf377d92da9d9a02ef0f04b0dd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___list_solution.html#ga08c28cf377d92da9d9a02ef0f04b0dd0">listSolutionInsert</a> (<a class="el" href="struct_list_solution.html">ListSolution</a> *listSolution, <a class="el" href="struct_step.html">Step</a> *steps)</td></tr>
 <tr class="memdesc:ga08c28cf377d92da9d9a02ef0f04b0dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insère une solution dans une liste de solution.  <a href="#ga08c28cf377d92da9d9a02ef0f04b0dd0">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga08c28cf377d92da9d9a02ef0f04b0dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,7 +144,7 @@ Fonctions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga66904260e8081ae4e5bd4f15a51b63b3"></a>
+<a class="anchor" id="ga124ebbfdde9474394007660875d2c48c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -152,8 +152,18 @@ Fonctions</h2></td></tr>
           <td class="memname">void listSolutionDestroy </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_list_solution.html">ListSolution</a> *&#160;</td>
-          <td class="paramname"><em>listSolution</em></td><td>)</td>
+          <td class="paramname"><em>listSolution</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>deleteSteps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -162,6 +172,7 @@ Fonctions</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">listSolution</td><td>la liste à détruire. </td></tr>
+    <tr><td class="paramname">deleteSteps</td><td>si mis à 1, indique qu'il faut libérer de la mémoire les tableau de solution. Sinon, seul la liste (le conteneur) est libéré </td></tr>
   </table>
   </dd>
 </dl>
@@ -209,7 +220,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

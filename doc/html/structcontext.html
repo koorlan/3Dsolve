@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>SolidSnake: Référence de la structure context</title>
+<title>3DSolve: Référence de la structure context</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div class="container-fluid">
     <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
     </div>
 </div>
 <!-- end header part -->
@@ -116,48 +116,66 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>screen_width</b></td><
 <tr class="memitem:a3b4a1bd850991355b91c7bfc15247d49"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b4a1bd850991355b91c7bfc15247d49"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>screen_height</b></td></tr>
 <tr class="separator:a3b4a1bd850991355b91c7bfc15247d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f45113638a0b749a8a205d2cd7fb42b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f45113638a0b749a8a205d2cd7fb42b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>running</b></td></tr>
-<tr class="separator:a2f45113638a0b749a8a205d2cd7fb42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac223398d564a4c19d0f8a50a4433489f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac223398d564a4c19d0f8a50a4433489f"></a>
 pthread_t&#160;</td><td class="memItemRight" valign="bottom"><b>render_thread</b></td></tr>
 <tr class="separator:ac223398d564a4c19d0f8a50a4433489f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c71df623af0b47c73c156d680534eea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2c71df623af0b47c73c156d680534eea"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>volume_program</b></td></tr>
-<tr class="separator:a2c71df623af0b47c73c156d680534eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa92054dddc3b6e428b54520b2ac939e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa92054dddc3b6e428b54520b2ac939e2"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>snake_program</b></td></tr>
 <tr class="separator:aa92054dddc3b6e428b54520b2ac939e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22cf828c2b69113a409f520a663b0722"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22cf828c2b69113a409f520a663b0722"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>snake_program_vs</b></td></tr>
+<tr class="separator:a22cf828c2b69113a409f520a663b0722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64751d53f9aa1eb5fd363df539cdb647"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a64751d53f9aa1eb5fd363df539cdb647"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>snake_program_fs</b></td></tr>
+<tr class="separator:a64751d53f9aa1eb5fd363df539cdb647"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fa1e2cf7849b9bc36ecd9d84ef588c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fa1e2cf7849b9bc36ecd9d84ef588c5"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>picking_program</b></td></tr>
 <tr class="separator:a0fa1e2cf7849b9bc36ecd9d84ef588c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8403ba5fd00d853f1c6ef8c32ddf625f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8403ba5fd00d853f1c6ef8c32ddf625f"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>picking_program_vs</b></td></tr>
+<tr class="separator:a8403ba5fd00d853f1c6ef8c32ddf625f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a527604b53567b6847f492cc3b49813f3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a527604b53567b6847f492cc3b49813f3"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>picking_program_fs</b></td></tr>
+<tr class="separator:a527604b53567b6847f492cc3b49813f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58097335e8968dc6c85a1eb5d35269a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a58097335e8968dc6c85a1eb5d35269a0"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>dwoodtex</b></td></tr>
 <tr class="separator:a58097335e8968dc6c85a1eb5d35269a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa45e7b7997c62546548ac4e7bd30596f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa45e7b7997c62546548ac4e7bd30596f"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>lwoodtex</b></td></tr>
 <tr class="separator:aa45e7b7997c62546548ac4e7bd30596f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59dfeb5188fc2b445cdeade60e01bc86"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59dfeb5188fc2b445cdeade60e01bc86"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>linktex</b></td></tr>
+<tr class="separator:a59dfeb5188fc2b445cdeade60e01bc86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06767289b25a51facbdc0885035da51d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06767289b25a51facbdc0885035da51d"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>menutex</b></td></tr>
+<tr class="separator:a06767289b25a51facbdc0885035da51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca36b9475625e0622faa1143c3b665f0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca36b9475625e0622faa1143c3b665f0"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>itemtex</b></td></tr>
+<tr class="separator:aca36b9475625e0622faa1143c3b665f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa74c93f4d7a096e690dd12621a484b34"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa74c93f4d7a096e690dd12621a484b34"></a>
 <a class="el" href="structobject.html">Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>cube_mesh</b></td></tr>
 <tr class="separator:aa74c93f4d7a096e690dd12621a484b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3779ff94a6fe22ae4949d8303eea0c26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3779ff94a6fe22ae4949d8303eea0c26"></a>
 <a class="el" href="structobject.html">Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>square_mesh</b></td></tr>
 <tr class="separator:a3779ff94a6fe22ae4949d8303eea0c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add9abf88773799f63b6b61aa3b95a8e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add9abf88773799f63b6b61aa3b95a8e3"></a>
+<a class="el" href="structobject.html">Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>link_mesh</b></td></tr>
+<tr class="separator:add9abf88773799f63b6b61aa3b95a8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af95833c961e5bd20dcd54e1d46a03c0b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af95833c961e5bd20dcd54e1d46a03c0b"></a>
 <a class="el" href="structcamera.html">Camera</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>camera</b></td></tr>
 <tr class="separator:af95833c961e5bd20dcd54e1d46a03c0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a207ad05f99cc72068a92358861ff5e71"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a207ad05f99cc72068a92358861ff5e71"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>ratio</b></td></tr>
 <tr class="separator:a207ad05f99cc72068a92358861ff5e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a408cd599ea288e5b692809edb69e65c2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a408cd599ea288e5b692809edb69e65c2"></a>
-<a class="el" href="struct_snake.html">Snake</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>snake</b></td></tr>
-<tr class="separator:a408cd599ea288e5b692809edb69e65c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d99a9e2fdae8652db4aa612f8d9cd96"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d99a9e2fdae8652db4aa612f8d9cd96"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>drawpick</b></td></tr>
 <tr class="separator:a3d99a9e2fdae8652db4aa612f8d9cd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa49a4684df5eedf20a5c1589e381b00e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa49a4684df5eedf20a5c1589e381b00e"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>playmode</b></td></tr>
 <tr class="separator:aa49a4684df5eedf20a5c1589e381b00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fcb2da8648b09e9271722def1ad799a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9fcb2da8648b09e9271722def1ad799a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>spread</b></td></tr>
+<tr class="separator:a9fcb2da8648b09e9271722def1ad799a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>La documentation de cette structure a été générée à partir du fichier suivant :<ul>
 <li><a class="el" href="context_8h_source.html">context.h</a></li>
@@ -168,7 +186,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>playmode</b></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structcontext.html">context</a></li>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

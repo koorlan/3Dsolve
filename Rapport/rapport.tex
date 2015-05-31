@@ -9,6 +9,8 @@
 \usepackage{moreverb}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{multirow}
+\usepackage{subfig}
 
 \lstset
 {
@@ -21,12 +23,12 @@ numbersep=7pt,
 captionpos=b
 }
 
-\title{Rapport de développement de l'application SolidSnake}
+\title{Rapport de développement de l'application 3DSolve}
 \author{Lisa Aubry Alban Chazot Korlan Colas Anthony Gourd}
 \date{\today}
 
 \pdfinfo{
-  /Title    (Rapport de d\'eveloppement pour l'application SolidSnake)
+  /Title    (Rapport de d\'eveloppement pour l'application 3DSolve)
   /Author   (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
   /Creator  (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
   /Producer (Lisa Aubry, Alban Chazot, Korlan Colas, Anthony Gourd)
@@ -49,8 +51,10 @@ captionpos=b
     \textsc{\Large Rapport de développement}\\[1.5cm]
 
     % Title
-    { \huge \bfseries Projet application\\[0.4cm] }
-    \today
+    { \huge \bfseries Projet application - 3DSolve\\[0.4cm] }
+    \today \\[1.5cm]
+    
+    \includegraphics[scale=1]{img/Logo.png}~\\[1.5cm]
     
     \vfill
 
@@ -94,6 +98,8 @@ Compte rendu portant sur le projet application effectué lors de la première an
 \input{chapter9}
 \chapter{Tests}\label{Tests}
 \input{chapter10}
+
+\chapter*{Remerciements}
 
 \listoffigures
 \lstlistoflistings

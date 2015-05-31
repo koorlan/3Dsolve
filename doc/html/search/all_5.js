@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['findinitialvectors',['findInitialVectors',['../group___resolver.html#ga40fbf6882bcfb4ec22fb1ace6d00b825',1,'findInitialVectors(Snake *snake, int *initialVectorNb):&#160;resolver.c'],['../group___resolver.html#ga40fbf6882bcfb4ec22fb1ace6d00b825',1,'findInitialVectors(Snake *snake, int *initialVectorNb):&#160;resolver.c']]],
-  ['floatcoord',['FloatCoord',['../struct_float_coord.html',1,'']]]
+  ['exploredwaynb',['exploredWayNb',['../struct_thread_args.html#ade20f35c133efc37e4b900794a7e9b38',1,'ThreadArgs']]]
 ];

@@ -434,17 +434,17 @@ int getInput ( Context* context )
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-		int i = 0,
-				j = 0,
-				closedMenu = 0;
-		Menu *currentMenu = NULL;
-		Menu *menuToClose = NULL;
-		currentMenu = app->menu;
-
-		int accumulator = 0;
 
 		if( app->itemSelected >= 0)
 		{
+			int i = 0,
+					j = 0,
+					closedMenu = 0;
+					Solution *newSolution;
+			Menu *currentMenu = NULL;
+			Menu *menuToClose = NULL;
+			currentMenu = app->menu;
+			int accumulator = 0;
 			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {
 			accumulator += currentMenu->size;
@@ -477,28 +477,65 @@ int getInput ( Context* context )
 		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
-					logWrite("[MENU] Close Trigger (item %d)\n",currentMenu->selected);
-
 					break;
 				case EXIT:
-					logWrite("[MENU] EXIT Trigger EXIT (item %d)\n",currentMenu->selected);
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					logWrite("[MENU] LOADSNAKE Trigger (item %d)\n",currentMenu->selected);
+					// Chargement d'un nouveau snake
+					logWrite("[MENU] New snake requested\n");
+					// Récupération du nom du snake
+					char* snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
+					char* snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
+					sprintf(snakePath, "Snakes/%s", snakeName);
+					logWrite("[MENU] Loading Snake : %s\n", snakePath);
+					Snake* newSnake = snakeInit(snakePath);
+					free(snakePath);
+					currentMenu->state = CLOSE;
+					if(newSnake != NULL)
+					{
+						snakeDestroy(app->snake, 1);
+						app->snake = newSnake;
+						resolverSolveSnake(app->snake, NULL, 1);
 
+						playerDestroy(gplayer);
+						gplayer = playerInit ( app->snake );
+						gplayer->selected = 0;
+						playerDestroy(gsolver);
+						gsolver = playerInit(app->snake);
+						gsolver->currentSolution = app->snake->solutions->head;
+					}
+					break;
+				case LOADSOL:
+				newSolution = app->snake->solutions->head;
+					for(i=0; i<currentMenu->selected;i++){
+						if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
+						{
+							if (newSolution->next!=NULL) newSolution = newSolution->next;
+							else newSolution = app->snake->solutions->head;
+						}
+					}
+						gsolver->currentSolution = newSolution;
+						gsolver->selected = 0;
+						gsolver->steps[0].dir = RIGHT;
+						playerFlatten (gsolver, app->snake, 0);
+						int i;
+						for (i=0;i<app->snake->length;i++)
+						{
+							mat4x4_translate(gsolver->realCubePos[i],
+								(float) gsolver->steps[i].coord.x,
+								(float) gsolver->steps[i].coord.y,
+								(float) gsolver->steps[i].coord.z);
+						}
 					break;
 				case MENU:
-					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
-						logWrite("[MENU] OPEN A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
 						currentMenu->opened = currentMenu->selected;
 						app->menuDepth ++;
 						break;
 					}
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
-						logWrite("[MENU] CLOSE A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
 						app->menuDepth --;
 						break;
@@ -616,7 +653,7 @@ Context* contextCreate ()
 	{
 		GLFWmonitor* mon = glfwGetPrimaryMonitor ();
 		const GLFWvidmode* vmode = glfwGetVideoMode ( mon );
-		context->window = glfwCreateWindow ( vmode->width, vmode->height, "Solid Snake", mon, NULL );
+		context->window = glfwCreateWindow ( vmode->width, vmode->height, "3DSolve", mon, NULL );
 		context->screen_width = vmode->width;
 		context->screen_height = vmode->height;
 	}
@@ -624,7 +661,7 @@ Context* contextCreate ()
 	{
 		context->screen_width = DRESX;
 		context->screen_height = DRESY;
-		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "Solid Snake", NULL, NULL );
+		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "3DSolve", NULL, NULL );
 	}
 	logWrite ("[CNTXT] Using resolution %dx%d\n", context->screen_width, context->screen_height);
 

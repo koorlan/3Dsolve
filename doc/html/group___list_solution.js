@@ -9,6 +9,6 @@ var group___list_solution =
       [ "size", "struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c", null ]
     ] ],
     [ "listSolutionCreate", "group___list_solution.html#ga2a33a1e12cb6a4cdc699c242516b8b42", null ],
-    [ "listSolutionDestroy", "group___list_solution.html#ga66904260e8081ae4e5bd4f15a51b63b3", null ],
+    [ "listSolutionDestroy", "group___list_solution.html#ga124ebbfdde9474394007660875d2c48c", null ],
     [ "listSolutionInsert", "group___list_solution.html#ga08c28cf377d92da9d9a02ef0f04b0dd0", null ]
 ];

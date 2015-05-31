@@ -206,6 +206,7 @@ void* resolverSolveNode(void* args)
     }
 
     pthread_exit(NULL);
+    return NULL;
 }
 
 Tree initTree()

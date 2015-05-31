@@ -1,8 +1,20 @@
 var searchData=
 [
-  ['r',['r',['../struct_color.html#a514f1b439f404f86f77090fa9edc96ce',1,'Color']]],
-  ['reducemenu',['reduceMenu',['../group___menu.html#gaf9a27f10f98bdd4c4ca29f9c1ff074e5',1,'reduceMenu(Menu *menu):&#160;menu.c'],['../group___menu.html#gaf9a27f10f98bdd4c4ca29f9c1ff074e5',1,'reduceMenu(Menu *menu):&#160;menu.c']]],
-  ['reshapemenu',['reshapeMenu',['../group___menu.html#gad61893edf96d6b639312e606f85605e5',1,'reshapeMenu(Menu *menu, int width, int height):&#160;menu.c'],['../group___menu.html#gad61893edf96d6b639312e606f85605e5',1,'reshapeMenu(Menu *menu, int width, int height):&#160;menu.c']]],
-  ['resolver',['Resolver',['../group___resolver.html',1,'']]],
-  ['resolversolvesnake',['resolverSolveSnake',['../group___resolver.html#ga0bd04b9a2502baf8afbd94c3c0a4d974',1,'resolverSolveSnake(Snake *snake):&#160;resolver.c'],['../group___resolver.html#ga0bd04b9a2502baf8afbd94c3c0a4d974',1,'resolverSolveSnake(Snake *snake):&#160;resolver.c']]]
+  ['parent',['parent',['../struct_node_tree.html#a457d913bff1ebc8671c1eca1c9d5fc03',1,'NodeTree']]],
+  ['pathexplored',['pathExplored',['../struct_application.html#ade759d521aee8eb5401fb08bc97229e3',1,'Application']]],
+  ['player',['Player',['../struct_player.html',1,'Player'],['../struct_application.html#a46afbb77ee4b53026dff7b4f65384dc4',1,'Application::player()'],['../group___player.html',1,'(Espace de nommage global)']]],
+  ['playerchecksolution',['playerCheckSolution',['../group___player.html#gac9ddd28fb75760a871c7baad7d63c183',1,'playerCheckSolution(Player *player, Volume volume, int length):&#160;player.c'],['../group___player.html#gac9ddd28fb75760a871c7baad7d63c183',1,'playerCheckSolution(Player *player, Volume volume, int length):&#160;player.c']]],
+  ['playerdestroy',['playerDestroy',['../group___player.html#gaf1911ad584cefd37dc547d5a4260cccc',1,'playerDestroy(Player *player):&#160;player.c'],['../group___player.html#gaf1911ad584cefd37dc547d5a4260cccc',1,'playerDestroy(Player *player):&#160;player.c']]],
+  ['playerfakerotate',['playerFakeRotate',['../group___player.html#ga4a0ce1b88f9f69ca36e5f823852ac778',1,'playerFakeRotate(Player *player, int stepIndex, Snake *snake, int magnet):&#160;player.c'],['../group___player.html#ga4a0ce1b88f9f69ca36e5f823852ac778',1,'playerFakeRotate(Player *player, int stepIndex, Snake *snake, int magnet):&#160;player.c']]],
+  ['playerfindminmax',['playerFindMinMax',['../group___player.html#ga53f05cd74811715faf9a66381e260661',1,'playerFindMinMax(Coord *min, Coord *max, int length, Player *player, Volume volume):&#160;player.c'],['../group___player.html#ga53f05cd74811715faf9a66381e260661',1,'playerFindMinMax(Coord *min, Coord *max, int length, Player *player, Volume volume):&#160;player.c']]],
+  ['playerflatten',['playerFlatten',['../group___player.html#ga3983e08fde834c755eb1aa68a96a0508',1,'playerFlatten(Player *player, Snake *snake, int fromIndex):&#160;player.c'],['../group___player.html#ga3983e08fde834c755eb1aa68a96a0508',1,'playerFlatten(Player *player, Snake *snake, int fromIndex):&#160;player.c']]],
+  ['playerhelp',['playerHelp',['../group___player.html#ga23496721d29f7a227f7ba20f2ec59734',1,'playerHelp(Player *player, Snake *snake):&#160;player.c'],['../group___player.html#ga23496721d29f7a227f7ba20f2ec59734',1,'playerHelp(Player *player, Snake *snake):&#160;player.c']]],
+  ['playerinit',['playerInit',['../group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7',1,'playerInit(Snake *snake):&#160;player.c'],['../group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7',1,'playerInit(Snake *snake):&#160;player.c']]],
+  ['playerrotate',['playerRotate',['../group___player.html#ga6c3d30fd77b5b93c541167f61d661103',1,'playerRotate(Player *player, int stepIndex, Snake *snake, int magnet):&#160;player.c'],['../group___player.html#ga6c3d30fd77b5b93c541167f61d661103',1,'playerRotate(Player *player, int stepIndex, Snake *snake, int magnet):&#160;player.c']]],
+  ['pointa',['pointA',['../struct_line.html#ae61338ee34dcba3435f5415e653cad2a',1,'Line']]],
+  ['pointb',['pointB',['../struct_line.html#ac573310eb7acf2d7e112153d00a92695',1,'Line']]],
+  ['printcurrentnode',['printCurrentNode',['../group___resolver.html#ga8eb45285dea3218d08a2e532ca31db6d',1,'printCurrentNode(Tree currentNode):&#160;resolver.c'],['../group___resolver.html#ga8eb45285dea3218d08a2e532ca31db6d',1,'printCurrentNode(Tree currentNode):&#160;resolver.c']]],
+  ['printline',['printLine',['../group___resolver.html#gab41fb96ca2f03baa37109c18a9636813',1,'printLine(Line line):&#160;resolver.c'],['../group___resolver.html#gab41fb96ca2f03baa37109c18a9636813',1,'printLine(Line line):&#160;resolver.c']]],
+  ['printsnake',['printSnake',['../group___resolver.html#ga6ece3acf45a9cf3a4f43d24be4b8ceb0',1,'printSnake(Snake snake):&#160;resolver.c'],['../group___resolver.html#ga6ece3acf45a9cf3a4f43d24be4b8ceb0',1,'printSnake(Snake snake):&#160;resolver.c']]],
+  ['printtree',['printTree',['../group___resolver.html#gafb462b1cee08e8d549f077b204369ece',1,'printTree(Tree rootNode):&#160;resolver.c'],['../group___resolver.html#gafb462b1cee08e8d549f077b204369ece',1,'printTree(Tree rootNode):&#160;resolver.c']]]
 ];
