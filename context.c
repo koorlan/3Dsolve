@@ -47,6 +47,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	switch(action)
 	{
 		case GLFW_PRESS:
+			key_flags |= K_ANY;
 			switch(key)
 			{
 				case GLFW_KEY_ESCAPE:
@@ -68,13 +69,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					key_flags |= K_RT;
 					break;
 				case GLFW_KEY_ENTER:
-					bhv_flags ^= BHV_SPREAD;
+					key_flags |= K_ENTER;
 					break;
 				case GLFW_KEY_SPACE:
 					bhv_flags ^= BHV_ROTATE;
 					break;
-				case GLFW_KEY_H:
-					key_flags |= K_H;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -113,7 +112,16 @@ int getInput ( Context* context )
 
 	}
 
-	if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
+	if ( app->state == AS_HOME && key_flags!=0)
+	{
+		key_flags = K_NONE;
+		app->state = AS_GAME;
+	}
+	else if ( (key_flags&K_ENTER)==K_ENTER )
+	{
+		bhv_flags ^= BHV_SPREAD;
+	}
+	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
 	{
 		gsolver->selected = 0;
 		gsolver->steps[0].dir = RIGHT;
@@ -153,13 +161,11 @@ int getInput ( Context* context )
 			gsolver->steps[0].dir = RIGHT;
 			playerFlatten (gsolver, app->snake, 0);
 			int i;
-			for (i=0;i<app->snake->length;i++)
-			{
-				mat4x4_translate(gsolver->realCubePos[i],
-					(float) gsolver->steps[i].coord.x,
-					(float) gsolver->steps[i].coord.y,
-					(float) gsolver->steps[i].coord.z);
-			}
+			for (i=0; i<app->snake->length;i++)
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -826,12 +832,17 @@ void contextInit ( Context* context )
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.8f;
+	camera->angle[1] = 0.5f;
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
 	context->drawpick = 0;
-	//bhv_flags |= BHV_ROTATE;
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
+				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+				* sin(context->camera->angle[1]);
 
 	glfwMakeContextCurrent ( NULL );
 

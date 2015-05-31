@@ -15,6 +15,7 @@ Application* applicationCreate()
     app->pathExplored = 0;
     app->calculTime = 0;
     app->running = 1;
+    app->state = AS_HOME;
 
     return app;
 }

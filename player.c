@@ -155,7 +155,8 @@ void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 			(float) player->steps[i].coord.z);
 		mat4x4_identity(player->realCubeRot[i]);
 	}
-	playerCheckSolution(gplayer, app->snake->volume, app->snake->length);
+	if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
+		bhv_flags |= BHV_ROTATE;
 }
 void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet)
 {
