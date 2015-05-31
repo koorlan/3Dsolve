@@ -482,6 +482,8 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
+					app->state = AS_HOME;
+					sleep(1);
 					// Chargement d'un nouveau snake
 					logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
@@ -492,6 +494,7 @@ int getInput ( Context* context )
 					Snake* newSnake = snakeInit(snakePath);
 					free(snakePath);
 					currentMenu->state = CLOSE;
+					app->menuDepth --;
 					if(newSnake != NULL)
 					{
 						snakeDestroy(app->snake, 1);
@@ -505,6 +508,7 @@ int getInput ( Context* context )
 						gsolver = playerInit(app->snake);
 						gsolver->currentSolution = app->snake->solutions->head;
 					}
+					app->state = AS_GAME;
 					break;
 				case LOADSOL:
 				newSolution = app->snake->solutions->head;
