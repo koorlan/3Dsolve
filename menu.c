@@ -239,10 +239,10 @@ int calcMenu(Menu *menu){
   if (menu == NULL)
     return 0;
   for (i = 0; i < menu->size; i++) {
-    if (ftglGetFontFaceSize(menu->item[i]->descriptor.font) != menu->item[i]->descriptor.fontSize 	){
-      ftglSetFontFaceSize(menu->item[i]->descriptor.font, menu->item[i]->descriptor.fontSize,72);
-      ftglSetFontCharMap(menu->item[i]->descriptor.font, ft_encoding_unicode);
-      }
+  //  if (ftglGetFontFaceSize(menu->item[i]->descriptor.font) != menu->item[i]->descriptor.fontSize 	){
+    //  ftglSetFontFaceSize(menu->item[i]->descriptor.font, menu->item[i]->descriptor.fontSize,72);
+  //    ftglSetFontCharMap(menu->item[i]->descriptor.font, ft_encoding_unicode);
+    //  }
     ftglGetFontBBox(menu->item[i]->descriptor.font,menu->item[i]->descriptor.name,strlen(menu->item[i]->descriptor.name),menu->item[i]->descriptor.bbox);
     if ( (menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0]) + menu->item[i]->margin[0] + menu->item[i]->margin[2]  >= menuWidth)
       menuWidth = menu->item[i]->descriptor.bbox[3]-menu->item[i]->descriptor.bbox[0] + menu->item[i]->margin[0]  + menu->item[i]->margin[2];

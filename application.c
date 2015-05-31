@@ -208,26 +208,28 @@ int applicationInitMainMenu(Application *app,int width, int height){
     //Snake Solution
     initMenu(&(app->menu->item[2]->menu));
     app->menu->item[2]->menu->type = COLUMN;
-    for (i=0 ; i<app->snake->solutions->size; i++){
+    FTGLfont *itemFont = LoadFont("fonts/Tahoma.ttf");
+    for (i=0 ; i<MAX_MENU_SIZE; i++){
       initItem(&(tmpitem));
       setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
 
       char buf[255];
-      char snakeSolution[255] = "solution n°";
+      char snakeSolution[255] = "solution n°\0";
       sprintf(buf,"%d",i+1);
       strcat(snakeSolution,buf);
       setItemDescriptor(tmpitem,(struct Descriptor)
       {	.name=snakeSolution,
-        .font=LoadFont("fonts/Tahoma.ttf"),
+        .font=itemFont,
         .fontSize = 20,
         .minFontSize = DEFAULT_MIN_FONT_SIZE,
         .maxFontSize = DEFAULT_MAX_FONT_SIZE,
         .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
         .action= LOADSOL});
 
-      ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+    //  ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
       addItemToMenu(app->menu->item[2]->menu,tmpitem);
     }
+    app->menu->item[2]->menu->size = i;
     app->menu->item[2]->menu->state = CLOSE;
     app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
     calcMenu(app->menu->item[2]->menu);
