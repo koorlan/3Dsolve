@@ -185,7 +185,6 @@ int main ( int argc, char ** argv )
 	if(!noGraphics)
 	{
 		//Boucle principale
-		app->state = AS_GAME;
 		while (app->running)
 		{
 			getInput(context);
