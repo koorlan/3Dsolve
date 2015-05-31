@@ -47,6 +47,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	switch(action)
 	{
 		case GLFW_PRESS:
+			key_flags |= K_ANY;
 			switch(key)
 			{
 				case GLFW_KEY_ESCAPE:
@@ -68,13 +69,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					key_flags |= K_RT;
 					break;
 				case GLFW_KEY_ENTER:
-					bhv_flags ^= BHV_SPREAD;
+					key_flags |= K_ENTER;
 					break;
 				case GLFW_KEY_SPACE:
 					bhv_flags ^= BHV_ROTATE;
 					break;
-				case GLFW_KEY_H:
-					key_flags |= K_H;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -113,7 +112,16 @@ int getInput ( Context* context )
 
 	}
 
-	if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
+	if ( app->state == AS_HOME && key_flags!=0)
+	{
+		key_flags = K_NONE;
+		app->state = AS_GAME;
+	}
+	else if ( (key_flags&K_ENTER)==K_ENTER )
+	{
+		bhv_flags ^= BHV_SPREAD;
+	}
+	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
 	{
 		gsolver->selected = 0;
 		gsolver->steps[0].dir = RIGHT;
