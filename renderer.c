@@ -409,7 +409,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 					accumulator -= 2*(menu->item[i]->margin[1]/context->screen_height);
 				mat4x4_translate_in_place( WMat, 0.f ,accumulator , 0);
 				mat4x4_scale_aniso(WMat, WMat, menu->bboxRel[0], menu->bboxRel[1] , 0.f);
-				mat4x4_scale_aniso(WMat, WMat, 1.f, (menu->item[i]->bboxRel[1]/menu->bboxRel[1]) , 0.f);
+				mat4x4_scale_aniso(WMat, WMat, 1.f, (menu->item[i]->bboxRel[1]/menu->bboxRel[1])*2.f , 0.f);
 
 				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 				if(i == menu->opened){

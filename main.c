@@ -146,6 +146,7 @@ int main ( int argc, char ** argv )
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
 	}
+	resolverSolveSnake(app->snake, NULL, maxThreadNb);
 	/// [2]
 
 	/// [3] Context and menu initialization
@@ -191,7 +192,7 @@ int main ( int argc, char ** argv )
 								.minFontSize = DEFAULT_MIN_FONT_SIZE,
 								.maxFontSize = DEFAULT_MAX_FONT_SIZE,
 								.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-								.action= LOADSNAKE});
+								.action= MENU});
 						break;
 
 					case 2:
@@ -218,7 +219,7 @@ int main ( int argc, char ** argv )
 			initMenu(&(app->menu->item[0]->menu));
 			app->menu->item[0]->menu->type = COLUMN;
 			//setMenuMargin(app->menu->item[0]->menu,(float []) {0.0f, 0.0f, 0.0f, 0.0f} );
-			for ( i = 0;  i <5; i++) {
+			for ( i = 0;  i <4; i++) {
 				initItem(&(tmpitem));
 				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
 				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
@@ -263,16 +264,6 @@ int main ( int argc, char ** argv )
 						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
 						.action= ABOUT});
 					break;
-					case 4:
-						setItemDescriptor(tmpitem,(struct Descriptor)
-						{	.name="Options",
-						.font=LoadFont("fonts/Libertine.ttf"),
-						.fontSize = 20,
-						.minFontSize = DEFAULT_MIN_FONT_SIZE,
-						.maxFontSize = DEFAULT_MAX_FONT_SIZE,
-						.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-						.action= MENU});
-					break;
 				}
 				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
 				addItemToMenu(app->menu->item[0]->menu,tmpitem);
@@ -282,44 +273,56 @@ int main ( int argc, char ** argv )
 			calcMenu(app->menu->item[0]->menu);
 			testMenuMesh(app->menu->item[0]->menu,context->screen_width,context->screen_height);
 
-			//OPTION menu
-			initMenu(&(app->menu->item[0]->menu->item[4]->menu));
-			app->menu->item[0]->menu->item[4]->menu->type = COLUMN;
-			//setMenuMargin(app->menu->item[0]->menu,(float []) {0.0f, 0.0f, 0.0f, 0.0f} );
-			for ( i = 0;  i <2; i++) {
+			//Snake LOAD
+			initMenu(&(app->menu->item[1]->menu));
+			app->menu->item[1]->menu->type = COLUMN;
+			for (i=0 ; i<app->snakeNumber; i++){
 				initItem(&(tmpitem));
-				//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
 				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
-				switch (i){
-					case 0:
-					setItemDescriptor(tmpitem,(struct Descriptor)
-					{	.name="MouseSpeed",
+				setItemDescriptor(tmpitem,(struct Descriptor)
+				{	.name=app->snakeNames[i],
 					.font=LoadFont("fonts/Libertine.ttf"),
 					.fontSize = 20,
 					.minFontSize = DEFAULT_MIN_FONT_SIZE,
 					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
 					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-					.action= EXIT});
-					break;
-					case 1:
-					setItemDescriptor(tmpitem,(struct Descriptor)
-					{	.name="TOINARD",
+					.action= LOADSNAKE});
+
+				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
+				addItemToMenu(app->menu->item[1]->menu,tmpitem);
+			}
+			app->menu->item[1]->menu->state = CLOSE;
+			app->menu->item[1]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[1]->menu);
+			testMenuMesh(app->menu->item[1]->menu,context->screen_width,context->screen_height);
+
+			//Snake Solution
+			initMenu(&(app->menu->item[2]->menu));
+			app->menu->item[2]->menu->type = COLUMN;
+			for (i=0 ; i<app->snake->solutions->size; i++){
+				initItem(&(tmpitem));
+				setItemMargin(tmpitem,(float[]){5.f,10.f,10.f,10.f});
+
+				char buf[255];
+				char snakeSolution[255] = "solution n°";
+				sprintf(buf,"%d",i+1);
+				strcat(snakeSolution,buf);
+				setItemDescriptor(tmpitem,(struct Descriptor)
+				{	.name=snakeSolution,
 					.font=LoadFont("fonts/Libertine.ttf"),
 					.fontSize = 20,
 					.minFontSize = DEFAULT_MIN_FONT_SIZE,
 					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
-					.color=(struct Color){.r=1.0f,.g=1.0f,.b=0.0f,.a=1.0f},
-					.action= EXIT});
-					break;
+					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
+					.action= LOADSOL});
 
-				}
 				ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
-				addItemToMenu(app->menu->item[0]->menu->item[4]->menu,tmpitem);
+				addItemToMenu(app->menu->item[2]->menu,tmpitem);
 			}
-			app->menu->item[0]->menu->item[4]->menu->state = CLOSE;
-			app->menu->item[0]->menu->item[4]->menu->mesh = objectLoad("stc/menu.stc");
-			calcMenu(app->menu->item[0]->menu->item[4]->menu);
-			testMenuMesh(app->menu->item[0]->menu->item[4]->menu,context->screen_width,context->screen_height);
+			app->menu->item[2]->menu->state = CLOSE;
+			app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[2]->menu);
+			testMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
 
 
 			app->menuDepth =1;
@@ -350,7 +353,7 @@ int main ( int argc, char ** argv )
 
 	if(!noGraphics)
 		contextInit ( context );
-	resolverSolveSnake(app->snake, NULL, maxThreadNb);
+
 
 	if(!noGraphics)
 	{

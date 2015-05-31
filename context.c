@@ -428,17 +428,19 @@ int getInput ( Context* context )
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
-		int i = 0,
-				j = 0,
-				closedMenu = 0;
-		Menu *currentMenu = NULL;
-		Menu *menuToClose = NULL;
-		currentMenu = app->menu;
 
-		int accumulator = 0;
+
+
 
 		if( app->itemSelected >= 0)
 		{
+			int i = 0,
+					j = 0,
+					closedMenu = 0;
+			Menu *currentMenu = NULL;
+			Menu *menuToClose = NULL;
+			currentMenu = app->menu;
+			int accumulator = 0;
 			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {
 			accumulator += currentMenu->size;
