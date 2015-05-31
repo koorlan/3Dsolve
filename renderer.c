@@ -531,6 +531,8 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 		glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
 		accumulator = 0.f;
 			for ( i = 0; i < menu->size; i++) {
+				
+
 				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;

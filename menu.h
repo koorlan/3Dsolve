@@ -21,7 +21,7 @@
 #include "fonts.h"
 
 
-#define MAX_MENU_SIZE 20
+#define MAX_MENU_SIZE 15
 #define DEFAULT_MIN_FONT_SIZE 5
 #define DEFAULT_MAX_FONT_SIZE 20
 
