@@ -502,7 +502,7 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					app->state = AS_HOME;
+					app->state = AS_LOAD;
 					sleep(1);
 					// Chargement d'un nouveau snake
 					logWrite("[MENU] New snake requested\n");

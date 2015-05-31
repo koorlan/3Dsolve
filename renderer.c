@@ -95,7 +95,6 @@ void* renderer ( void *arg )
 		// Set OpenGl viewport to the entire window
 		glViewport (0, 0, context->screen_width, context->screen_height);
 
-
 		switch (app->state)
 		{
 		case AS_HOME:
@@ -201,9 +200,9 @@ void* renderer ( void *arg )
 			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			glTranslatef (-100.f, 0.f,0.f);
+			glTranslatef (-50.f, 0.f,0.f);
 			glColor4f (1.f, 1.f, 1.f, 1.f - (0.35f*(1+cos(4*glfwGetTime()))));
-			ftglRenderFont( pressFont, "Chargement...", FTGL_RENDER_ALL);
+			ftglRenderFont( pressFont, "Calcul...", FTGL_RENDER_ALL);
 
 		break;
 		case AS_HELP:
