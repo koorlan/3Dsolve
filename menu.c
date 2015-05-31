@@ -322,7 +322,7 @@ int increaseMenu(Menu *menu){
 }
 
 
-int testMenuMesh(Menu *menu,int width, int height){
+int calcMenuMesh(Menu *menu,int width, int height){
   int i;
   float mW = (menu->bbox[2] - menu->bbox[0] )/width ;
   float mH = (menu->bbox[3] - menu->bbox[1]) /height;

@@ -20,6 +20,7 @@
 #include "snake.h"
 #include "fonts.h"
 
+
 #define MAX_MENU_SIZE 20
 #define DEFAULT_MIN_FONT_SIZE 5
 #define DEFAULT_MAX_FONT_SIZE 20
@@ -397,6 +398,7 @@ int reduceMenu(Menu *menu);
 int increaseMenu(Menu *menu);
 
 
-int testMenuMesh(Menu *menu,int width, int height);
-int menuCalcRelativeCoord(Menu *childMenu,Menu *parentMenu);
+int calcMenuMesh(Menu *menu,int width, int height);
+
+
 #endif //MENU_H

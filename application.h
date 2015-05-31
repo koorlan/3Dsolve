@@ -94,4 +94,6 @@ void applicationDestroy(Application* app);
  */
 void applicationFindSnakes(Application* app);
 
+int applicationInitMainMenu(Application *app,int width, int height);
+
 #endif //APPLICATION_H
