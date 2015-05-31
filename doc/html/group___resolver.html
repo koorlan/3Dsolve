@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>SolidSnake: Resolver</title>
+<title>3DSolve: Resolver</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div class="container-fluid">
     <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
     </div>
 </div>
 <!-- end header part -->
@@ -112,6 +112,9 @@ Structures de données</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_line.html">Line</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit une ligne (ou axe de symétrie).  <a href="struct_line.html#details">Plus de détails...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_thread_args.html">ThreadArgs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure utilisé pour passer les paramètres aux thread de calcul.  <a href="struct_thread_args.html#details">Plus de détails...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Définitions de type</h2></td></tr>
@@ -120,9 +123,12 @@ Définitions de type</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Fonctions</h2></td></tr>
-<tr class="memitem:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga0bd04b9a2502baf8afbd94c3c0a4d974">resolverSolveSnake</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
-<tr class="memdesc:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonction principale dans la résolution du snake.  <a href="#ga0bd04b9a2502baf8afbd94c3c0a4d974">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga0bd04b9a2502baf8afbd94c3c0a4d974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5e90c99b1b7305225d55b4ea62985b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga5e90c99b1b7305225d55b4ea62985b48">resolverSolveSnake</a> (<a class="el" href="struct_snake.html">Snake</a> *snake, <a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> helpNode, int maxThreadNb)</td></tr>
+<tr class="memdesc:ga5e90c99b1b7305225d55b4ea62985b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonction principale dans la résolution du snake.  <a href="#ga5e90c99b1b7305225d55b4ea62985b48">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga5e90c99b1b7305225d55b4ea62985b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga21457eb6ddb29a0e7839013b2689291c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c">resolverSolveNode</a> (void *args)</td></tr>
+<tr class="memdesc:ga21457eb6ddb29a0e7839013b2689291c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cette fonction cherche les solutions à partir du noeud qui lui est passé en paramètre.  <a href="#ga21457eb6ddb29a0e7839013b2689291c">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga21457eb6ddb29a0e7839013b2689291c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac3069e7da183b89bbec0f3441253e4da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gac3069e7da183b89bbec0f3441253e4da">initTree</a> ()</td></tr>
 <tr class="memdesc:gac3069e7da183b89bbec0f3441253e4da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une nouvelle racine d'arbre.  <a href="#gac3069e7da183b89bbec0f3441253e4da">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gac3069e7da183b89bbec0f3441253e4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,6 +180,9 @@ Fonctions</h2></td></tr>
 <tr class="memitem:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gaaf21069b19d4e7351f51cbaf81e1e2cb">createAllInitialVectors</a> (<a class="el" href="struct_volume.html">Volume</a> volume)</td></tr>
 <tr class="memdesc:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée tous les points de départ possible pour un volume donné.  <a href="#gaaf21069b19d4e7351f51cbaf81e1e2cb">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gaaf21069b19d4e7351f51cbaf81e1e2cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga286d323a1e52a093aa00218af4a17931"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga286d323a1e52a093aa00218af4a17931">validVectCube</a> (<a class="el" href="struct_coord.html">Coord</a> nCoord, <a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a> dir, int max)</td></tr>
+<tr class="memdesc:ga286d323a1e52a093aa00218af4a17931"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet d'indenfier des vecteurs valides pour le recherche de sysmétrie.  <a href="#ga286d323a1e52a093aa00218af4a17931">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga286d323a1e52a093aa00218af4a17931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -459,6 +468,7 @@ Variables</h2></td></tr>
 <li>On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">volume</td><td>Le volume sur lequel effectuer le calcul </td></tr>
+    <tr><td class="paramname">vectorNb</td><td>un pointer sur int pour stocker le nombre de vecteur initiaux </td></tr>
   </table>
   </dd>
 </dl>
@@ -658,7 +668,33 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga0bd04b9a2502baf8afbd94c3c0a4d974"></a>
+<a class="anchor" id="ga21457eb6ddb29a0e7839013b2689291c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* resolverSolveNode </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Cette fonction cherche les solutions à partir du noeud qui lui est passé en paramètre. </p>
+<p>Cette fonction est la fonction principale des thread de calcul. Elle tente de résoudre le serpent à partir du noued qui lui est donné en paramètre. Les informations sont remontées au thread principal via les pointeurs présents dans la structure <a class="el" href="struct_thread_args.html" title="Structure utilisé pour passer les paramètres aux thread de calcul. ">ThreadArgs</a> </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>les arguments du thread </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>Voir également</dt><dd><a class="el" href="struct_thread_args.html" title="Structure utilisé pour passer les paramètres aux thread de calcul. ">ThreadArgs</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga5e90c99b1b7305225d55b4ea62985b48"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -666,8 +702,24 @@ Variables</h2></td></tr>
           <td class="memname">void resolverSolveSnake </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
-          <td class="paramname"><em>snake</em></td><td>)</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
+          <td class="paramname"><em>helpNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxThreadNb</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -675,7 +727,8 @@ Variables</h2></td></tr>
 <p>Fonction principale dans la résolution du snake. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
-    <tr><td class="paramname">snake</td><td>: le serpent à résoudre </td></tr>
+    <tr><td class="paramname">snake</td><td>le serpent à résoudre </td></tr>
+    <tr><td class="paramname">maxThreadNb</td><td>le nombre maximal de thread que la fonction est autorisée à utiliser pour résoudre le snake. </td></tr>
   </table>
   </dd>
 </dl>
@@ -739,17 +792,17 @@ Variables</h2></td></tr>
 <p>Détermine si un vecteur est symétrique à un autre selon les différentes symétries axiales dans un plan. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
-    <tr><td class="paramname">initialStep</td><td>[description] </td></tr>
-    <tr><td class="paramname">nCoord</td><td>[description] </td></tr>
-    <tr><td class="paramname">nDir</td><td>[description] </td></tr>
-    <tr><td class="paramname">verticalAxis</td><td>[description] </td></tr>
-    <tr><td class="paramname">horizontalAxis</td><td>[description] </td></tr>
-    <tr><td class="paramname">diagonalAxis</td><td>[description] </td></tr>
-    <tr><td class="paramname">slashAxis</td><td>[description] </td></tr>
+    <tr><td class="paramname">initialStep</td><td>Un vecteur de départ à partir on calcul les symétries </td></tr>
+    <tr><td class="paramname">nCoord</td><td>Coordonnée du vecteur étudié </td></tr>
+    <tr><td class="paramname">nDir</td><td>Direction du vecteur étudié </td></tr>
+    <tr><td class="paramname">verticalAxis</td><td>Axe vertical </td></tr>
+    <tr><td class="paramname">horizontalAxis</td><td>Axe horizontal </td></tr>
+    <tr><td class="paramname">diagonalAxis</td><td>Axe diagonal </td></tr>
+    <tr><td class="paramname">slashAxis</td><td>Second axe diagonal </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>[description] </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si le vecteur est symétrique, 0 sinon </dd></dl>
 
 </div>
 </div>
@@ -827,6 +880,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ga286d323a1e52a093aa00218af4a17931"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int validVectCube </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>nCoord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___snake.html#ga7cf6e8c5a5bc5e7b2afef3647870b1c4">Dir</a>&#160;</td>
+          <td class="paramname"><em>dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Permet d'indenfier des vecteurs valides pour le recherche de sysmétrie. </p>
+<p>Dans le cas où le "tranche" étudié est une "tranche" intérieur, on ne veut pas étudier les vecteur extérieur car ils sont déjà considéré dans l'étude des faces extérieures. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nCoord</td><td>Les coordonnées du vecteur à valideCoord </td></tr>
+    <tr><td class="paramname">dir</td><td>La direction du vecteur à valider </td></tr>
+    <tr><td class="paramname">max</td><td>La taille du cube </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si le vecteur est valide, 0 sinon </dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Documentation des variables</h2>
 <a class="anchor" id="ga9336ebf25087d91c818ee6e9ec29f8c1"></a>
 <div class="memitem">
@@ -848,7 +945,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

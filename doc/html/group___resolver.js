@@ -14,6 +14,11 @@ var group___resolver =
       [ "pointA", "struct_line.html#ae61338ee34dcba3435f5415e653cad2a", null ],
       [ "pointB", "struct_line.html#ac573310eb7acf2d7e112153d00a92695", null ]
     ] ],
+    [ "ThreadArgs", "struct_thread_args.html", [
+      [ "exploredWayNb", "struct_thread_args.html#ade20f35c133efc37e4b900794a7e9b38", null ],
+      [ "rootNode", "struct_thread_args.html#a057f9de4afe85dad22a6bedc06424f58", null ],
+      [ "snake", "struct_thread_args.html#aa798779259654cac04213978cf4297ab", null ]
+    ] ],
     [ "Tree", "group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb", null ],
     [ "addInitialVector", "group___resolver.html#gafc6abaee62415960f12fde37f598f640", null ],
     [ "buildChildren", "group___resolver.html#ga9b757700512c4fd0bba270167c0b3a21", null ],
@@ -29,9 +34,11 @@ var group___resolver =
     [ "printLine", "group___resolver.html#gab41fb96ca2f03baa37109c18a9636813", null ],
     [ "printSnake", "group___resolver.html#ga6ece3acf45a9cf3a4f43d24be4b8ceb0", null ],
     [ "printTree", "group___resolver.html#gafb462b1cee08e8d549f077b204369ece", null ],
-    [ "resolverSolveSnake", "group___resolver.html#ga0bd04b9a2502baf8afbd94c3c0a4d974", null ],
+    [ "resolverSolveNode", "group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c", null ],
+    [ "resolverSolveSnake", "group___resolver.html#ga5e90c99b1b7305225d55b4ea62985b48", null ],
     [ "symmetries", "group___resolver.html#ga32c547fc9326200a8278a52420ba2aba", null ],
     [ "validCoord", "group___resolver.html#ga12fbaaab641e2d2632d83785080631b0", null ],
     [ "validCoordSym", "group___resolver.html#ga0189b788cfe43109fa9e519f9c57358b", null ],
+    [ "validVectCube", "group___resolver.html#ga286d323a1e52a093aa00218af4a17931", null ],
     [ "x", "group___resolver.html#ga9336ebf25087d91c818ee6e9ec29f8c1", null ]
 ];

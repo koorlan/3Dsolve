@@ -132,8 +132,7 @@ int main ( int argc, char ** argv )
 	int noGraphics = 0;
 	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
 
-  app = applicationCreate();
-
+	app = applicationCreate();
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -321,15 +320,9 @@ int main ( int argc, char ** argv )
 			calcMenu(app->menu->item[0]->menu->item[4]->menu);
 			testMenuMesh(app->menu->item[0]->menu->item[4]->menu,context->screen_width,context->screen_height);
 
-
 			app->menuDepth =1;
-
-
 			//End test menu
 	}
-
-
-
 	/// [3]
 
 	/// [4] Application running
@@ -341,15 +334,15 @@ int main ( int argc, char ** argv )
 	time1.tv_nsec = 1000000;
 	#endif
 
-
-	context->playmode = PM_PLAY;
-	gplayer = playerInit ( app->snake );
-	gplayer->selected = 0;
-	gsolver = playerInit ( app->snake );
-	gsolver->currentSolution = app->snake->solutions->head;
-
 	if(!noGraphics)
+	{
+		context->playmode = PM_PLAY;
+		gplayer = playerInit ( app->snake );
+		gplayer->selected = 0;
+		gsolver = playerInit ( app->snake );
+		gsolver->currentSolution = app->snake->solutions->head;
 		contextInit ( context );
+	}
 	resolverSolveSnake(app->snake, NULL, maxThreadNb);
 
 	if(!noGraphics)

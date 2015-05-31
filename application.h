@@ -43,8 +43,7 @@
  * Le snake actuellement utilisé
  * (indexé Application::loadedSnake dans Application::snakeNames)
  * @var Application::player
- * Le joueur
- *
+ * Le joueur *
  * @var Application::menu
  * Le menu de l'application
  * @var Application::menuDepth
@@ -54,8 +53,6 @@
  * @var Application::calculTime
  * Le temps pris pour le calcul des solutions
  */
-
-
 typedef struct Application
 {
     char** snakeNames;
@@ -72,10 +69,7 @@ typedef struct Application
     double calculTime;
 } Application;
 
-
-//GLOBAL POINTER OMG OMG
 Application* app;
-
 
 /**
  * @ingroup Application
