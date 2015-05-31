@@ -493,7 +493,7 @@ int getInput ( Context* context )
 					logWrite("[MENU] Loading Snake : %s\n", snakePath);
 					Snake* newSnake = snakeInit(snakePath);
 					free(snakePath);
-					currentMenu->state = CLOSE;
+					//currentMenu->state = CLOSE;
 					if(newSnake != NULL)
 					{
 						snakeDestroy(app->snake, 1);
