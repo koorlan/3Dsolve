@@ -100,16 +100,25 @@ void* renderer ( void *arg )
 
 			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// Afficher texte ici
+			
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			//ftglRenderFont( , "SNAKE", FTGL_RENDER_ALL);
+			
+
+			// Eye-candy
+			glUseProgram (context->snake_program);
 			mat4x4_identity(viewMat);
 			mat4x4_identity(perMat);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 			glUniform1f(alphaID, 1.0f);
-
-			// Afficher texte ici
-
-
-			glUseProgram (context->snake_program);
 			glEnable (GL_DEPTH_TEST);
 			mat4x4_look_at(viewMat, (vec3){3,4.5,3},
 						(vec3){0,1.5,0},

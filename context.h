@@ -51,8 +51,9 @@
 #define K_RST		0b00010000
 #define K_PGUP		0b00100000
 #define K_ENTER		0b01000000
+#define K_ANY		0b10000000
+#define K_NONE		0b00000000
 
-#define K_H		0b10000000
 
 
 #define BHV_ROTATE	0b00000001
