@@ -1,5 +1,5 @@
 \section{Structure de donnée}
-Afin de pouvoir présenter certain des algorithmes que nous avons mis en place dans notre application, nous allons d'abord présenter brièvement les structure de données utilisées par ces algorithmes.
+Afin de pouvoir présenter certain des algorithmes que nous avons mis en place dans notre application, nous allons d'abord présenter brièvement les structures de données utilisées par ces algorithmes.
 
 \paragraph{Dir} Type énuméré qui définit les six différentes directions dans l’espace, plus une valeur qui signale une erreur
 \paragraph{Unit} Type énuméré qui définit les trois natures d’unité de cube, coin, unité droite ou extrémité
@@ -28,7 +28,7 @@ Variables - noeud : Noeud // Le noeud courant
             resultatConstruction : entier
 D(*é*)but
 | noeud <- racine
-| Tant que noeud := racine OU racine->aJou(*é*) = 0
+| Tant que noeud (*$\neq$*) racine OU racine->aJou(*é*) = 0
 | | Si noeud->aJou(*é*) = 0
 | | | resultatConstruction <- ConstructionDesFils(noeud, s)
 | | | Si resultatConstruction = 1 Alors
@@ -38,11 +38,11 @@ D(*é*)but
 | | | // Construction OK et casse-t(*ê*)te r(*é*)solu 
 | | | | sauvegardeSolution(s)
 | | | Fin si
-| | Sinon // Le noeud n'a pas jou(*é*)
+| | Sinon // Le noeud a d(*é*)j(*à*) jou(*é*)
 | | | serpent->volume.etat[noeud->(*é*)tape.coord.x]
 | | |                     [noeud->(*é*)tape.coord.y]
 | | |                     [noeud->(*é*)tape.coord.z] <- LIBRE
-| | | Si noeud->fr(*è*)re := NIL
+| | | Si noeud->fr(*è*)re (*$\neq$*) NIL
 | | | | noeud <- noeud->fr(*è*)re
 | | | Sinon
 | | | | noeud <- noeud->p(*è*)re

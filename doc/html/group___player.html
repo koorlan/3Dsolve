@@ -1,0 +1,535 @@
+<!-- HTML header for doxygen 1.8.6-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.6"/>
+<title>3DSolve: Player</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
+    </div>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.8.6 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Page&#160;principale</span></a></li>
+      <li><a href="pages.html"><span>Pages&#160;associées</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Structures&#160;de&#160;données</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Recherche" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('group___player.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tout</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Structures de données</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Fonctions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Définitions de type</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Énumérations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groupes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Fonctions</a>  </div>
+  <div class="headertitle">
+<div class="title">Player</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Ce module, articulé autour de la structure <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a> permet de modéliser un joueur et de gérer l'interaction de celui-ci avec l'application.  
+<a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:gad1a97fdf7e216abbe0d12112b0eff2b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7">playerInit</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
+<tr class="memdesc:gad1a97fdf7e216abbe0d12112b0eff2b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée et initialise un <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a>.  <a href="#gad1a97fdf7e216abbe0d12112b0eff2b7">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gad1a97fdf7e216abbe0d12112b0eff2b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3983e08fde834c755eb1aa68a96a0508"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga3983e08fde834c755eb1aa68a96a0508">playerFlatten</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_snake.html">Snake</a> *snake, int fromIndex)</td></tr>
+<tr class="memdesc:ga3983e08fde834c755eb1aa68a96a0508"><td class="mdescLeft">&#160;</td><td class="mdescRight">???  <a href="#ga3983e08fde834c755eb1aa68a96a0508">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga3983e08fde834c755eb1aa68a96a0508"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6c3d30fd77b5b93c541167f61d661103"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga6c3d30fd77b5b93c541167f61d661103">playerRotate</a> (<a class="el" href="struct_player.html">Player</a> *player, int stepIndex, <a class="el" href="struct_snake.html">Snake</a> *snake, int magnet)</td></tr>
+<tr class="memdesc:ga6c3d30fd77b5b93c541167f61d661103"><td class="mdescLeft">&#160;</td><td class="mdescRight">???  <a href="#ga6c3d30fd77b5b93c541167f61d661103">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga6c3d30fd77b5b93c541167f61d661103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a0ce1b88f9f69ca36e5f823852ac778"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga4a0ce1b88f9f69ca36e5f823852ac778">playerFakeRotate</a> (<a class="el" href="struct_player.html">Player</a> *player, int stepIndex, <a class="el" href="struct_snake.html">Snake</a> *snake, int magnet)</td></tr>
+<tr class="memdesc:ga4a0ce1b88f9f69ca36e5f823852ac778"><td class="mdescLeft">&#160;</td><td class="mdescRight">???  <a href="#ga4a0ce1b88f9f69ca36e5f823852ac778">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga4a0ce1b88f9f69ca36e5f823852ac778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf1911ad584cefd37dc547d5a4260cccc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gaf1911ad584cefd37dc547d5a4260cccc">playerDestroy</a> (<a class="el" href="struct_player.html">Player</a> *player)</td></tr>
+<tr class="memdesc:gaf1911ad584cefd37dc547d5a4260cccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détruit un joueur et nettoie la mémoire.  <a href="#gaf1911ad584cefd37dc547d5a4260cccc">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gaf1911ad584cefd37dc547d5a4260cccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga53f05cd74811715faf9a66381e260661"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga53f05cd74811715faf9a66381e260661">playerFindMinMax</a> (<a class="el" href="struct_coord.html">Coord</a> *min, <a class="el" href="struct_coord.html">Coord</a> *max, int length, <a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_volume.html">Volume</a> volume)</td></tr>
+<tr class="memdesc:ga53f05cd74811715faf9a66381e260661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcule les coordonnées min et max du volume.  <a href="#ga53f05cd74811715faf9a66381e260661">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga53f05cd74811715faf9a66381e260661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac9ddd28fb75760a871c7baad7d63c183"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gac9ddd28fb75760a871c7baad7d63c183">playerCheckSolution</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_volume.html">Volume</a> volume, int length)</td></tr>
+<tr class="separator:gac9ddd28fb75760a871c7baad7d63c183"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga58ea907ff2ae8824ac0757a9d4c65499">initVolume</a> (<a class="el" href="struct_snake.html">Snake</a> *solSnake, <a class="el" href="struct_snake.html">Snake</a> *snake, <a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_coord.html">Coord</a> min, <a class="el" href="struct_coord.html">Coord</a> max, int *debugCpt)</td></tr>
+<tr class="memdesc:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="mdescLeft">&#160;</td><td class="mdescRight">???  <a href="#ga58ea907ff2ae8824ac0757a9d4c65499">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga23496721d29f7a227f7ba20f2ec59734"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga23496721d29f7a227f7ba20f2ec59734">playerHelp</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
+<tr class="memdesc:ga23496721d29f7a227f7ba20f2ec59734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aide le joueur à résoudre le casse-tête à partir des mouvement qu'il a commencé à faire.  <a href="#ga23496721d29f7a227f7ba20f2ec59734">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga23496721d29f7a227f7ba20f2ec59734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<p>Ce module, articulé autour de la structure <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a> permet de modéliser un joueur et de gérer l'interaction de celui-ci avec l'application. </p>
+<h2 class="groupheader">Documentation des fonctions</h2>
+<a class="anchor" id="ga58ea907ff2ae8824ac0757a9d4c65499"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int initVolume </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>solSnake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a>&#160;</td>
+          <td class="paramname"><em>max</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>debugCpt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>??? </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">solSnake</td><td>??? </td></tr>
+    <tr><td class="paramname">snake</td><td>??? </td></tr>
+    <tr><td class="paramname">player</td><td>??? </td></tr>
+    <tr><td class="paramname">min</td><td>??? </td></tr>
+    <tr><td class="paramname">max</td><td>??? </td></tr>
+    <tr><td class="paramname">debugCpt</td><td>??? </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gac9ddd28fb75760a871c7baad7d63c183"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int playerCheckSolution </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_volume.html">Volume</a>&#160;</td>
+          <td class="paramname"><em>volume</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Vérifie si le joueur à résolu le casse tête ou non </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">volume</td><td>Le volume à remplir pour résoudre le casse-tête </td></tr>
+    <tr><td class="paramname">length</td><td>La longueur du serpent </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si le joueur a résolu le casse-tête, -1 sinon. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf1911ad584cefd37dc547d5a4260cccc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void playerDestroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Détruit un joueur et nettoie la mémoire. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur à détruir </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga4a0ce1b88f9f69ca36e5f823852ac778"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void playerFakeRotate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>stepIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>magnet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>??? </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">stepIndex</td><td>[description] </td></tr>
+    <tr><td class="paramname">snake</td><td>Le serpent </td></tr>
+    <tr><td class="paramname">magnet</td><td>[description] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga53f05cd74811715faf9a66381e260661"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int playerFindMinMax </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a> *&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_coord.html">Coord</a> *&#160;</td>
+          <td class="paramname"><em>max</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_volume.html">Volume</a>&#160;</td>
+          <td class="paramname"><em>volume</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calcule les coordonnées min et max du volume. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min</td><td>Pointeur pour récupérer les coord min </td></tr>
+    <tr><td class="paramname">max</td><td>Pointeur pour récupérer les coord max </td></tr>
+    <tr><td class="paramname">length</td><td>??? </td></tr>
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">volume</td><td>??? </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga3983e08fde834c755eb1aa68a96a0508"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void playerFlatten </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fromIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>??? </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">snake</td><td>Le serpent </td></tr>
+    <tr><td class="paramname">fromIndex</td><td>l'index de début </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga23496721d29f7a227f7ba20f2ec59734"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int playerHelp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Aide le joueur à résoudre le casse-tête à partir des mouvement qu'il a commencé à faire. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">snake</td><td>Le serpent à résoudre </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gad1a97fdf7e216abbe0d12112b0eff2b7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_player.html">Player</a>* playerInit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Crée et initialise un <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">snake</td><td>Le snake à résoudre </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Le <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a> créé. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga6c3d30fd77b5b93c541167f61d661103"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void playerRotate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_player.html">Player</a> *&#160;</td>
+          <td class="paramname"><em>player</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>stepIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
+          <td class="paramname"><em>snake</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>magnet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>??? </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">stepIndex</td><td>??? </td></tr>
+    <tr><td class="paramname">snake</td><td>Le serpent </td></tr>
+    <tr><td class="paramname">magnet</td><td>??? </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
+  </ul>
+</div>
+</body>
+</html>
