@@ -632,7 +632,7 @@ Context* contextCreate ()
 	{
 		GLFWmonitor* mon = glfwGetPrimaryMonitor ();
 		const GLFWvidmode* vmode = glfwGetVideoMode ( mon );
-		context->window = glfwCreateWindow ( vmode->width, vmode->height, "Solid Snake", mon, NULL );
+		context->window = glfwCreateWindow ( vmode->width, vmode->height, "3DSolve", mon, NULL );
 		context->screen_width = vmode->width;
 		context->screen_height = vmode->height;
 	}
@@ -640,7 +640,7 @@ Context* contextCreate ()
 	{
 		context->screen_width = DRESX;
 		context->screen_height = DRESY;
-		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "Solid Snake", NULL, NULL );
+		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "3DSolve", NULL, NULL );
 	}
 	logWrite ("[CNTXT] Using resolution %dx%d\n", context->screen_width, context->screen_height);
 

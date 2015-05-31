@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['z',['z',['../struct_float_coord.html#a25ed1bcb423b0b7200f485fc5ff71c8e',1,'FloatCoord::z()'],['../struct_coord.html#a25ed1bcb423b0b7200f485fc5ff71c8e',1,'Coord::z()']]]
+  ['x',['x',['../group___resolver.html#ga9336ebf25087d91c818ee6e9ec29f8c1',1,'FloatCoord::x()'],['../struct_coord.html#a9336ebf25087d91c818ee6e9ec29f8c1',1,'Coord::x()']]]
 ];

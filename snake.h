@@ -16,7 +16,10 @@
 /**
  * @defgroup Snake Snake
  *
- * @brief Module de gestion du Snake
+ * @brief Module de gestion du Snake.
+ *
+ * Le module Snake s'articule principalement autour de la structure Snake qui
+ * modélise le casse-tête.
  */
 
 #ifndef SNAKE_H
@@ -179,14 +182,21 @@ typedef struct Snake
  */
 Snake* snakeInit(char* templatePath);
 
+/**
+ * @ingroup Snake
+ * @breif Copie un snake.
+ *
+ * @param destination Destination de la Copie
+ * @param source      Source de la copie
+ */
 void snakeCopy(Snake* destination, Snake* source);
 
 /**
  * @ingroup Snake
  * @brief Supprime snake de la mémoire
  * @param snake Le snake à détruir
- * @param deleteSolution Si mis à 1, indique qu'il faut libérer de la mémoire
- * les solutions. Si mis à 0, les solution sont conservé en mémoire (utile
+ * @param deleteSolution Si mit à 1, indique qu'il faut libérer de la mémoire
+ * les solutions. Si mit à 0, les solution sont conservé en mémoire (utile
  * lors de la destruction des serpents utilisé par les threads)
  */
 void snakeDestroy ( Snake* snake, int deleteSolution);

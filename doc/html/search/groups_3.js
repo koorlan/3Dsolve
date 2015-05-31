@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['resolver',['Resolver',['../group___resolver.html',1,'']]]
+  ['player',['Player',['../group___player.html',1,'']]]
 ];
