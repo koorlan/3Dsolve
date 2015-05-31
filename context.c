@@ -481,8 +481,29 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					logWrite("[MENU] LOADSNAKE Trigger (item %d)\n",currentMenu->selected);
+					// Chargement d'un nouveau snake
+					logWrite("[MENU] New snake requested\n");
+					// Récupération du nom du snake
+					char* snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
+					char* snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
+					sprintf(snakePath, "Snakes/%s", snakeName);
+					logWrite("[MENU] Loading Snake : %s\n", snakePath);
+					Snake* newSnake = snakeInit(snakePath);
+					free(snakePath);
+					currentMenu->state = CLOSE;
+					if(newSnake != NULL)
+					{
+						snakeDestroy(app->snake, 1);
+						app->snake = newSnake;
+						resolverSolveSnake(app->snake, NULL, 1);
 
+						playerDestroy(gplayer);
+						gplayer = playerInit ( app->snake );
+						gplayer->selected = 0;
+						playerDestroy(gsolver);
+						gsolver = playerInit(app->snake);
+						gsolver->currentSolution = app->snake->solutions->head;
+					}
 					break;
 				case MENU:
 					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
