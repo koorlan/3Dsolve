@@ -29,7 +29,7 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
       //Tree rootNode = createAllInitialVectors(snake->volume);
       logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
     }
-    else 
+    else
     {
       rootNode = helpNode;
       initialVectorNb = cptNode(rootNode);
@@ -817,12 +817,12 @@ int validVectCube(Coord nCoord, Dir dir, int max)
 
 int resolverInitializeHelp(Snake *snake, Step fstStep)
 {
-  Tree rootNode = initTree(); 
+  Tree rootNode = initTree();
   Tree currentNode = malloc(sizeof(NodeTree));
 
 
   if (currentNode == NULL)
-  { 
+  {
     logError("[RESOL] Error of memory allocation\n");
     exit(-1);
   }
@@ -843,7 +843,7 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   if(validCoord(nCoord, snake->volume.max) && snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
   {
-    
+
       snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FILL;
       snake->currentUnit=-1;
       nextUnit = snakeGetNextUnit(snake);

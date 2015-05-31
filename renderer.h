@@ -34,7 +34,7 @@
 #include "menu.h"
 #include "application.h"
 
-FTGLfont *myfont;
+//extern struct context;
 
 #define F_NEAR 0.1f
 #define F_FAR 1000.0f
@@ -42,6 +42,9 @@ FTGLfont *myfont;
 #define abs(X) ((X)<0?-(X):(X))
 
 void* renderer ( void *arg );
-void render_text(const char *text, float x, float y, float sx, float sy);
+void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int alphaID, unsigned int wID);
+void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller,int *id, mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int pickcolorID, unsigned int wID);
+void drawMenuText(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller);
+
 
 #endif //RENDERERS_H

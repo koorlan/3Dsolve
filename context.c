@@ -101,15 +101,12 @@ int getInput ( Context* context )
 
 	if (resize_h!=-1 || resize_w!=-1)
 	{
+
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
 
-		pthread_mutex_lock(mymenu->mutex);
-		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		calcMenu(mymenu);
-		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
-		pthread_mutex_unlock(mymenu->mutex);
+	//	testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 		resize_h = -1;
 		resize_w = -1;
@@ -415,7 +412,6 @@ int getInput ( Context* context )
 				else
 					gplayer->steps[i].dir = prevDir;
 			}
-			
 
 			gplayer->steps[i].coord.x = (gplayer->steps[i-1].coord.x+dir2int[gplayer->steps[i-1].dir][0]);
 			gplayer->steps[i].coord.y = (gplayer->steps[i-1].coord.y+dir2int[gplayer->steps[i-1].dir][1]);
@@ -432,11 +428,90 @@ int getInput ( Context* context )
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
+		int i = 0,
+				j = 0,
+				closedMenu = 0;
+		Menu *currentMenu = NULL;
+		Menu *menuToClose = NULL;
+		currentMenu = app->menu;
+
+		int accumulator = 0;
+
+		if( app->itemSelected >= 0)
+		{
+			//From 279 to 307 , Magic...do not touch !
+		for ( i = 0; i < app->menuDepth; i++) {
+			accumulator += currentMenu->size;
+			logWrite("accumulator %d \n",accumulator);
+			if(app->itemSelected >= accumulator){
+				if(currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size)
+					currentMenu = currentMenu->item[currentMenu->opened]->menu;
+				else
+					break;
+			}
+			else{
+				logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
+				currentMenu->selected = app->itemSelected - accumulator + currentMenu->size;
+				if (currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size){
+					menuToClose = currentMenu->item[currentMenu->opened]->menu;
+				for ( j = i+1; j < app->menuDepth; j++) {
+					if(currentMenu->selected == currentMenu->opened)
+						break;
+					menuToClose->state = CLOSE;
+					closedMenu ++;
+					if (menuToClose->opened >= 0 && menuToClose->opened < menuToClose->size){
+						menuToClose = menuToClose->item[menuToClose->opened]->menu;
+					}
+				}
+				app->menuDepth -= closedMenu;
+				}
+				break;
+			}
+		}
+		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
+			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
+				case RESET:
+					logWrite("[MENU] Close Trigger (item %d)\n",currentMenu->selected);
+
+					break;
+				case EXIT:
+					logWrite("[MENU] EXIT Trigger EXIT (item %d)\n",currentMenu->selected);
+					app->running = 0;
+					break;
+				case LOADSNAKE:
+					logWrite("[MENU] LOADSNAKE Trigger (item %d)\n",currentMenu->selected);
+
+					break;
+				case MENU:
+					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
+						logWrite("[MENU] OPEN A FUCKING MENU\n");
+						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
+						currentMenu->opened = currentMenu->selected;
+						app->menuDepth ++;
+						break;
+					}
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
+						logWrite("[MENU] CLOSE A FUCKING MENU\n");
+						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
+						app->menuDepth --;
+						break;
+					}
+					break;
+				default:
+					break;
+			}
+			currentMenu->opened = currentMenu->selected;
+			currentMenu->selected = -1;
+		}
+	}
+
 		if (gplayer->selected!=0)
 		{
 			playerRotate(gplayer, gplayer->selected, app->snake, 0);
 			playerRotate(gplayer, gplayer->selected, app->snake, 1);
 		}
+
 		magnet = 0;
 		mouse_flags ^= M_RLEFTONCE;
 	}
@@ -446,7 +521,7 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
-			mouse_flags ^= M_LEFTONCE;
+				mouse_flags ^= M_LEFTONCE;
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
@@ -462,7 +537,7 @@ int getInput ( Context* context )
 				if (accy>0) magnet += MAG_STEP;
 				else if (accy<0) magnet -= MAG_STEP;
 			}
-	
+
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
 				playerRotate(gplayer, gplayer->selected, app->snake, magnet);
@@ -488,7 +563,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
 	else context->spread = 0;
@@ -651,8 +726,8 @@ void contextInit ( Context* context )
 	context->dwoodtex = textureID;
 	free(buffer);
 
-	/*
-	lodepng_decode32_file(&buffer, &width, &height, "textures/bad.png");
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/menu.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -660,8 +735,17 @@ void contextInit ( Context* context )
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	context->badtex = textureID;
-	*/
+	context->menutex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/item.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->itemtex = textureID;
 
 	vec3 vol_offset;
 	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
@@ -694,6 +778,7 @@ void contextInit ( Context* context )
 	context->loading = 1;
 
 	glfwMakeContextCurrent ( NULL );
+
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 
