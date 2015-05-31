@@ -152,6 +152,14 @@ int getInput ( Context* context )
 			gsolver->selected = 0;
 			gsolver->steps[0].dir = RIGHT;
 			playerFlatten (gsolver, app->snake, 0);
+			int i;
+			for (i=0;i<app->snake->length;i++)
+			{
+				mat4x4_translate(gsolver->realCubePos[i],
+					(float) gsolver->steps[i].coord.x,
+					(float) gsolver->steps[i].coord.y,
+					(float) gsolver->steps[i].coord.z);
+			}
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -429,14 +437,12 @@ int getInput ( Context* context )
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
 
-
-
-
 		if( app->itemSelected >= 0)
 		{
 			int i = 0,
 					j = 0,
 					closedMenu = 0;
+					Solution *newSolution;
 			Menu *currentMenu = NULL;
 			Menu *menuToClose = NULL;
 			currentMenu = app->menu;
@@ -473,28 +479,42 @@ int getInput ( Context* context )
 		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
-					logWrite("[MENU] Close Trigger (item %d)\n",currentMenu->selected);
-
 					break;
 				case EXIT:
-					logWrite("[MENU] EXIT Trigger EXIT (item %d)\n",currentMenu->selected);
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					logWrite("[MENU] LOADSNAKE Trigger (item %d)\n",currentMenu->selected);
-
+					break;
+				case LOADSOL:
+				newSolution = app->snake->solutions->head;
+					for(i=0; i<currentMenu->selected;i++){
+						if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
+						{
+							if (newSolution->next!=NULL) newSolution = newSolution->next;
+							else newSolution = app->snake->solutions->head;
+						}
+					}
+						gsolver->currentSolution = newSolution;
+						gsolver->selected = 0;
+						gsolver->steps[0].dir = RIGHT;
+						playerFlatten (gsolver, app->snake, 0);
+						int i;
+						for (i=0;i<app->snake->length;i++)
+						{
+							mat4x4_translate(gsolver->realCubePos[i],
+								(float) gsolver->steps[i].coord.x,
+								(float) gsolver->steps[i].coord.y,
+								(float) gsolver->steps[i].coord.z);
+						}
 					break;
 				case MENU:
-					logWrite("[MENU] Open Trigger (item %d)\n",currentMenu->selected);
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
-						logWrite("[MENU] OPEN A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
 						currentMenu->opened = currentMenu->selected;
 						app->menuDepth ++;
 						break;
 					}
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
-						logWrite("[MENU] CLOSE A FUCKING MENU\n");
 						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
 						app->menuDepth --;
 						break;
