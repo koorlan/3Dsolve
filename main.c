@@ -128,11 +128,11 @@ int main ( int argc, char ** argv )
 
 	char* filePath = malloc(50);
 	strncpy(filePath, "Snakes/snake.snake", 19);
-	int maxThreadNb = 1;
 	int noGraphics = 0;
-	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
-
 	app = applicationCreate();
+	app->maxThread = -1;
+
+	checkArguments(argc, argv, &(app->maxThread), filePath, &noGraphics);
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -145,7 +145,7 @@ int main ( int argc, char ** argv )
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
 	}
-	resolverSolveSnake(app->snake, NULL, maxThreadNb);
+	resolverSolveSnake(app->snake, NULL);
 	/// [2]
 
 	/// [3] Context and menu initialization
