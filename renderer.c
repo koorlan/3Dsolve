@@ -102,7 +102,7 @@ void* renderer ( void *arg )
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Afficher texte ici
-			
+
 			glUseProgram (0);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -110,7 +110,7 @@ void* renderer ( void *arg )
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			//ftglRenderFont( , "SNAKE", FTGL_RENDER_ALL);
-			
+
 
 			// Eye-candy
 			glUseProgram (context->snake_program);
@@ -466,6 +466,8 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 		glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
 		accumulator = 0.f;
 			for ( i = 0; i < menu->size; i++) {
+				
+
 				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;
