@@ -1,5 +1,5 @@
 \section{Structure de donnée}
-Afin de pouvoir présenter certain des algorithmes que nous avons mis en place dans notre application, nous allons d'abord présenter brièvement les structure de données utilisées par ces algorithmes.
+Afin de pouvoir présenter certains des algorithmes que nous avons mis en place dans notre application, nous allons d'abord présenter brièvement les structures de données utilisées par ces algorithmes.
 
 \paragraph{Dir} Type énuméré qui définit les six différentes directions dans l’espace, plus une valeur qui signale une erreur
 \paragraph{Unit} Type énuméré qui définit les trois natures d’unité de cube, coin, unité droite ou extrémité
@@ -9,18 +9,18 @@ Afin de pouvoir présenter certain des algorithmes que nous avons mis en place d
 \paragraph{Volume} Type structuré qui contient un champ max (type Coord) définissant les limites du volume dans l’espace et selon les trois coordonnées, et un champ état (state) (tableau 3D de VolumeState)
 \paragraph{Serpent (snake)} Type structuré qui contient : 
 \begin{itemize}
- \item Un entier, taille (length), indiquant le nombre d’unité du serpent 
+ \item Un entier, taille (length), indiquant le nombre d’unités du serpent 
  \item volume, un élément de type Volume qui définit le volume final
  \item units, qui pointe sur les unités du serpent 
  \item currentUnit, pointant sur l’unité en cous de traitement 
  \item solutions, pointeur sur la liste des solutions 
  \item symetries, tableau de quatre entiers correspondant aux différents axes de symétrie
 \end{itemize}
-\paragraph{Nœud (TreeNode)} Structure de données représentant un nœud dans l'arbre de recherche des solutions. Un nœud représente une étape dans l'enchaînement en cour de recherche. Si cet enchaînement abouti à une solution alors le mouvement (l'étape) porter par le nœud deviendra une étape de la solution.
+\paragraph{Nœud (TreeNode)} Structure de données représentant un nœud dans l'arbre de recherche des solutions. Un nœud représente une étape dans l'enchaînement en cour de recherche. Si cet enchaînement abouti à une solution alors le mouvement (l'étape) porté par le nœud deviendra une étape de la solution.
 Chaque nœud possède un pointeur vers son père, son frère et son premier fils.
 
 \section{Parcours en profondeur d'une branche}
-Cet algorithme permet de créer à la voler et de parcourir en profondeur une branche de l'arbre à partir d'un nœud initial correspond au placement du premier élément du serpent. Cet algorithme fait référence au principe exposé dans la partie~\ref{solveNode} (page~\pageref{solveNode}).
+Cet algorithme permet de créer à la volée et de parcourir en profondeur une branche de l'arbre à partir d'un nœud initial correspond au placement du premier élément du serpent. Cet algorithme fait référence au principe exposé dans la partie~\ref{solveNode} (page~\pageref{solveNode}).
 
 \begin{lstlisting}[caption=Algorithme de résolution pour une branche]
 Procedure ResoudreNoeud(racine : Noeud, s : Serpent)
@@ -55,11 +55,11 @@ Fin
 
 \newpage
 \paragraph{Explication}
-Tant que l'algorithme tout les chemin possible découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant s'il ne l'a pas déjà fait. Faire ``jouer'' le nœud consiste à tenter de lui créer ses fils grâce à l'algorithme \verb|ContructionDesFils|. Si la construction réussi, cela signifie qu'au moins un fils a été créé, le premier des fils créé devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvement aboutissant à cette solution. Si la construction, cela signifie que le chemin emprunté ne peut pas aboutir à une solution et rien de ne passe.
+Tant que l'algorithme tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant s'il ne l'a pas déjà fait. Faire ``jouer'' le nœud consiste à tenter de lui créer ses fils grâce à l'algorithme \verb|ContructionDesFils|. Si la construction réussi, cela signifie qu'au moins un fils a été créé, le premier des fils créé devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvements aboutissant à cette solution. Si la construction, cela signifie que le chemin emprunté ne peut pas aboutir à une solution et rien ne se passe.
 
-Si le nœud a déjà jouer alors on réinitialise l'état du sous-volume qu'il occupe à Libre. Autrement dit, on enlève cet élément et le mouvement qu'il lui est associé de la suite de mouvement en cour de calcul. Si le nœud possède un frère, alors son frère devient le nœud courant. Sinon, c'est son père qui devient nœud courant, ce qui signifie que l'on ``remonte'' d'une étape dans la recherche de la solution.
+Si le nœud a déjà joué alors on réinitialise l'état du sous-volume qu'il occupe à Libre. Autrement dit, on enlève cet élément et le mouvement qui lui est associé de la suite de mouvement en cour de calcul. Si le nœud possède un frère, alors son frère devient le nœud courant. Sinon, c'est son père qui devient nœud courant, ce qui signifie que l'on ``remonte'' d'une étape dans la recherche de la solution.
 
-Lorsque le nœud courant reprend pour valeur celle de la racine et la racine a déjà jouer, cela signifie que l'on a explorer tous les chemins possible à partir de la racine. On termine donc l'algorithme.
+Lorsque le nœud courant reprend pour valeur celle de la racine et la racine a déjà joué, cela signifie que l'on a exploré tous les chemins possibles à partir de la racine. On termine donc l'algorithme.
 
 \newpage
 \section{Création des fils}
@@ -104,11 +104,11 @@ D(*é*)but
 Fin
 \end{lstlisting}
 
-\paragraph{Explications} La première étape dans la construction des fils d'un nœud consiste à vérifier la validité des coordonnées des-dit futurs fils. Si les coordonnées sont valides, c'est-à-dire qu'elles sont comprises dans le volume final et que le sous-volume qu'elles repèrent est Libre, alors on ajouter une étape dans la séquence de résolution, on indique que ce nœud a joué et on récupère le type du prochain élément du serpent qu'il faut placer.
+\paragraph{Explications} La première étape dans la construction des fils d'un nœud consiste à vérifier la validité des coordonnées des-dit futurs fils. Si les coordonnées sont valides, c'est-à-dire qu'elles sont comprises dans le volume final et que le sous-volume qu'elles repèrent est Libre, alors on ajoute une étape dans la séquence de résolution, on indique que ce nœud a joué et on récupère le type du prochain élément du serpent qu'il faut placer.
 
-Si le type récupéré est ``Extrémité'', cela signifie que c'est le dernier élément à placer et que donc, le casse-tête est résolue. L'algorithme renvoie donc la valeur 2. Si le type récupéré est ``Droit'' alors le fils à créer est de type Droit et n'a donc qu'une seul façon d'être orienté. On créer un seul fils que l'on ``accroche au nœud étudié et on retourne 1.
+Si le type récupéré est ``Extrémité'', cela signifie que c'est le dernier élément à placer et que donc, le casse-tête est résolu. L'algorithme renvoie donc la valeur 2. Si le type récupéré est ``Droit'' alors le fils à créer est de type Droit et n'a donc qu'une seul façon d'être orienté. On créer un seul fils que l'on ``accroche au nœud étudié et on retourne 1.
 
-Si le type du prochain élément est ''Corner`` alors il existe au maximum 4 manière de l'orienter parmi les 6 directions possibles. Les orientations possibles sont données par \verb|TableVéritéAngle| dont voici la composition se trouve figure~\ref{truthTable}. Pour chaque direction valide, on créé un fils que l'on accroche au nœud traité et on fini en retournant la valeur 1.
+Si le type du prochain élément est ''Corner`` alors il existe au maximum 4 manière de l'orienter parmi les 6 directions possibles. Les orientations possibles sont données par \verb|TableVéritéAngle| dont la composition se trouve figure~\ref{truthTable}. Pour chaque direction valide, on créé un fils que l'on accroche au nœud traité et on fini en retournant la valeur 1.
 
 \begin{figure}
 \begin{center}
