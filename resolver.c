@@ -10,11 +10,12 @@ const int cornerTruthTable[6][6] =
    {1 , 1 , 1 , 1 , 0 , 0 }
  } ;
 
-pthread_mutex_t buildMutex = PTHREAD_MUTEX_INITIALIZER;
-
-
-void resolverSolveSnake(Snake *snake, Tree helpNode)
+void* resolverSolveSnake(void* argsf)
 {
+    app->state = AS_LOAD;
+    ThreadArgs* tmpArgs = (ThreadArgs*)(argsf);
+    Snake* snake = tmpArgs->snake;
+    Tree helpNode = tmpArgs->rootNode;
     // Let's resolve <snake>
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
 
@@ -38,8 +39,10 @@ void resolverSolveSnake(Snake *snake, Tree helpNode)
     }
     if(initialVectorNb <= 0)
     {
+      app->state = AS_GAME;
       logError("[RESOL] No initial vector !\n");
-      return;
+      free(tmpArgs);
+      return NULL;
     }
     printSnake(*snake);
 
@@ -154,6 +157,11 @@ void resolverSolveSnake(Snake *snake, Tree helpNode)
 
     logWrite ("[RESOL] Snake solved, found %d solutions in %lf seconds after exploration of %d path\n",
     snake->solutions->size, elapsedTime, exploredWayNb);
+
+    app->updateSolutionMenu = 1;
+    app->state = AS_GAME;
+    free(tmpArgs);
+    return NULL;
 }
 
 void* resolverSolveNode(void* args)
@@ -913,6 +921,15 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   free(currentNode);
   currentNode = NULL;
-  resolverSolveSnake(snake, rootNode);
+  pthread_attr_t attr;
+  pthread_t solverThread;
+  ThreadArgs* args = malloc(sizeof(ThreadArgs));
+  args->snake = app->snake;
+  args->rootNode = rootNode;
+
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+  pthread_create(&solverThread, &attr, resolverSolveSnake, args);
+
   return 0;
 }

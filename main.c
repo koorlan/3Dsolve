@@ -145,8 +145,17 @@ int main ( int argc, char ** argv )
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
 	}
-	resolverSolveSnake(app->snake, NULL);
 	/// [2]
+
+	pthread_attr_t attr;
+	pthread_t solverThread;
+	ThreadArgs* args = malloc(sizeof(ThreadArgs));
+	args->snake = app->snake;
+	args->rootNode = NULL;
+
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	pthread_create(&solverThread, &attr, resolverSolveSnake, args);
 
 	/// [3] Context and menu initialization
 	Context* context;
@@ -159,7 +168,6 @@ int main ( int argc, char ** argv )
 			return EXIT_FAILURE;
 		}
 		applicationInitMainMenu(app,context->screen_width, context->screen_height);
-
 	}
 	/// [3]
 
@@ -193,6 +201,35 @@ int main ( int argc, char ** argv )
 			#else
 				nanosleep(&time1, &time2);
 			#endif
+
+			if(app->updateSolutionMenu == 1)
+			{
+				playerDestroy(gplayer);
+				gplayer = playerInit ( app->snake );
+				gplayer->selected = 0;
+				playerDestroy(gsolver);
+				gsolver = playerInit(app->snake);
+				gsolver->currentSolution = app->snake->solutions->head;
+				
+				int i;
+				//Snake Solution
+				app->menu->item[2]->menu->size = 0;
+			for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
+					char buf[255];
+					char snakeSolution[255] = "solution n°\0";
+					sprintf(buf,"%d",i+1);
+					strcat(snakeSolution,buf);
+					strcpy(app->menu->item[2]->menu->item[i]->descriptor.name,snakeSolution);
+					app->menu->item[2]->menu->size ++;
+
+				}
+				//app->menu->item[2]->menu->size = i;
+			//app->menu->item[2]->menu->state = CLOSE;
+			//app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
+			calcMenu(app->menu->item[2]->menu);
+			calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
+				app->updateSolutionMenu = 0;
+			}
 		}
 	}
 	/// [4]
