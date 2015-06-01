@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['snake',['Snake',['../group___snake.html',1,'']]]
+  ['resolver',['Resolver',['../group___resolver.html',1,'']]]
 ];

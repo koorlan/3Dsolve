@@ -13,7 +13,7 @@ const int cornerTruthTable[6][6] =
 pthread_mutex_t buildMutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
+void resolverSolveSnake(Snake *snake, Tree helpNode)
 {
     // Let's resolve <snake>
     logWrite("[RESOL] Starting resolution (snake size : %d x %d x %d)\n",snake->volume.max.x, snake->volume.max.y, snake->volume.max.z);
@@ -21,6 +21,7 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
     double startTime = glfwGetTime();
     long unsigned int exploredWayNb = 0;
 
+    int nbThread = app->maxThread;
     int initialVectorNb = 0;
 
     Tree rootNode;
@@ -29,7 +30,7 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
       //Tree rootNode = createAllInitialVectors(snake->volume);
       logWrite("[RESOL] %d initial vector found\n", initialVectorNb);
     }
-    else 
+    else
     {
       rootNode = helpNode;
       initialVectorNb = cptNode(rootNode);
@@ -47,6 +48,11 @@ void resolverSolveSnake(Snake *snake, Tree helpNode, int nbThread)
     int i = 0;
 
     /* Création des threads de calcul */
+    if(nbThread == -1)
+        nbThread = initialVectorNb;
+    else if(initialVectorNb < nbThread)
+        nbThread = initialVectorNb;
+
     ThreadArgs* args[nbThread];
 
     pthread_t* threads = malloc(nbThread * sizeof(pthread_t));
@@ -203,6 +209,7 @@ void* resolverSolveNode(void* args)
     }
 
     pthread_exit(NULL);
+    return NULL;
 }
 
 Tree initTree()
@@ -814,12 +821,12 @@ int validVectCube(Coord nCoord, Dir dir, int max)
 
 int resolverInitializeHelp(Snake *snake, Step fstStep)
 {
-  Tree rootNode = initTree(); 
+  Tree rootNode = initTree();
   Tree currentNode = malloc(sizeof(NodeTree));
 
 
   if (currentNode == NULL)
-  { 
+  {
     logError("[RESOL] Error of memory allocation\n");
     exit(-1);
   }
@@ -840,7 +847,7 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   if(validCoord(nCoord, snake->volume.max) && snake->volume.state[nCoord.x][nCoord.y][nCoord.z] == FREE)
   {
-    
+
       snake->volume.state[currentNode->step.coord.x][currentNode->step.coord.y][currentNode->step.coord.z] = FILL;
       snake->currentUnit=-1;
       nextUnit = snakeGetNextUnit(snake);
@@ -906,6 +913,6 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   free(currentNode);
   currentNode = NULL;
-  resolverSolveSnake(snake, rootNode, 1);
+  resolverSolveSnake(snake, rootNode);
   return 0;
 }

@@ -7,13 +7,23 @@
     #include <direct.h>
     #include <conio.h>
     #include <ctype.h>
+    #include <windows.h>
 #endif
 
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "log.h"
 #include "player.h"
+#include "menu.h"
+
+
+#define AS_HOME		0
+#define AS_GAME		1
+#define AS_HELP		2
+#define AS_ABOUT	3
+#define AS_LOAD		4
 
 /**
  * @defgroup Application Application
@@ -40,7 +50,11 @@
  * Le snake actuellement utilisé
  * (indexé Application::loadedSnake dans Application::snakeNames)
  * @var Application::player
- * Le joueur
+ * Le joueur *
+ * @var Application::menu
+ * Le menu de l'application
+ * @var Application::menuDepth
+ * La profondeur du menu actuellement ouvert
  * @var Application::pathExplored
  * Le nombre de chemin exploré pour trouver toutes les solutions
  * @var Application::calculTime
@@ -54,10 +68,14 @@ typedef struct Application
     Snake* snake;
     Player* player;
     Player* solver;
+    Menu *menu;
+    int menuDepth;
+    int itemSelected;
     int running;
-
     unsigned int pathExplored;
     double calculTime;
+    int state;
+    int maxThread;
 } Application;
 
 Application* app;
@@ -84,5 +102,7 @@ void applicationDestroy(Application* app);
  * @param app   l'application
  */
 void applicationFindSnakes(Application* app);
+
+int applicationInitMainMenu(Application *app,int width, int height);
 
 #endif //APPLICATION_H

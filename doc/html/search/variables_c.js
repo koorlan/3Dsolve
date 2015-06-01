@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['size',['size',['../struct_list_solution.html#aa3d6656320f1a7278c0c2c7fdf07617c',1,'ListSolution::size()'],['../struct_menu.html#aa3d6656320f1a7278c0c2c7fdf07617c',1,'Menu::size()']]],
-  ['snake',['snake',['../struct_application.html#aa798779259654cac04213978cf4297ab',1,'Application']]],
-  ['snakenames',['snakeNames',['../struct_application.html#a431afcada7d842aad844fa2bad7c8471',1,'Application']]],
-  ['snakenumber',['snakeNumber',['../struct_application.html#a3a29af741927410caf6c6451e6c10464',1,'Application']]],
-  ['solutions',['solutions',['../struct_snake.html#a97be9d71c3998b7a3a97e9403e375979',1,'Snake']]],
-  ['step',['step',['../struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'Solution::step()'],['../struct_node_tree.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'NodeTree::step()']]]
+  ['parent',['parent',['../struct_node_tree.html#a457d913bff1ebc8671c1eca1c9d5fc03',1,'NodeTree']]],
+  ['pathexplored',['pathExplored',['../struct_application.html#ade759d521aee8eb5401fb08bc97229e3',1,'Application']]],
+  ['player',['player',['../struct_application.html#a46afbb77ee4b53026dff7b4f65384dc4',1,'Application']]],
+  ['pointa',['pointA',['../struct_line.html#ae61338ee34dcba3435f5415e653cad2a',1,'Line']]],
+  ['pointb',['pointB',['../struct_line.html#ac573310eb7acf2d7e112153d00a92695',1,'Line']]]
 ];

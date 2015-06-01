@@ -47,6 +47,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	switch(action)
 	{
 		case GLFW_PRESS:
+			key_flags |= K_ANY;
 			switch(key)
 			{
 				case GLFW_KEY_ESCAPE:
@@ -68,13 +69,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 					key_flags |= K_RT;
 					break;
 				case GLFW_KEY_ENTER:
-					bhv_flags ^= BHV_SPREAD;
+					key_flags |= K_ENTER;
 					break;
 				case GLFW_KEY_SPACE:
-					bhv_flags ^= BHV_ROTATE;
+					key_flags |= K_SPACE;
 					break;
-				case GLFW_KEY_H:
-					key_flags |= K_H;
 			}
 		break;
 		case GLFW_RELEASE:
@@ -92,7 +91,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 int getInput ( Context* context )
 {
 	static int magnet;
-	//mouse_flags = M_NONE;
 	last_xpos = gxpos;
 	last_ypos = gypos;
 	key_flags = M_NONE;
@@ -102,27 +100,63 @@ int getInput ( Context* context )
 
 	if (resize_h!=-1 || resize_w!=-1)
 	{
+
 		context->screen_width = resize_w;
 		context->screen_height = resize_h;
 		context->ratio = ((float)resize_w)/(float)resize_h;
 
-		pthread_mutex_lock(mymenu->mutex);
-		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-		calcMenu(mymenu);
-		reshapeMenu(mymenu, context->screen_width	, context->screen_height);
-		pthread_mutex_unlock(mymenu->mutex);
+	//	testMenuMesh(app->menu, context->screen_width	, context->screen_height);
 
 		resize_h = -1;
 		resize_w = -1;
 
 	}
 
-	if ((key_flags&K_UP)==K_UP)
+	if ( (app->state == AS_HOME || app->state == AS_ABOUT || app->state == AS_HELP )
+			&& (key_flags!=0 || (mouse_flags!=0 && mouse_flags!=M_MOVE)) )
+	{
+		key_flags = K_NONE;
+		app->state = AS_GAME;
+	}
+	else if ( (key_flags&K_ENTER)==K_ENTER )
+	{
+		bhv_flags ^= BHV_SPREAD;
+	}
+	else if ( (key_flags&K_SPACE)==K_SPACE )
+	{
+		bhv_flags ^= BHV_ROTATE;
+	}
+	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_RESOLVE)
+	{
+		gsolver->selected = 0;
+		gsolver->steps[0].dir = RIGHT;
+		playerFlatten (gsolver, app->snake, 0);
+		int i;
+		for (i=0;i<app->snake->length;i++)
+		{
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
+		}
+
+	}
+	else if ((key_flags&K_UP)==K_UP && context->playmode == PM_PLAY)
 	{
 		gplayer->selected = 0;
-		playerFlatten ( gplayer, app->snake, 0 );
+		gplayer->steps[0].dir = RIGHT;
+		playerFlatten (gplayer, app->snake, 0);
+		int i;
+		for (i=0;i<app->snake->length;i++)
+		{
+			mat4x4_translate(gplayer->realCubePos[i],
+				(float) gplayer->steps[i].coord.x,
+				(float) gplayer->steps[i].coord.y,
+				(float) gplayer->steps[i].coord.z);
+		}
+
 	}
-	else if ((key_flags&K_PGUP)==K_PGUP)
+	else if ((key_flags&K_PGUP)==K_PGUP )
 	{
 		if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
 		{
@@ -131,6 +165,12 @@ int getInput ( Context* context )
 			gsolver->selected = 0;
 			gsolver->steps[0].dir = RIGHT;
 			playerFlatten (gsolver, app->snake, 0);
+			int i;
+			for (i=0; i<app->snake->length;i++)
+			mat4x4_translate(gsolver->realCubePos[i],
+				(float) gsolver->steps[i].coord.x,
+				(float) gsolver->steps[i].coord.y,
+				(float) gsolver->steps[i].coord.z);
 		}
 	}
 	else if ((key_flags&K_DN)==K_DN)
@@ -139,9 +179,24 @@ int getInput ( Context* context )
 		if (context->playmode == PM_RESOLVE)
 		{
 			gsolver->currentSolution = app->snake->solutions->head;
+			playerFlatten(gplayer, app->snake, 0 );
+		}
+		else
+		{
+			int i;
+			for (i=0; i<app->snake->length;i++)
+			{
+				gplayer->steps[i].dir = gsolver->steps[i].dir;
+				gplayer->steps[i].coord.x = gsolver->steps[i].coord.x;
+				gplayer->steps[i].coord.y = gsolver->steps[i].coord.y;
+				gplayer->steps[i].coord.z = gsolver->steps[i].coord.z;
+				mat4x4_dup (gplayer->realCubePos[i], gsolver->realCubePos[i]);
+				mat4x4_dup (gplayer->realCubeRot[i], gsolver->realCubeRot[i]);
+				gplayer->selected = gsolver->selected;
+			}
 		}
 	}
-	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL)
+	else if ((key_flags&K_LF)==K_LF && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
 	{
 		int i;
 
@@ -153,13 +208,16 @@ int getInput ( Context* context )
 		}
 
 		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
-		Dir prevDir = DNONE;
+		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
 			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
-			prevDir = ( curDir != prevDir ? curDir : prevDir );
-			curDir = gsolver->steps[i].dir;
+			if (gsolver->selected!=0)
+			{
+				prevDir = ( curDir != prevDir ? curDir : prevDir );
+				curDir = gsolver->steps[i].dir;
+			}
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
@@ -183,7 +241,14 @@ int getInput ( Context* context )
 					toggle = 0;
 				}
 			}
-			else gsolver->steps[i].dir = curDir;
+			else
+			{
+				if (toggle == 0)
+					gsolver->steps[i].dir = curDir;
+				else
+					gsolver->steps[i].dir = prevDir;
+			}
+
 
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
@@ -196,7 +261,79 @@ int getInput ( Context* context )
 
 
 	}
-	else if ((key_flags&K_RT)==K_RT && (key_flags&K_H)==K_H && gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
+	else if ((key_flags&K_LF)==K_LF && context->playmode == PM_PLAY)
+	{
+		int i;
+
+		for ( i=gplayer->selected-1; i < app->snake->length; i++ )
+		{
+			if ( gplayer->selected > 0) gplayer->selected--;
+			if ( app->snake->units[gplayer->selected] == CORNER || app->snake->units[gplayer->selected] == EDGE )
+				break;
+		}
+		if (gplayer->selected < 1)
+		{
+			playerFlatten(gplayer, app->snake, 0 );
+			for (i=0;i<app->snake->length;i++)
+			{
+				mat4x4_translate(gplayer->realCubePos[i],
+					(float) gplayer->steps[i].coord.x,
+					(float) gplayer->steps[i].coord.y,
+					(float) gplayer->steps[i].coord.z);
+			}
+		}
+		else
+		{
+			Dir curDir = (gplayer->selected == 0 ? RIGHT : DNONE);//DNONE;;
+			Dir prevDir = DNONE;
+			int toggle = 0;
+			for (i=0;i<=gplayer->selected;i++)
+			{
+				prevDir = ( curDir != prevDir ? curDir : prevDir );
+				curDir = gplayer->steps[i].dir;
+				gplayer->steps[i].coord.x = (i==0?0:gplayer->steps[i-1].coord.x+dir2int[gplayer->steps[i-1].dir][0]);
+				gplayer->steps[i].coord.y = (i==0?0:gplayer->steps[i-1].coord.y+dir2int[gplayer->steps[i-1].dir][1]);
+				gplayer->steps[i].coord.z = (i==0?0:gplayer->steps[i-1].coord.z+dir2int[gplayer->steps[i-1].dir][2]);
+				mat4x4_translate(gplayer->realCubePos[i],
+					(float) gplayer->steps[i].coord.x,
+					(float) gplayer->steps[i].coord.y,
+					(float) gplayer->steps[i].coord.z);
+			}
+			for (i=gplayer->selected+1;i<app->snake->length;i++)
+			{
+				if (app->snake->units[i] == CORNER)
+				{
+					if (toggle == 0)
+					{
+						gplayer->steps[i].dir = prevDir;
+						toggle = 1;
+					}
+					else
+					{
+						gplayer->steps[i].dir = curDir;
+						toggle = 0;
+					}
+				}
+				else
+				{
+					if (toggle == 0)
+						gplayer->steps[i].dir = curDir;
+					else
+						gplayer->steps[i].dir = prevDir;
+				}
+
+
+				gplayer->steps[i].coord.x = (i==0?0:gplayer->steps[i-1].coord.x+dir2int[gplayer->steps[i-1].dir][0]);
+				gplayer->steps[i].coord.y = (i==0?0:gplayer->steps[i-1].coord.y+dir2int[gplayer->steps[i-1].dir][1]);
+				gplayer->steps[i].coord.z = (i==0?0:gplayer->steps[i-1].coord.z+dir2int[gplayer->steps[i-1].dir][2]);
+				mat4x4_translate(gplayer->realCubePos[i],
+					(float) gplayer->steps[i].coord.x,
+					(float) gplayer->steps[i].coord.y,
+					(float) gplayer->steps[i].coord.z);
+			}
+		}
+	}
+	else if ((key_flags&K_RT)==K_RT&& gsolver->currentSolution != NULL && context->playmode == PM_RESOLVE)
 	{
 		int i;
 
@@ -210,13 +347,16 @@ int getInput ( Context* context )
 		}
 
 		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;
-		Dir prevDir = DNONE;//(gsolver->selected == 0 ? RIGHT : DNONE);
+		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
 		{
 			gsolver->steps[i].dir = gsolver->currentSolution->step[i].dir;
-			prevDir = ( curDir != prevDir ? curDir : prevDir );
-			curDir = gsolver->steps[i].dir;
+			if (gsolver->selected!=0)
+			{
+				prevDir = ( curDir != prevDir ? curDir : prevDir );
+				curDir = gsolver->steps[i].dir;
+			}
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
 			gsolver->steps[i].coord.z = (i==0?0:gsolver->steps[i-1].coord.z+dir2int[gsolver->steps[i-1].dir][2]);
@@ -240,7 +380,13 @@ int getInput ( Context* context )
 					toggle = 0;
 				}
 			}
-			else gsolver->steps[i].dir = curDir;
+			else
+			{
+				if (toggle == 0)
+					gsolver->steps[i].dir = curDir;
+				else
+					gsolver->steps[i].dir = prevDir;
+			}
 
 			gsolver->steps[i].coord.x = (i==0?0:gsolver->steps[i-1].coord.x+dir2int[gsolver->steps[i-1].dir][0]);
 			gsolver->steps[i].coord.y = (i==0?0:gsolver->steps[i-1].coord.y+dir2int[gsolver->steps[i-1].dir][1]);
@@ -254,10 +400,6 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
 	{
-		playerCheckSolution(gplayer, app->snake->volume, app->snake->length);
-	}
-	else if((key_flags&K_H)==K_H && context->playmode == PM_PLAY)
-	{
 		playerHelp(gplayer, app->snake);
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
@@ -265,14 +407,215 @@ int getInput ( Context* context )
 				(float) gplayer->steps[i].coord.x,
 				(float) gplayer->steps[i].coord.y,
 				(float) gplayer->steps[i].coord.z);
+
+		Dir curDir = DNONE;
+		Dir prevDir = DNONE;
+		int toggle = 0;
+		for (i=0;i<=gplayer->selected;i++)
+		{
+			prevDir = ( curDir != prevDir ? curDir : prevDir );
+			curDir = gplayer->steps[i].dir;
+		}
+		for (i=gplayer->selected+1;i<app->snake->length;i++)
+		{
+			if (app->snake->units[i] == CORNER)
+			{
+				if (toggle == 0)
+				{
+					gplayer->steps[i].dir = prevDir;
+					toggle = 1;
+				}
+				else
+				{
+					gplayer->steps[i].dir = curDir;
+					toggle = 0;
+				}
+			}
+			else
+			{
+				if (toggle == 0)
+					gplayer->steps[i].dir = curDir;
+				else
+					gplayer->steps[i].dir = prevDir;
+			}
+
+			gplayer->steps[i].coord.x = (gplayer->steps[i-1].coord.x+dir2int[gplayer->steps[i-1].dir][0]);
+			gplayer->steps[i].coord.y = (gplayer->steps[i-1].coord.y+dir2int[gplayer->steps[i-1].dir][1]);
+			gplayer->steps[i].coord.z = (gplayer->steps[i-1].coord.z+dir2int[gplayer->steps[i-1].dir][2]);
+			mat4x4_translate(gplayer->realCubePos[i],
+				(float) gplayer->steps[i].coord.x,
+				(float) gplayer->steps[i].coord.y,
+				(float) gplayer->steps[i].coord.z);
+
+
+		}
+
 	}
+
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
+
+		if( app->itemSelected >= 0)
+		{
+			int i = 0,
+					j = 0,
+					closedMenu = 0;
+					Solution *newSolution;
+			Menu *currentMenu = NULL;
+			Menu *menuToClose = NULL;
+			currentMenu = app->menu;
+			int accumulator = 0;
+			//From 279 to 307 , Magic...do not touch !
+		for ( i = 0; i < app->menuDepth; i++) {
+			accumulator += currentMenu->size;
+			logWrite("accumulator %d \n",accumulator);
+			if(app->itemSelected >= accumulator){
+				if(currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size)
+					currentMenu = currentMenu->item[currentMenu->opened]->menu;
+				else
+					break;
+			}
+			else{
+				logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
+				currentMenu->selected = app->itemSelected - accumulator + currentMenu->size;
+				if (currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size){
+					menuToClose = currentMenu->item[currentMenu->opened]->menu;
+				for ( j = i+1; j < app->menuDepth; j++) {
+					if(currentMenu->selected == currentMenu->opened)
+						break;
+					menuToClose->state = CLOSE;
+					closedMenu ++;
+					if (menuToClose->opened >= 0 && menuToClose->opened < menuToClose->size){
+						menuToClose = menuToClose->item[menuToClose->opened]->menu;
+					}
+				}
+				app->menuDepth -= closedMenu;
+				}
+				break;
+			}
+		}
+		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
+			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
+				case RESET:
+					break;
+				case EXIT:
+					app->running = 0;
+					break;
+				case LOADSNAKE:
+					app->state = AS_LOAD;
+					// Chargement d'un nouveau snake
+					logWrite("[MENU] New snake requested\n");
+					// Récupération du nom du snake
+					char* snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
+					char* snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
+					sprintf(snakePath, "Snakes/%s", snakeName);
+					logWrite("[MENU] Loading Snake : %s\n", snakePath);
+					Snake* newSnake = snakeInit(snakePath);
+					free(snakePath);
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
+					if(newSnake != NULL)
+					{
+						snakeDestroy(app->snake, 1);
+						app->snake = newSnake;
+						resolverSolveSnake(app->snake, NULL);
+
+						playerDestroy(gplayer);
+						gplayer = playerInit ( app->snake );
+						gplayer->selected = 0;
+						playerDestroy(gsolver);
+						gsolver = playerInit(app->snake);
+						gsolver->currentSolution = app->snake->solutions->head;
+						logWrite("[MENU] Re-init solution menu \n");
+						//Snake Solution
+						Item *tmpitem;
+						app->menu->item[2]->menu->size = 0;
+						char *newName = NULL;
+				    for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
+							char buf[255];
+							char snakeSolution[255] = "solution n°\0";
+							sprintf(buf,"%d",i+1);
+							strcat(snakeSolution,buf);
+							strcpy(app->menu->item[2]->menu->item[i]->descriptor.name,snakeSolution);
+							app->menu->item[2]->menu->size ++;
+
+						}
+						//app->menu->item[2]->menu->size = i;
+				    //app->menu->item[2]->menu->state = CLOSE;
+				    //app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
+				    calcMenu(app->menu->item[2]->menu);
+				    calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
+
+					}
+					app->state = AS_GAME;
+					break;
+				case LOADSOL:
+				newSolution = app->snake->solutions->head;
+					for(i=0; i<currentMenu->selected;i++){
+						if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
+						{
+							if (newSolution->next!=NULL) newSolution = newSolution->next;
+							else newSolution = app->snake->solutions->head;
+						}
+					}
+						gsolver->currentSolution = newSolution;
+						gsolver->selected = 0;
+						gsolver->steps[0].dir = RIGHT;
+						playerFlatten (gsolver, app->snake, 0);
+						int i;
+						for (i=0;i<app->snake->length;i++)
+						{
+							mat4x4_translate(gsolver->realCubePos[i],
+								(float) gsolver->steps[i].coord.x,
+								(float) gsolver->steps[i].coord.y,
+								(float) gsolver->steps[i].coord.z);
+						}
+						context->playmode = PM_RESOLVE;
+					break;
+				case MENU:
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
+						currentMenu->item[currentMenu->selected]->menu->state = OPEN;
+						currentMenu->opened = currentMenu->selected;
+						app->menuDepth ++;
+						break;
+					}
+					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == OPEN){
+						currentMenu->item[currentMenu->selected]->menu->state = CLOSE;
+						app->menuDepth --;
+						break;
+					}
+					break;
+				default:
+					break;
+			}
+			currentMenu->opened = currentMenu->selected;
+			currentMenu->selected = -1;
+		}
+	}
+
 		if (gplayer->selected!=0)
 		{
-			playerRotate(gplayer, gplayer->selected, app->snake, 0);
-			playerRotate(gplayer, gplayer->selected, app->snake, 1);
+			if(context->playmode == PM_RESOLVE){
+				int i;
+				for (i=0; i<app->snake->length;i++)
+				{
+					gplayer->steps[i].dir = gsolver->steps[i].dir;
+					gplayer->steps[i].coord.x = gsolver->steps[i].coord.x;
+					gplayer->steps[i].coord.y = gsolver->steps[i].coord.y;
+					gplayer->steps[i].coord.z = gsolver->steps[i].coord.z;
+					mat4x4_dup (gplayer->realCubePos[i], gsolver->realCubePos[i]);
+					mat4x4_dup (gplayer->realCubeRot[i], gsolver->realCubeRot[i]);
+					gplayer->selected = gsolver->selected;
+				}
+				context->playmode = PM_PLAY;
+			}
+			else{
+				playerRotate(gplayer, gplayer->selected, app->snake, 0);
+				playerRotate(gplayer, gplayer->selected, app->snake, 1);
+			}
+
 		}
+
 		magnet = 0;
 		mouse_flags ^= M_RLEFTONCE;
 	}
@@ -282,15 +625,12 @@ int getInput ( Context* context )
 		if ((mouse_flags&M_LEFTONCE)==M_LEFTONCE)
 		{
 			context->drawpick = 1;
-			mouse_flags ^= M_LEFTONCE;
+				mouse_flags ^= M_LEFTONCE;
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
 		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
 		{
-			//TODO: meilleure detection du sens de rotation
-			//if	(accx>0 && accy>0) magnet += MAG_STEP;
-			//else if (accx<0) magnet -= MAG_STEP;
 			if ( abs(accx) > abs(accy) )
 			{
 				if (accx<0) magnet += MAG_STEP;
@@ -301,7 +641,7 @@ int getInput ( Context* context )
 				if (accy>0) magnet += MAG_STEP;
 				else if (accy<0) magnet -= MAG_STEP;
 			}
-	
+
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
 				playerRotate(gplayer, gplayer->selected, app->snake, magnet);
@@ -311,6 +651,7 @@ int getInput ( Context* context )
 			else playerFakeRotate(gplayer, gplayer->selected, app->snake, magnet);
 		}
 	}
+
 
 
 	if ((mouse_flags&M_RIGHT)==M_RIGHT)
@@ -326,7 +667,7 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
-	
+
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
 	else context->spread = 0;
@@ -373,7 +714,7 @@ Context* contextCreate ()
 	{
 		GLFWmonitor* mon = glfwGetPrimaryMonitor ();
 		const GLFWvidmode* vmode = glfwGetVideoMode ( mon );
-		context->window = glfwCreateWindow ( vmode->width, vmode->height, "Solid Snake", mon, NULL );
+		context->window = glfwCreateWindow ( vmode->width, vmode->height, "3DSolve", mon, NULL );
 		context->screen_width = vmode->width;
 		context->screen_height = vmode->height;
 	}
@@ -381,7 +722,7 @@ Context* contextCreate ()
 	{
 		context->screen_width = DRESX;
 		context->screen_height = DRESY;
-		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "Solid Snake", NULL, NULL );
+		context->window = glfwCreateWindow ( context->screen_width, context->screen_height, "3DSolve", NULL, NULL );
 	}
 	logWrite ("[CNTXT] Using resolution %dx%d\n", context->screen_width, context->screen_height);
 
@@ -489,8 +830,8 @@ void contextInit ( Context* context )
 	context->dwoodtex = textureID;
 	free(buffer);
 
-	/*
-	lodepng_decode32_file(&buffer, &width, &height, "textures/bad.png");
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/menu.png");
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -498,13 +839,22 @@ void contextInit ( Context* context )
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	context->badtex = textureID;
-	*/
+	context->menutex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/item.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->itemtex = textureID;
 
 	vec3 vol_offset;
-	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x -1 )/2);
-	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y -1 )/2);
-	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z -1 )/2);
+	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
+	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y)/2);
+	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z)/2);
 
 	Camera * camera = cameraCreate();
 	camera->eye[0] = 0.f;
@@ -517,14 +867,20 @@ void contextInit ( Context* context )
 	camera->up[1] = 1.f;
 	camera->up[2] = 0.f;
 	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.8f;
+	camera->angle[1] = 0.5f;
 	camera->fov = 1.6f;
 	camera->distance = 4.f;
 	context->camera = camera;
 	context->drawpick = 0;
-	//bhv_flags |= BHV_ROTATE;
+	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
+				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
+	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+				* sin(context->camera->angle[1]);
 
 	glfwMakeContextCurrent ( NULL );
+
 	pthread_create ( &context->render_thread, NULL, renderer, (void*)context );
 }
 

@@ -1,6 +1,6 @@
 var NAVTREE =
 [
-  [ "SolidSnake", "index.html", [
+  [ "3DSolve", "index.html", [
     [ "3Dsolve - snakepuzzle", "md__r_e_a_d_m_e.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Structures de données", null, [

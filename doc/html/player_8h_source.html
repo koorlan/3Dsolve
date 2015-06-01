@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>SolidSnake:  Fichier source de player.h</title>
+<title>3DSolve:  Fichier source de player.h</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div class="container-fluid">
     <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
     </div>
 </div>
 <!-- end header part -->
@@ -95,45 +95,84 @@ $(document).ready(function(){initNavTree('player_8h_source.html','');});
 <div class="title">player.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef PLAYER_H</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PLAYER_H</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;context.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;log.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;object.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;snake.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structplayer.html">   13</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structplayer.html">player</a></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="struct_step.html">Step</a>* steps;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">int</span> selected;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* currentSolution;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;} <a class="code" href="structplayer.html">Player</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="code" href="structplayer.html">Player</a>* gplayer;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="code" href="structplayer.html">Player</a>* gsolver;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="code" href="structplayer.html">Player</a>* playerInit ( <a class="code" href="struct_snake.html">Snake</a>* snake );</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">void</span> playerFlatten ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> fromIndex );</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> playerRotate ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a>, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> way );</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> playerDestroy ( <a class="code" href="structplayer.html">Player</a>* <a class="code" href="structplayer.html">player</a> );</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif //PLAYER_H</span></div>
-<div class="ttc" id="struct_step_html"><div class="ttname"><a href="struct_step.html">Step</a></div><div class="ttdoc">Définit une étape de résolution. </div><div class="ttdef"><b>Definition:</b> snake.h:96</div></div>
-<div class="ttc" id="struct_snake_html"><div class="ttname"><a href="struct_snake.html">Snake</a></div><div class="ttdoc">Définit le snake à résoudre. </div><div class="ttdef"><b>Definition:</b> snake.h:161</div></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef PLAYER_H</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define PLAYER_H</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;log.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;object.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;snake.h&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;linmath.h&quot;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="struct_player.html">   42</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_player.html">Player</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="struct_player.html#a4d629e97dab1ddb8b4348b94f29fd12d">   44</a></span>&#160;    <a class="code" href="struct_step.html">Step</a>* <a class="code" href="struct_player.html#a4d629e97dab1ddb8b4348b94f29fd12d">steps</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="struct_player.html#a2224ec0958a602aef926b6a3715e094e">   45</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct_player.html#a2224ec0958a602aef926b6a3715e094e">selected</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="struct_player.html#ae16babfa5704af311a6ddc0bffc0a264">   46</a></span>&#160;    <a class="code" href="struct_solution.html">Solution</a>* <a class="code" href="struct_player.html#ae16babfa5704af311a6ddc0bffc0a264">currentSolution</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="struct_player.html#a33f9f6271dd8ca0d6ddb202e89e9389d">   47</a></span>&#160;    mat4x4* <a class="code" href="struct_player.html#a33f9f6271dd8ca0d6ddb202e89e9389d">realCubePos</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="struct_player.html#a0b0f175736e3ad0ce95b00b920f6a326">   48</a></span>&#160;    mat4x4* <a class="code" href="struct_player.html#a0b0f175736e3ad0ce95b00b920f6a326">realCubeRot</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="struct_player.html#a3e020c150630118544b7ee8d5a0fa342">   49</a></span>&#160;    vec3* <a class="code" href="struct_player.html#a3e020c150630118544b7ee8d5a0fa342">flatCubePos</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="struct_player.html#a65ade14a0a5b6a72b70f85d4e8342e02">   50</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct_player.html#a65ade14a0a5b6a72b70f85d4e8342e02">segStart</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="struct_player.html#adf8cb3ca02fdd7d413e88c3c4c4c0286">   51</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="struct_player.html#adf8cb3ca02fdd7d413e88c3c4c4c0286">segEnd</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;} <a class="code" href="struct_player.html">Player</a>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;resolver.h&quot;</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="struct_player.html">Player</a>* gplayer;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="struct_player.html">Player</a>* gsolver;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<a class="code" href="struct_player.html">Player</a>* <a class="code" href="group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7">playerInit</a> ( <a class="code" href="struct_snake.html">Snake</a>* snake );</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___player.html#ga3983e08fde834c755eb1aa68a96a0508">playerFlatten</a> ( <a class="code" href="struct_player.html">Player</a>* player, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> fromIndex );</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___player.html#ga6c3d30fd77b5b93c541167f61d661103">playerRotate</a> ( <a class="code" href="struct_player.html">Player</a>* player, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> magnet );</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___player.html#ga4a0ce1b88f9f69ca36e5f823852ac778">playerFakeRotate</a> ( <a class="code" href="struct_player.html">Player</a>* player, <span class="keywordtype">int</span> stepIndex, <a class="code" href="struct_snake.html">Snake</a>* snake, <span class="keywordtype">int</span> magnet );</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___player.html#gaf1911ad584cefd37dc547d5a4260cccc">playerDestroy</a> ( <a class="code" href="struct_player.html">Player</a>* player );</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___player.html#ga53f05cd74811715faf9a66381e260661">playerFindMinMax</a> (<a class="code" href="struct_coord.html">Coord</a> *min, <a class="code" href="struct_coord.html">Coord</a> *max, <span class="keywordtype">int</span> length, <a class="code" href="struct_player.html">Player</a> * player, <a class="code" href="struct_volume.html">Volume</a> volume);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___player.html#gac9ddd28fb75760a871c7baad7d63c183">playerCheckSolution</a> (<a class="code" href="struct_player.html">Player</a> *player, <a class="code" href="struct_volume.html">Volume</a> volume, <span class="keywordtype">int</span> length);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___player.html#ga58ea907ff2ae8824ac0757a9d4c65499">initVolume</a>(<a class="code" href="struct_snake.html">Snake</a> *solSnake, <a class="code" href="struct_snake.html">Snake</a> *snake, <a class="code" href="struct_player.html">Player</a> * player, <a class="code" href="struct_coord.html">Coord</a> min, <a class="code" href="struct_coord.html">Coord</a> max, <span class="keywordtype">int</span> *debugCpt);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___player.html#ga23496721d29f7a227f7ba20f2ec59734">playerHelp</a>(<a class="code" href="struct_player.html">Player</a> *player, <a class="code" href="struct_snake.html">Snake</a> * snake);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#endif //PLAYER_H</span></div>
+<div class="ttc" id="struct_player_html_ae16babfa5704af311a6ddc0bffc0a264"><div class="ttname"><a href="struct_player.html#ae16babfa5704af311a6ddc0bffc0a264">Player::currentSolution</a></div><div class="ttdeci">Solution * currentSolution</div><div class="ttdef"><b>Definition:</b> player.h:46</div></div>
+<div class="ttc" id="group___player_html_ga23496721d29f7a227f7ba20f2ec59734"><div class="ttname"><a href="group___player.html#ga23496721d29f7a227f7ba20f2ec59734">playerHelp</a></div><div class="ttdeci">int playerHelp(Player *player, Snake *snake)</div><div class="ttdoc">Aide le joueur à résoudre le casse-tête à partir des mouvement qu&#39;il a commencé à faire...</div><div class="ttdef"><b>Definition:</b> player.c:324</div></div>
+<div class="ttc" id="group___player_html_gac9ddd28fb75760a871c7baad7d63c183"><div class="ttname"><a href="group___player.html#gac9ddd28fb75760a871c7baad7d63c183">playerCheckSolution</a></div><div class="ttdeci">int playerCheckSolution(Player *player, Volume volume, int length)</div><div class="ttdef"><b>Definition:</b> player.c:265</div></div>
+<div class="ttc" id="struct_player_html_a0b0f175736e3ad0ce95b00b920f6a326"><div class="ttname"><a href="struct_player.html#a0b0f175736e3ad0ce95b00b920f6a326">Player::realCubeRot</a></div><div class="ttdeci">mat4x4 * realCubeRot</div><div class="ttdef"><b>Definition:</b> player.h:48</div></div>
+<div class="ttc" id="struct_volume_html"><div class="ttname"><a href="struct_volume.html">Volume</a></div><div class="ttdoc">Définit la forme que le snake possède dans son état résolu. </div><div class="ttdef"><b>Definition:</b> snake.h:132</div></div>
+<div class="ttc" id="group___player_html_ga53f05cd74811715faf9a66381e260661"><div class="ttname"><a href="group___player.html#ga53f05cd74811715faf9a66381e260661">playerFindMinMax</a></div><div class="ttdeci">int playerFindMinMax(Coord *min, Coord *max, int length, Player *player, Volume volume)</div><div class="ttdoc">Calcule les coordonnées min et max du volume. </div><div class="ttdef"><b>Definition:</b> player.c:212</div></div>
+<div class="ttc" id="group___player_html_ga4a0ce1b88f9f69ca36e5f823852ac778"><div class="ttname"><a href="group___player.html#ga4a0ce1b88f9f69ca36e5f823852ac778">playerFakeRotate</a></div><div class="ttdeci">void playerFakeRotate(Player *player, int stepIndex, Snake *snake, int magnet)</div><div class="ttdoc">??? </div><div class="ttdef"><b>Definition:</b> player.c:160</div></div>
+<div class="ttc" id="struct_player_html_a33f9f6271dd8ca0d6ddb202e89e9389d"><div class="ttname"><a href="struct_player.html#a33f9f6271dd8ca0d6ddb202e89e9389d">Player::realCubePos</a></div><div class="ttdeci">mat4x4 * realCubePos</div><div class="ttdef"><b>Definition:</b> player.h:47</div></div>
+<div class="ttc" id="group___player_html_ga3983e08fde834c755eb1aa68a96a0508"><div class="ttname"><a href="group___player.html#ga3983e08fde834c755eb1aa68a96a0508">playerFlatten</a></div><div class="ttdeci">void playerFlatten(Player *player, Snake *snake, int fromIndex)</div><div class="ttdoc">??? </div><div class="ttdef"><b>Definition:</b> player.c:69</div></div>
+<div class="ttc" id="struct_coord_html"><div class="ttname"><a href="struct_coord.html">Coord</a></div><div class="ttdoc">Coordonnée dans un espace 3D. </div><div class="ttdef"><b>Definition:</b> snake.h:80</div></div>
+<div class="ttc" id="struct_player_html_a4d629e97dab1ddb8b4348b94f29fd12d"><div class="ttname"><a href="struct_player.html#a4d629e97dab1ddb8b4348b94f29fd12d">Player::steps</a></div><div class="ttdeci">Step * steps</div><div class="ttdef"><b>Definition:</b> player.h:44</div></div>
+<div class="ttc" id="group___player_html_ga6c3d30fd77b5b93c541167f61d661103"><div class="ttname"><a href="group___player.html#ga6c3d30fd77b5b93c541167f61d661103">playerRotate</a></div><div class="ttdeci">void playerRotate(Player *player, int stepIndex, Snake *snake, int magnet)</div><div class="ttdoc">??? </div><div class="ttdef"><b>Definition:</b> player.c:112</div></div>
+<div class="ttc" id="group___player_html_ga58ea907ff2ae8824ac0757a9d4c65499"><div class="ttname"><a href="group___player.html#ga58ea907ff2ae8824ac0757a9d4c65499">initVolume</a></div><div class="ttdeci">int initVolume(Snake *solSnake, Snake *snake, Player *player, Coord min, Coord max, int *debugCpt)</div><div class="ttdoc">??? </div><div class="ttdef"><b>Definition:</b> player.c:291</div></div>
+<div class="ttc" id="group___player_html_gaf1911ad584cefd37dc547d5a4260cccc"><div class="ttname"><a href="group___player.html#gaf1911ad584cefd37dc547d5a4260cccc">playerDestroy</a></div><div class="ttdeci">void playerDestroy(Player *player)</div><div class="ttdoc">Détruit un joueur et nettoie la mémoire. </div><div class="ttdef"><b>Definition:</b> player.c:201</div></div>
+<div class="ttc" id="struct_step_html"><div class="ttname"><a href="struct_step.html">Step</a></div><div class="ttdoc">Définit une étape de résolution. </div><div class="ttdef"><b>Definition:</b> snake.h:99</div></div>
+<div class="ttc" id="struct_player_html_adf8cb3ca02fdd7d413e88c3c4c4c0286"><div class="ttname"><a href="struct_player.html#adf8cb3ca02fdd7d413e88c3c4c4c0286">Player::segEnd</a></div><div class="ttdeci">int segEnd</div><div class="ttdef"><b>Definition:</b> player.h:51</div></div>
+<div class="ttc" id="struct_player_html_a65ade14a0a5b6a72b70f85d4e8342e02"><div class="ttname"><a href="struct_player.html#a65ade14a0a5b6a72b70f85d4e8342e02">Player::segStart</a></div><div class="ttdeci">int segStart</div><div class="ttdef"><b>Definition:</b> player.h:50</div></div>
+<div class="ttc" id="group___player_html_gad1a97fdf7e216abbe0d12112b0eff2b7"><div class="ttname"><a href="group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7">playerInit</a></div><div class="ttdeci">Player * playerInit(Snake *snake)</div><div class="ttdoc">Crée et initialise un Player. </div><div class="ttdef"><b>Definition:</b> player.c:37</div></div>
+<div class="ttc" id="struct_snake_html"><div class="ttname"><a href="struct_snake.html">Snake</a></div><div class="ttdoc">Définit le snake à résoudre. </div><div class="ttdef"><b>Definition:</b> snake.h:164</div></div>
+<div class="ttc" id="struct_player_html_a2224ec0958a602aef926b6a3715e094e"><div class="ttname"><a href="struct_player.html#a2224ec0958a602aef926b6a3715e094e">Player::selected</a></div><div class="ttdeci">int selected</div><div class="ttdef"><b>Definition:</b> player.h:45</div></div>
 <div class="ttc" id="struct_solution_html"><div class="ttname"><a href="struct_solution.html">Solution</a></div><div class="ttdoc">Définit un élement d&#39;une liste de solution. </div><div class="ttdef"><b>Definition:</b> listSolution.h:38</div></div>
-<div class="ttc" id="structplayer_html"><div class="ttname"><a href="structplayer.html">player</a></div><div class="ttdef"><b>Definition:</b> player.h:13</div></div>
+<div class="ttc" id="struct_player_html_a3e020c150630118544b7ee8d5a0fa342"><div class="ttname"><a href="struct_player.html#a3e020c150630118544b7ee8d5a0fa342">Player::flatCubePos</a></div><div class="ttdeci">vec3 * flatCubePos</div><div class="ttdef"><b>Definition:</b> player.h:49</div></div>
+<div class="ttc" id="struct_player_html"><div class="ttname"><a href="struct_player.html">Player</a></div><div class="ttdoc">Modélise un joueur, soit un utilisateur de l&#39;application. </div><div class="ttdef"><b>Definition:</b> player.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>player.h</b></li>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

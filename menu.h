@@ -14,11 +14,14 @@
 
 #include "linmath.h"
 
+
 #include "log.h"
+#include "object.h"
 #include "snake.h"
 #include "fonts.h"
 
-#define MAX_MENU_SIZE 20
+
+#define MAX_MENU_SIZE 15
 #define DEFAULT_MIN_FONT_SIZE 5
 #define DEFAULT_MAX_FONT_SIZE 20
 
@@ -34,7 +37,7 @@
  * @var ItemType::COLLUM
  * Un menu en colone
  */
-typedef enum ItemType {ITEM ,ROW, COLLUM} ItemType;
+typedef enum MenuType {ROW, COLUMN} MenuType;
 
 /**
  * @ingroup Menu
@@ -49,7 +52,22 @@ typedef enum ItemType {ITEM ,ROW, COLLUM} ItemType;
  *
  * @var Action::TEST
  */
-typedef enum Action {NONE, OPEN, CLOSE, TEST} Action;
+typedef enum Action {NONE, MENU,RESET, TEST,BACKAPP,EXIT,HELP,ABOUT,OPTION,LOADSNAKE,SOLUTION,GENSOL,LOADSOL,NEXTSOL,PREVSOL,EXPAND} Action;
+
+/**
+ * @ingroup Menu
+ * @enum State
+ * @brief Définit un état pour un menu.
+ *
+ * @var Action::NONE
+ * Aucune action
+ * @var Action::OPEN
+ *
+ * @var Action::CLOSE
+ *
+ * @var Action::TEST
+ */
+typedef enum State {OPEN, CLOSE} State;
 
 /**
  * @ingroup Menu
@@ -108,7 +126,6 @@ typedef struct Descriptor
   float bbox[6];
 } Descriptor;
 
-typedef struct Menu Menu;
 
 /**
  * @ingroup Menu
@@ -131,13 +148,18 @@ typedef struct Menu Menu;
  * Le menu à dérouler au clique. Ce pointeur est égale à NULL si
  * Item::type == ITEM
  */
+
+typedef struct Menu Menu;
+
 typedef struct Item
 {
-  ItemType type;
   float bbox[4];
   float margin[4]; //left top right bottom
   Descriptor descriptor;
   Menu *menu;
+  Object *mesh;
+  float bboxRel[4];
+  float marginRel[4];
 } Item;
 
 /**
@@ -162,15 +184,19 @@ typedef struct Item
  * en particulier.
  */
 struct Menu{
+  State state;
+  MenuType type;
   float margin[4];
   float bbox[4];
+  float bboxRel[4];
   int size;
   Item **item;
+  Object *mesh;
+  float scale[3];
+  int selected;
+  int opened;
   pthread_mutex_t *mutex;
 };
-
-//Global pointer
-Menu *mymenu;
 
 /**
  * @ingroup Menu
@@ -244,14 +270,6 @@ int setMenuSize(Menu *menu, int size);
  */
 int initItem(Item **item);
 
-/**
- * @ingroup Menu
- * @brief Permet de récupérer le type d'un item
- * @param  item     l'item
- * @param  itemType le pointeur dans lequel récupérer la valeur
- * @return          valeur de contrôle, 1 si l'opération s'est bien passé, 0 sinon
- */
-int getItemType(Item *item, ItemType *itemType);
 
 /**
  * @ingroup Menu
@@ -309,15 +327,6 @@ int setItemBbox(Item *item,float bbox[]);
  */
 int setItemMargin(Item *item,float margin[]);
 
-/**
- * @ingroup Menu
- * @brief Permet de modifier le type d'un item.
- *
- * @param  item l'item
- * @param  itemType le nouveau type de l'item
- * @return      valeur de contrôle, s si l'opération s'est bien passé, 0 sinon
- */
-int setItemType(Item *item, ItemType itemType);
 
 /**
  * @ingroup Menu
@@ -388,4 +397,8 @@ int reduceMenu(Menu *menu);
  */
 int increaseMenu(Menu *menu);
 
-#endif // MENU_H
+
+int calcMenuMesh(Menu *menu,int width, int height);
+
+
+#endif //MENU_H

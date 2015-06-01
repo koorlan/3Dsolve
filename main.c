@@ -125,13 +125,14 @@ int main ( int argc, char ** argv )
 	}
 	/// [1]
 
+
 	char* filePath = malloc(50);
 	strncpy(filePath, "Snakes/snake.snake", 19);
-	int maxThreadNb = 1;
 	int noGraphics = 0;
-	checkArguments(argc, argv, &maxThreadNb, filePath, &noGraphics);
-
 	app = applicationCreate();
+	app->maxThread = -1;
+
+	checkArguments(argc, argv, &(app->maxThread), filePath, &noGraphics);
 	applicationFindSnakes(app);
 
 	/// [2] Load snake from commande line arguments
@@ -144,6 +145,7 @@ int main ( int argc, char ** argv )
 		logError("[MAIN.] Snake load failure");
 		return EXIT_FAILURE;
 	}
+	resolverSolveSnake(app->snake, NULL);
 	/// [2]
 
 	/// [3] Context and menu initialization
@@ -156,43 +158,10 @@ int main ( int argc, char ** argv )
 			logError ("[MAIN.] Could not create context\n");
 			return EXIT_FAILURE;
 		}
+		applicationInitMainMenu(app,context->screen_width, context->screen_height);
 
-		//Menu test;
-		int i ;
-		mymenu = NULL;
-		initMenu(&mymenu);
-		setMenuMargin(mymenu,(float []) {0.02f*context->screen_width, 0.02f*context->screen_height, 0.02f*context->screen_width, 0.02f*context->screen_height} );
-
-		Item *tmpitem;
-		for ( i = 0;  i <2; i++) {
-			initItem(&(tmpitem));
-			setItemType(tmpitem, ITEM);
-			//setItemStartCoord(tmpitem,(float[2]){-1.f+0.2f*i,1.f-0.2f*i});
-			setItemMargin(tmpitem,(float[]){5.f,10.f,5.f,10.f});
-			setItemDescriptor(tmpitem,(struct Descriptor)
-				{	.name="Default Text",
-					.font=LoadFont("fonts/Libertine.ttf"),
-					.fontSize = 20,
-					.minFontSize = DEFAULT_MIN_FONT_SIZE,
-					.maxFontSize = DEFAULT_MAX_FONT_SIZE,
-					.color=(struct Color){.r=0.0f,.g=0.0f,.b=0.0f,.a=1.0f},
-					.action= OPEN});
-			ftglSetFontFaceSize(tmpitem->descriptor.font,tmpitem->descriptor.fontSize,72);
-			addItemToMenu(mymenu,tmpitem);
-		}
-
-		//setItemDescriptor(mymenu->item[3],(struct Descriptor)
-		//	{	.name="Custom Text",
-		//		.font=LoadFont("fonts/Fipps-Regular.otf"),
-		//		.fontSize = 25,
-		//		.color=(struct Color){.r=0.0f,.g=0.0f,.b=1.0f,.a=1.0f},
-		//		.action= OPEN});
-		//ftglSetFontFaceSize(mymenu->item[3]->descriptor.font,mymenu->item[3]->descriptor.fontSize,72);
-		//test relative fontSize
-		calcMenu(mymenu);
-		//End test menu
-		/// [3]
 	}
+	/// [3]
 
 	/// [4] Application running
 
@@ -203,15 +172,15 @@ int main ( int argc, char ** argv )
 	time1.tv_nsec = 1000000;
 	#endif
 
-
-	context->playmode = PM_PLAY;
-	gplayer = playerInit ( app->snake );
-	gsolver = playerInit ( app->snake );
-	gsolver->currentSolution = app->snake->solutions->head;
-
 	if(!noGraphics)
+	{
+		context->playmode = PM_PLAY;
+		gplayer = playerInit ( app->snake );
+		gplayer->selected = 0;
+		gsolver = playerInit ( app->snake );
+		gsolver->currentSolution = app->snake->solutions->head;
 		contextInit ( context );
-	resolverSolveSnake(app->snake, NULL, maxThreadNb);
+	}
 
 	if(!noGraphics)
 	{

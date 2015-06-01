@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>SolidSnake: Menu</title>
+<title>3DSolve: Menu</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div class="container-fluid">
     <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.solidsnake.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> SolidSnake Documentation</h1>
+        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
     </div>
 </div>
 <!-- end header part -->
@@ -120,19 +120,35 @@ Structures de données</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Énumérations</h2></td></tr>
-<tr class="memitem:ga443f647757dde85043b49343f5cbe66b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga443f647757dde85043b49343f5cbe66b">ItemType</a> { <b>ITEM</b>, 
-<b>ROW</b>, 
-<b>COLLUM</b>
- }</td></tr>
-<tr class="memdesc:ga443f647757dde85043b49343f5cbe66b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit le type de l'item. <br/></td></tr>
-<tr class="separator:ga443f647757dde85043b49343f5cbe66b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8bb1ef53467e4f61410d12822d922498"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga8bb1ef53467e4f61410d12822d922498">Action</a> { <b>NONE</b>, 
-<b>OPEN</b>, 
-<b>CLOSE</b>, 
-<b>TEST</b>
+<tr class="memitem:ga8bb1ef53467e4f61410d12822d922498"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga8bb1ef53467e4f61410d12822d922498">Action</a> { <br/>
+&#160;&#160;<b>NONE</b>, 
+<b>MENU</b>, 
+<b>RESET</b>, 
+<b>TEST</b>, 
+<br/>
+&#160;&#160;<b>BACKAPP</b>, 
+<b>EXIT</b>, 
+<b>CONTROL</b>, 
+<b>ABOUT</b>, 
+<br/>
+&#160;&#160;<b>OPTION</b>, 
+<b>LOADSNAKE</b>, 
+<b>SOLUTION</b>, 
+<b>GENSOL</b>, 
+<br/>
+&#160;&#160;<b>LOADSOL</b>, 
+<b>NEXTSOL</b>, 
+<b>PREVSOL</b>, 
+<b>EXPAND</b>
+<br/>
  }</td></tr>
 <tr class="memdesc:ga8bb1ef53467e4f61410d12822d922498"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit une action pour un item. <br/></td></tr>
 <tr class="separator:ga8bb1ef53467e4f61410d12822d922498"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5d74787dedbc4e11c1ab15bf487e61f8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga5d74787dedbc4e11c1ab15bf487e61f8">State</a> { <b>OPEN</b>, 
+<b>CLOSE</b>
+ }</td></tr>
+<tr class="memdesc:ga5d74787dedbc4e11c1ab15bf487e61f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit un état pour un menu. <br/></td></tr>
+<tr class="separator:ga5d74787dedbc4e11c1ab15bf487e61f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Fonctions</h2></td></tr>
@@ -160,9 +176,6 @@ Fonctions</h2></td></tr>
 <tr class="memitem:ga310eea7d97a17ed028f1cb8f6731ebf7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga310eea7d97a17ed028f1cb8f6731ebf7">initItem</a> (<a class="el" href="struct_item.html">Item</a> **item)</td></tr>
 <tr class="memdesc:ga310eea7d97a17ed028f1cb8f6731ebf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise un <a class="el" href="struct_item.html" title="Un élément d&#39;un menu. ">Item</a>.  <a href="#ga310eea7d97a17ed028f1cb8f6731ebf7">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga310eea7d97a17ed028f1cb8f6731ebf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec">getItemType</a> (<a class="el" href="struct_item.html">Item</a> *item, <a class="el" href="group___menu.html#ga443f647757dde85043b49343f5cbe66b">ItemType</a> *itemType)</td></tr>
-<tr class="memdesc:ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de récupérer le type d'un item.  <a href="#ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab22492dc4af7e29ebd37b86366b91421"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#gab22492dc4af7e29ebd37b86366b91421">getItemDescriptor</a> (<a class="el" href="struct_item.html">Item</a> *item, <a class="el" href="struct_descriptor.html">Descriptor</a> *descriptor)</td></tr>
 <tr class="memdesc:gab22492dc4af7e29ebd37b86366b91421"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de récupérer le descripteur d'un item.  <a href="#gab22492dc4af7e29ebd37b86366b91421">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gab22492dc4af7e29ebd37b86366b91421"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,9 +194,6 @@ Fonctions</h2></td></tr>
 <tr class="memitem:gaaecd3e1047f9a22e1b167690eb4b9c0c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#gaaecd3e1047f9a22e1b167690eb4b9c0c">setItemMargin</a> (<a class="el" href="struct_item.html">Item</a> *item, float margin[])</td></tr>
 <tr class="memdesc:gaaecd3e1047f9a22e1b167690eb4b9c0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de modifier les marges d'un item.  <a href="#gaaecd3e1047f9a22e1b167690eb4b9c0c">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gaaecd3e1047f9a22e1b167690eb4b9c0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga07a8c36671c9eb2d08c1766b5bb61617"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga07a8c36671c9eb2d08c1766b5bb61617">setItemType</a> (<a class="el" href="struct_item.html">Item</a> *item, <a class="el" href="group___menu.html#ga443f647757dde85043b49343f5cbe66b">ItemType</a> itemType)</td></tr>
-<tr class="memdesc:ga07a8c36671c9eb2d08c1766b5bb61617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de modifier le type d'un item.  <a href="#ga07a8c36671c9eb2d08c1766b5bb61617">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga07a8c36671c9eb2d08c1766b5bb61617"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga86c90097087a2d1534151f1604e064da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga86c90097087a2d1534151f1604e064da">setItemDescriptor</a> (<a class="el" href="struct_item.html">Item</a> *item, <a class="el" href="struct_descriptor.html">Descriptor</a> descriptor)</td></tr>
 <tr class="memdesc:ga86c90097087a2d1534151f1604e064da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de modifier le descripteur d'un item.  <a href="#ga86c90097087a2d1534151f1604e064da">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga86c90097087a2d1534151f1604e064da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -408,42 +418,6 @@ Fonctions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">item</td><td>l'item </td></tr>
     <tr><td class="paramname">menu</td><td>le pointeur dans lequel récupérer le menu </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Renvoie</dt><dd>valeur de contrôle, 1 si l'opération s'est bien passé, 0 sinon </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga0b0de7b8e8c9c13a6fd7497c8c7cc7ec"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int getItemType </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_item.html">Item</a> *&#160;</td>
-          <td class="paramname"><em>item</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___menu.html#ga443f647757dde85043b49343f5cbe66b">ItemType</a> *&#160;</td>
-          <td class="paramname"><em>itemType</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Permet de récupérer le type d'un item. </p>
-<dl class="params"><dt>Paramètres</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">item</td><td>l'item </td></tr>
-    <tr><td class="paramname">itemType</td><td>le pointeur dans lequel récupérer la valeur </td></tr>
   </table>
   </dd>
 </dl>
@@ -846,42 +820,6 @@ Fonctions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga07a8c36671c9eb2d08c1766b5bb61617"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int setItemType </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_item.html">Item</a> *&#160;</td>
-          <td class="paramname"><em>item</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___menu.html#ga443f647757dde85043b49343f5cbe66b">ItemType</a>&#160;</td>
-          <td class="paramname"><em>itemType</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Permet de modifier le type d'un item. </p>
-<dl class="params"><dt>Paramètres</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">item</td><td>l'item </td></tr>
-    <tr><td class="paramname">itemType</td><td>le nouveau type de l'item </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Renvoie</dt><dd>valeur de contrôle, s si l'opération s'est bien passé, 0 sinon </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="gae06af094226ba2752df861c220955ed3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -995,7 +933,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Lundi 25 Mai 2015 18:47:15 pour SolidSnake par
+    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

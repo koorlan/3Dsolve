@@ -158,10 +158,8 @@ typedef struct ThreadArgs
  * @ingroup Resolver
  * @brief Fonction principale dans la résolution du snake.
  * @param snake le serpent à résoudre
- * @param maxThreadNb le nombre maximal de thread que la fonction est autorisée
- * à utiliser pour résoudre le snake.
  */
-void resolverSolveSnake(Snake *snake, Tree helpNode, int maxThreadNb);
+void resolverSolveSnake(Snake *snake, Tree helpNode);
 
 
 /**
