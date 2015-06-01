@@ -22,6 +22,12 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 		mouse_flags ^= M_RIGHT;
 
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		mouse_flags |= M_MID;
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+		mouse_flags ^= M_MID;
+
+
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		mouse_flags |= M_LEFT;
@@ -668,6 +674,15 @@ int getInput ( Context* context )
 	{
 		context->camera->angle[0]+=0.002f;
 	}
+
+	if ((mouse_flags&M_MID)==M_MID)
+	{
+		float accx = (last_xpos-gxpos) * 0.05f;
+		float accy = (last_ypos-gypos) * 0.05f;
+		context->camera->target[0] += accx * cos(context->camera->angle[0]) + accy * sin(context->camera->angle[0]);
+		context->camera->target[2] += -accx * sin(context->camera->angle[0]) + accy * cos(context->camera->angle[0]);
+	}
+
 
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
