@@ -64,16 +64,18 @@ void* renderer ( void *arg )
 	float r_angle =  -M_PI/4;
 	vec2 foffsetd;
 	vec2 foffseta;
-	foffsetd[0] = 0.5f;
-	foffsetd[1] = 0.5f;
-	foffseta[0] = 0.5f;
-	foffseta[1] = 0.5f;
+	foffsetd[0] = 0.8f;
+	foffsetd[1] = 0.8f;
+	foffseta[0] = 0.2f;
+	foffseta[1] = 0.2f;
 	FTGLfont* titleFont = LoadFont ("fonts/recharge bd.ttf");
 	ftglSetFontFaceSize(titleFont, 100, 72);
 	FTGLfont* pressFont = LoadFont ("fonts/recharge bd.ttf");
 	ftglSetFontFaceSize(pressFont, 22, 72);
 	FTGLfont* textFont = LoadFont ("fonts/Tahoma.ttf");
 	ftglSetFontFaceSize(textFont, 22, 72);
+	FTGLfont* stextFont = LoadFont ("fonts/Tahoma.ttf");
+	ftglSetFontFaceSize(stextFont, 16, 72);
 	//! [2]
 
 	//! [3] Renderer loop
@@ -511,13 +513,21 @@ void* renderer ( void *arg )
 			glEnable (GL_DEPTH_TEST);
 
 			//forme finale en haut a droite
-			//glViewport (foffset[0] * context->screen_width, foffset[1] * context->screen_height,
-			//		 context->screen_width, context->screen_height);
+			glViewport (foffsetd[0] * context->screen_width, foffsetd[1] * context->screen_height,
+					foffseta[0] * context->screen_width, foffseta[1] * context->screen_height);
 			mat4x4_identity(viewMat);
 			mat4x4_identity(perMat);
-			mat4x4_look_at(viewMat, context->camera->eye,
-					context->camera->target, context->camera->up);
-			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
+			//mat4x4_look_at(viewMat, context->camera->eye,
+			//		context->camera->target, context->camera->up);
+			vec3 vol_offset;
+			vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
+			vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y)/2);
+			vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z)/2);
+			int dist = 3;
+			mat4x4_look_at(viewMat, (vec3){vol_offset[0]+dist,vol_offset[1]+dist,vol_offset[2]+dist},
+						vol_offset,
+						(vec3){ 0.f ,1.f ,0.f });
+			mat4x4_perspective(perMat, 1.1f, context->ratio, F_NEAR, F_FAR);
 			mat4x4_mul (PVMat, perMat, viewMat);
 			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
 
@@ -537,15 +547,17 @@ void* renderer ( void *arg )
 				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
 				{	
 					mat4x4_identity ( WMat );
-					mat4x4_translate (WMat, x,y,z);
-					//mat4x4_scale3d(WMat, WMat, scoef);
+					//mat4x4_rotate_X ( WMat, WMat, glfwGetTime() * 0.8f );
+					mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
+					//mat4x4_rotate_Z ( WMat, WMat, glfwGetTime() * 0.2f );
+					mat4x4_translate_in_place ( WMat, x-vol_offset[0], y-vol_offset[1], z-vol_offset[2] );
 					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 			
 					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-					cnt++;
 				}
+				cnt++;
 			}
 
 
@@ -583,7 +595,27 @@ void* renderer ( void *arg )
 				glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
 			}
 
-			//==========view Menu template==========
+			// textes d'infos
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glLoadIdentity();
+			glTranslatef (-30.f, -275.f,0.f);
+			glColor4f ( 1.f, 1.f, 1.f, 1.f );
+			if (context->playmode==PM_PLAY)
+				ftglRenderFont( stextFont, "Mode: Jeu", FTGL_RENDER_ALL);
+			else ftglRenderFont( stextFont, "Mode: Solution", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef ( -105.f, 0.f, 0.f );
+			glColor4f ( 1.f, 0.f, 0.f, context->errorAlpha );
+			context->errorAlpha = (context->errorAlpha > 0 ? context->errorAlpha - 0.0075f: 0);
+			ftglRenderFont( pressFont, "Pas de solution", FTGL_RENDER_ALL);
+
+
+			//==========menu==========
 
 			 	mat4x4_identity(viewMat);
 				mat4x4_identity(perMat);
@@ -605,7 +637,7 @@ void* renderer ( void *arg )
 				}
 
 
-			//==========view Text==========
+			//==========texte menu==========
 			currentMenu = NULL ;
 			menuCaller = NULL;
 			tmpMenu = NULL;
@@ -644,6 +676,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 	float accumulator = 0.f;
 	int i=0;
 
+	glUseProgram (context->snake_program);
 	#ifdef __APPLE__
 	glBindVertexArrayAPPLE (menu->mesh->vao_id);
 	#else

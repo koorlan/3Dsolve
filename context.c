@@ -135,6 +135,11 @@ int getInput ( Context* context )
 		key_flags = K_NONE;
 		app->state = AS_GAME;
 	}
+	else if (app->state == AS_LOAD)
+	{
+		key_flags = K_NONE;
+		mouse_flags = M_NONE;
+	}	
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
@@ -224,7 +229,7 @@ int getInput ( Context* context )
 				break;
 		}
 
-		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);
 		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
@@ -415,9 +420,9 @@ int getInput ( Context* context )
 		}
 
 	}
-	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 )
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)==1)
 	{
-		playerHelp(gplayer, app->snake);
+		
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -466,8 +471,10 @@ int getInput ( Context* context )
 
 
 		}
-
 	}
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+		context->errorAlpha = 1.f;
+	
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
@@ -896,6 +903,7 @@ void contextInit ( Context* context )
 	context->camera = camera;
 	context->drawpick = 0;
 	context->drawcenter = 0;
+	context->errorAlpha = 0.f;
 
 	glfwMakeContextCurrent ( NULL );
 
