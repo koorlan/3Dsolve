@@ -103,6 +103,7 @@ typedef struct context
 	int drawpick;
 	int playmode;
 	int spread;
+	int drawcenter;
 } Context;
 
 #include "renderer.h"

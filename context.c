@@ -10,6 +10,7 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	mouse_flags = M_RLEFTONCE; // release pour eviter les demi-rotations
 	if (yoffset>0) mouse_flags |= M_ROLLF;
 	else if (yoffset<0) mouse_flags |= M_ROLLB;
 }
@@ -19,12 +20,12 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 		mouse_flags |= M_RIGHT;
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE && (mouse_flags&M_RIGHT)==M_RIGHT )
 		mouse_flags ^= M_RIGHT;
 
 	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
 		mouse_flags |= M_MID;
-	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE  && (mouse_flags&M_MID)==M_MID )
 		mouse_flags ^= M_MID;
 
 
@@ -33,7 +34,7 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 		mouse_flags |= M_LEFT;
 		mouse_flags |= M_LEFTONCE;
 	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE && (mouse_flags&M_LEFT)==M_LEFT )
 	{
 		mouse_flags ^= M_LEFT;
 		mouse_flags |= M_RLEFTONCE;
@@ -681,7 +682,8 @@ int getInput ( Context* context )
 		float accy = (last_ypos-gypos) * 0.05f;
 		context->camera->target[0] += accx * cos(context->camera->angle[0]) + accy * sin(context->camera->angle[0]);
 		context->camera->target[2] += -accx * sin(context->camera->angle[0]) + accy * cos(context->camera->angle[0]);
-	}
+		context->drawcenter = 1;
+	} else context->drawcenter = 0;
 
 
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
@@ -873,6 +875,7 @@ void contextInit ( Context* context )
 
 	context->camera = camera;
 	context->drawpick = 0;
+	context->drawcenter = 0;
 
 	glfwMakeContextCurrent ( NULL );
 

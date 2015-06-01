@@ -61,9 +61,13 @@ void* renderer ( void *arg )
 	int solidCheck = 0;
 	float scoef = 1.f;
 	int solidStart = 0;
-	float xoffset = -(app->snake->length*0.3333333f);
-	float yoffset = -0.75f * 20.f;
 	float r_angle =  -M_PI/4;
+	vec2 foffsetd;
+	vec2 foffseta;
+	foffsetd[0] = 0.5f;
+	foffsetd[1] = 0.5f;
+	foffseta[0] = 0.5f;
+	foffseta[1] = 0.5f;
 	FTGLfont* titleFont = LoadFont ("fonts/recharge bd.ttf");
 	ftglSetFontFaceSize(titleFont, 100, 72);
 	FTGLfont* pressFont = LoadFont ("fonts/recharge bd.ttf");
@@ -322,10 +326,12 @@ void* renderer ( void *arg )
 			}
 			//! [5]
 
-			//==========view cubes==========
+			//==========snake 3d==========
 			glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glUseProgram (context->snake_program);
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
 			mat4x4_look_at(viewMat, context->camera->eye,
 					context->camera->target, context->camera->up);
 			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
@@ -414,7 +420,49 @@ void* renderer ( void *arg )
 			}
 			glEnable (GL_DEPTH_TEST);
 
-			//==========view snake 2D==========
+			//forme finale en haut a droite
+			//glViewport (foffset[0] * context->screen_width, foffset[1] * context->screen_height,
+			//		 context->screen_width, context->screen_height);
+			mat4x4_identity(viewMat);
+			mat4x4_identity(perMat);
+			mat4x4_look_at(viewMat, context->camera->eye,
+					context->camera->target, context->camera->up);
+			mat4x4_perspective(perMat, context->camera->fov, context->ratio, F_NEAR, F_FAR);
+			mat4x4_mul (PVMat, perMat, viewMat);
+			glUniformMatrix4fv(vpID, 1, GL_FALSE, &PVMat[0][0]);
+
+
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->cube_mesh->vao_id);
+			#else
+				glBindVertexArray (context->cube_mesh->vao_id);
+			#endif
+
+			int x,y,z;
+			int cnt=0;
+			for (x=0;x<app->snake->volume.max.x;x++)
+			for (y=0;y<app->snake->volume.max.y;y++)
+			for (z=0;z<app->snake->volume.max.z;z++)
+			{
+				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
+				{	
+					mat4x4_identity ( WMat );
+					mat4x4_translate (WMat, x,y,z);
+					//mat4x4_scale3d(WMat, WMat, scoef);
+					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+			
+					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+					cnt++;
+				}
+			}
+
+
+			glViewport (0, 0, context->screen_width, context->screen_height);
+
+
+			//==========snake a plat==========
 			mat4x4_identity(viewMat);
 			mat4x4_identity(perMat);
 			mat4x4_mul (PVMat, perMat, viewMat);
@@ -426,7 +474,8 @@ void* renderer ( void *arg )
 				glBindVertexArray (context->square_mesh->vao_id);
 			#endif
 
-
+			float xoffset = -(app->snake->length*0.3333333f);
+			float yoffset = -0.75f * 20.f;
 			for ( i=0; i <= app->snake->length-1; i++ )
 			{
 				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
