@@ -524,7 +524,16 @@ int getInput ( Context* context )
 					{
 						snakeDestroy(app->snake, 1);
 						app->snake = newSnake;
-						resolverSolveSnake(app->snake, NULL);
+
+						pthread_attr_t attr;
+						pthread_t solverThread;
+						ThreadArgs* args = malloc(sizeof(ThreadArgs));
+						args->snake = app->snake;
+						args->rootNode = NULL;
+
+						pthread_attr_init(&attr);
+						pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+						pthread_create(&solverThread, &attr, resolverSolveSnake, args);
 
 						playerDestroy(gplayer);
 						gplayer = playerInit ( app->snake );
