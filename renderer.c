@@ -72,6 +72,8 @@ void* renderer ( void *arg )
 	ftglSetFontFaceSize(titleFont, 100, 72);
 	FTGLfont* pressFont = LoadFont ("fonts/recharge bd.ttf");
 	ftglSetFontFaceSize(pressFont, 22, 72);
+	FTGLfont* textFont = LoadFont ("fonts/Tahoma.ttf");
+	ftglSetFontFaceSize(textFont, 22, 72);
 	//! [2]
 
 	//! [3] Renderer loop
@@ -98,7 +100,7 @@ void* renderer ( void *arg )
 
 		// Set OpenGl viewport to the entire window
 		glViewport (0, 0, context->screen_width, context->screen_height);
-
+		float myX = -(context->screen_width / 2.f) + 20.f;
 		switch (app->state)
 		{
 		case AS_HOME:
@@ -197,7 +199,7 @@ void* renderer ( void *arg )
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 
-			
+
 			glUseProgram (0);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -214,12 +216,100 @@ void* renderer ( void *arg )
 			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef (-80.f, 250.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( pressFont, "Menu d'aide", FTGL_RENDER_ALL);
+
+			glTranslatef (myX, 170,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "Flèche directionnelle droite : prochaine étape de la solution", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 110,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "Flèche directionnelle gauche : étape précédente de la solution", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 50,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "Espace : activer/désactiver la rotation du snake", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 0,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "Entrer : Vue \"explosée\"", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, -50,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "Echape : Quitter l'application", FTGL_RENDER_ALL);
+
+			glLoadIdentity();
+			glTranslatef (-325.f, -220.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f - (0.35f*(1+cos(4*glfwGetTime()))));
+			ftglRenderFont( pressFont, "Appuyez sur une touche pour quitter ce menu", FTGL_RENDER_ALL);
+
 		break;
 		case AS_ABOUT:
 
 			glClearColor( 0.1f, 0.1f, 0.1f, 1.f );
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			glUseProgram (0);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-context->screen_width*0.5f,context->screen_width*0.5f,-context->screen_height*0.5f,context->screen_height*0.5f,0,1);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef (-80.f, 250.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( pressFont, "A Propos", FTGL_RENDER_ALL);
+
+			glLoadIdentity();
+			glTranslatef (myX, 150.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "3DSolve est une application réalisée dans le cadre du projet", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 120.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "application de première année à l'INSA-CVL.", FTGL_RENDER_ALL);
+
+			glLoadIdentity();
+			glTranslatef (myX, 70.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( pressFont, "Auteurs :", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 40.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "L.Aubry <lisa.aubry@insa-cvl.fr>", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, 10.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "A.Chazot <alban.chazot@insa-cvl.fr>", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, -20.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "K.Colas <korlan.colas@insa-cvl.fr>", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, -50.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "A.Gourd <anthony.gourd@insa-cvl.fr>", FTGL_RENDER_ALL);
+
+			glLoadIdentity();
+			glTranslatef (myX, -100.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( pressFont, "Encadrant :", FTGL_RENDER_ALL);
+			glLoadIdentity();
+			glTranslatef (myX, -130.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f);
+			ftglRenderFont( textFont, "P.Clemente <patrice.clemente@insa-cvl.fr>", FTGL_RENDER_ALL);
+
+			glLoadIdentity();
+			glTranslatef (-325.f, -220.f,0.f);
+			glColor4f (1.f, 1.f, 1.f, 1.f - (0.35f*(1+cos(4*glfwGetTime()))));
+			ftglRenderFont( pressFont, "Appuyez sur une touche pour quitter ce menu", FTGL_RENDER_ALL);
 		break;
 		case AS_GAME:
 
@@ -563,11 +653,11 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -580,7 +670,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 		glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
 		accumulator = 0.f;
 			for ( i = 0; i < menu->size; i++) {
-				
+
 
 				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
 						*itemCaller = menu->item[i];
@@ -629,11 +719,13 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+
+
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -698,7 +790,7 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 		glLoadIdentity();
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
 			yoffset -= (*menuCaller)->margin[1];
 		}
 

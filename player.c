@@ -358,14 +358,14 @@ int playerHelp(Player *player, Snake * snake)
 	solSnake->volume.state = malloc(solSnake->volume.max.x * sizeof(VolumeState*));
 
 	for(i = 0; i < solSnake->volume.max.x; i++)
-	{	solSnake->volume.state[i] = malloc(solSnake->volume.max.y * sizeof(VolumeState));
+	{	solSnake->volume.state[i] = malloc(solSnake->volume.max.y * sizeof(VolumeState*));
 		if(solSnake->volume.state[i] == NULL)
 		{
 			logError("[PHELP] Error on M alloc\n");
 			exit(-1);
 		}
 	}
-
+	
 
 	for(i = 0; i < solSnake->volume.max.x; i++)
 	{	for(j = 0; j < solSnake->volume.max.y; j++)
