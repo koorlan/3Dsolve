@@ -29,7 +29,7 @@ Algorithme&Taille du cube&Temps de calcul (s)&Solutions&Chemins explorés \\
 
 \newpage
 
-\paragraph{Interprétation} La première interprétation que l'on peut faire de ses résultats, c'est que sans surprise, plus la taille du cube est grande, plus le temps de calcul est important (0,000429 secondes pour un 2x2x2 contre 140,208572 pour un 4x4x4). Ces résultat nous permettent également de prouver l'efficacité de notre algorithme de réduction des points de départ. En effet lorsque l'algorithme est actif on constate que les temps de calcul, tout comme le nombre de chemins explorés, sont plus faibles que lorsque qu'il est inactif.
+\paragraph{Interprétation} La première interprétation que l'on peut faire de ces résultats est que, sans surprise, plus la taille du cube est grande, plus le temps de calcul est important (0,000429 secondes pour un 2x2x2 contre 140,208572 pour un 4x4x4). Ces résultats nous permettent également de prouver l'efficacité de notre algorithme de réduction des points de départ. En effet, lorsque l'algorithme est actif on constate que les temps de calcul, tout comme le nombre de chemins explorés, sont plus faibles que lorsque qu'il est inactif.
 
 \begin{figure}[h]
  \centering
@@ -119,7 +119,7 @@ Nombre de thread & Temps d’exécution (s) \\
 
 \newpage
 
-\paragraph{Interprétation} Le temps de résolution du snake 3x3x3 étant très cours, l'efficacité du calcul parallèle est difficile à percevoir. De plus, l'influence des autres processus lancés sur la machine dans l’ordonnancement et donc dans le sur le temps (réel) d'exécution du calcul n'est pas négligeable dans le cas du 3x3x3. Le cas du snake 4x4x4 est plus intéressant. On constate que plus on affecte de thread à la résolution du calcul, moins celui-ci prend de temps jusqu'à ce que l'on arrive à 6 thread. A ce moment là, on observe un ``pic'' dans le temps de calcul puis il décroit de nouveau. Selon nous, la raison de ce pic est dû à la façon dont nous avons implémenté le système de répartition des points de départ à traiter pour chaque thread. Dans ce cas précis, il y a 10 points de départ à traiter. Si l'on utilise 6 thread de calcul, le programme affecte (10 / 6) = 1 point de départ pour chaque thread, excepté le dernier auquel il affecte (10 - 5) = 5 thread. Finalement, avec ce système, on constate que la parallélisation du calcul n'est vraiment pas optimale, ce qui explique le ``pic '' dans le graphe.
+\paragraph{Interprétation} Le temps de résolution du snake 3x3x3 étant très court, l'efficacité du calcul parallèle est difficile à percevoir. De plus, l'influence d'autres processus s'exécutant sur la même machine que l'application biaise certainement les résultats pour ce snake. Le cas du snake 4x4x4 est plus intéressant. On constate que plus on affecte de threads à la résolution du calcul, moins celui-ci prend de temps. Ceci se vérifie jusqu'au 5e thread. Ensuite, on observe un ``pic'' dans le temps de calcul, puis il décroit de nouveau. Selon nous, ce pic est dû à la façon dont nous avons implémenté le système de répartition des points de départ à traiter pour chaque thread. Dans ce cas précis, il y a 10 points de départ à traiter. Si l'on utilise 6 threads de calcul, le programme affecte (10 / 6) = 1 point de départ pour chaque thread, excepté le dernier auquel il affecte (10 - 5) = 5 threads. Finalement, avec ce système, on constate que la parallélisation du calcul n'est vraiment pas optimale, ce qui explique le ``pic '' dans le graphe.
 
 \begin{figure}[h]
  \centering
@@ -134,4 +134,4 @@ Nombre de thread & Temps d’exécution (s) \\
 \end{figure}
 
 \section{Limites}
-Nos tests nous ont permit de mettre en évidence la limite principale de notre application : la taille du cube à résoudre. En effet, pour un cube 4x4x4 le temps d'attente n'est déjà plus négligeable et sa résolution sollicite grandement le CPU. 
+Nos tests nous ont permis de mettre en évidence la limite principale de notre application : la taille du cube à résoudre. En effet, pour un cube 4x4x4 le temps d'attente n'est déjà plus négligeable et sa résolution sollicite grandement le CPU. 

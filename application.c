@@ -135,7 +135,7 @@ int applicationInitMainMenu(Application *app,int width, int height){
       switch (i){
         case 0:
           setItemDescriptor(tmpitem,(struct Descriptor)
-            {	.name="Exit",
+            {	.name="Quitter",
               .font=LoadFont("fonts/Tahoma.ttf"),
               .fontSize = 20,
               .minFontSize = DEFAULT_MIN_FONT_SIZE,
@@ -155,7 +155,7 @@ int applicationInitMainMenu(Application *app,int width, int height){
           break;
         case 2:
           setItemDescriptor(tmpitem,(struct Descriptor)
-          {	.name="Help",
+          {	.name="Aide",
           .font=LoadFont("fonts/Tahoma.ttf"),
           .fontSize = 20,
           .minFontSize = DEFAULT_MIN_FONT_SIZE,
@@ -165,7 +165,7 @@ int applicationInitMainMenu(Application *app,int width, int height){
         break;
         case 3:
           setItemDescriptor(tmpitem,(struct Descriptor)
-          {	.name="About",
+          {	.name="A propos",
           .font=LoadFont("fonts/Tahoma.ttf"),
           .fontSize = 20,
           .minFontSize = DEFAULT_MIN_FONT_SIZE,
