@@ -12,7 +12,6 @@
 #include <stdlib.h>
 
 #include "log.h"
-#include "object.h"
 #include "snake.h"
 #include "linmath.h"
 
