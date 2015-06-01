@@ -398,7 +398,7 @@ int getInput ( Context* context )
 		}
 
 	}
-	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 )
 	{
 		playerHelp(gplayer, app->snake);
 		int i;
@@ -548,6 +548,7 @@ int getInput ( Context* context )
 
 					}
 					app->state = AS_GAME;
+					cameraReset (context->camera);
 					break;
 				case LOADSOL:
 				newSolution = app->snake->solutions->head;
@@ -686,9 +687,9 @@ int getInput ( Context* context )
 	//mise à jour de la position/orientation de la camera
 	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
 				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+	context->camera->eye[2] = context->camera->target[2] + context->camera->distance
 				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+	context->camera->eye[1] = context->camera->target[1] + context->camera->distance
 				* sin(context->camera->angle[1]);
 
 	return 0;
@@ -851,33 +852,12 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->itemtex = textureID;
 
-	vec3 vol_offset;
-	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
-	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y)/2);
-	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z)/2);
 
 	Camera * camera = cameraCreate();
-	camera->eye[0] = 0.f;
-	camera->eye[1] = 0.f;
-	camera->eye[2] = 0.f;
-	camera->target[0] = vol_offset[0];
-	camera->target[1] = vol_offset[1];
-	camera->target[2] = vol_offset[2];
-	camera->up[0] = 0.f;
-	camera->up[1] = 1.f;
-	camera->up[2] = 0.f;
-	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.5f;
-	camera->fov = 1.6f;
-	camera->distance = 4.f;
+	cameraReset ( camera );
+
 	context->camera = camera;
 	context->drawpick = 0;
-	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
-				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
-				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
-				* sin(context->camera->angle[1]);
 
 	glfwMakeContextCurrent ( NULL );
 

@@ -14,7 +14,9 @@ typedef struct camera {
 	float fov;
 } Camera;
 
+#include "application.h"
 
 Camera* cameraCreate ();
+void cameraReset ( Camera* camera );
 
 #endif //CAMERA_H
