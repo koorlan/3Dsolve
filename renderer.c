@@ -193,7 +193,7 @@ void* renderer ( void *arg )
 				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 
-			
+
 			glUseProgram (0);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -514,11 +514,11 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -531,7 +531,7 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 		glDrawArrays(GL_TRIANGLES, 0,menu->mesh->nb_faces);
 		accumulator = 0.f;
 			for ( i = 0; i < menu->size; i++) {
-				
+
 
 				if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
 						*itemCaller = menu->item[i];
@@ -580,11 +580,13 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+
+
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -649,7 +651,7 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 		glLoadIdentity();
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
