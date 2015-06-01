@@ -608,12 +608,14 @@ void* renderer ( void *arg )
 			if (context->playmode==PM_PLAY)
 				ftglRenderFont( stextFont, "Mode: Jeu", FTGL_RENDER_ALL);
 			else ftglRenderFont( stextFont, "Mode: Solution", FTGL_RENDER_ALL);
-			glLoadIdentity();
-			glTranslatef ( -105.f, 0.f, 0.f );
-			glColor4f ( 1.f, 0.f, 0.f, context->errorAlpha );
-			context->errorAlpha = (context->errorAlpha > 0 ? context->errorAlpha - 0.0075f: 0);
-			ftglRenderFont( pressFont, "Pas de solution", FTGL_RENDER_ALL);
-
+			if (context->errorAlpha>0)
+			{
+				glLoadIdentity();
+				glTranslatef ( -105.f, 0.f, 0.f );
+				glColor4f ( 1.f, 0.f, 0.f, context->errorAlpha );
+				context->errorAlpha -= 0.0075f;
+				ftglRenderFont( pressFont, "Pas de solution", FTGL_RENDER_ALL);
+			}
 
 			//==========menu==========
 
