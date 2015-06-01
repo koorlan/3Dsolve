@@ -557,6 +557,8 @@ int getInput ( Context* context )
 					cameraReset (context->camera);
 					break;
 				case LOADSOL:
+				currentMenu->state = CLOSE;
+				app->menuDepth --;
 				newSolution = app->snake->solutions->head;
 					for(i=0; i<currentMenu->selected;i++){
 						if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
@@ -594,9 +596,13 @@ int getInput ( Context* context )
 					break;
 				case HELP:
 					app->state = AS_HELP;
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
 					break;
 				case ABOUT:
 					app->state = AS_ABOUT;
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
 					break;
 				default:
 					break;
