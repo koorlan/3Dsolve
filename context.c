@@ -585,6 +585,12 @@ int getInput ( Context* context )
 						break;
 					}
 					break;
+				case HELP:
+					app->state = AS_HELP;
+					break;
+				case ABOUT:
+					app->state = AS_ABOUT;
+					break;
 				default:
 					break;
 			}
