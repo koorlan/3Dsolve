@@ -48,7 +48,7 @@
 #define K_DN		0b00000010
 #define K_LF		0b00000100
 #define K_RT		0b00001000
-#define K_RST		0b00010000
+#define K_SPACE		0b00010000
 #define K_PGUP		0b00100000
 #define K_ENTER		0b01000000
 #define K_ANY		0b10000000

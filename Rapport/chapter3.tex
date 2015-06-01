@@ -54,7 +54,7 @@ Le deuxième cas de figure est celui où l’on réussit à placer toutes les un
 
 \section{Méthode de calcul des couples coordonnées-direction des nœuds fils}
 Lorsqu’un nœud devient le nœud courant, il convient que ses fils soient générés dans l’arbre. Cela consiste notamment à leur attribuer un couple coordonnées-direction dans l’espace. Ce qu’il faut voir ici, c’est que le résultat de cette opération découle de la nature du nœud fils et du couple coordonnées-direction du père. Dans la suite de cette partie, on se placera dans un repère orthonormé (O ; x, y, z). 
-Pour calculer les coordonnées des fils d’un nœud, il suffit d’ajouter ses coordonnées avec sa direction. La figure suivante illustre ce procédé. Le nœud marron est le nœud courant et le nœud blanc est son fils. Les coordonnées du fils découlent de la position du père ainsi que de sa direction, matérialisée par la flèche marron. On constate alors que, pour un nœud père donné, tous les fils qu’il va engendrer auront le même triplet de coordonnées dans l’espace. 
+Pour calculer les coordonnées des fils d’un nœud, il suffit d’ajouter ses coordonnées avec sa direction. La figure suivante illustre ce procédé. 
 
 \begin{figure}[h]
  \centering
@@ -63,14 +63,18 @@ Pour calculer les coordonnées des fils d’un nœud, il suffit d’ajouter ses 
  \label{buildChildren}
 \end{figure}
 
+\newpage
+
+Le nœud marron est le nœud courant et le nœud blanc est son fils. Les coordonnées du fils découlent de la position du père ainsi que de sa direction, matérialisée par la flèche marron. On constate alors que, pour un nœud père donné, tous les fils qu’il va engendrer auront le même triplet de coordonnées dans l’espace.
+
+
 La différence entre les fils d’un nœud intervient lors du calcul de leur direction. Deux cas de figure sont alors à envisager :
 \begin{itemize}
- \item le nœud fils correspond à une unité droite (voir figure 4), dans ce cas, un seul nœud fils sera créé et celui-ci héritera de la direction de son père
+ \item le nœud fils correspond à une unité droite (voir figure~\ref{snakeUnits}), dans ce cas, un seul nœud fils sera créé et celui-ci héritera de la direction de son père
  \item le nœud fils correspond à un coin, dans ce cas, plusieurs nœuds fils seront créés avec des directions différentes de celle du père
 \end{itemize}
  
-La figure~\ref{buildCornerChildren} illustre le fonctionnement de l’arbre pour placer la 3e unité du serpent à partir d’un nœud donné. Les flèches indiquent les directions associées au dernier cube placé. À la hauteur n, on a déjà positionné les deux premières unités et la 2e unité a pour direction droite.  Étant donné que la 3e unité est un coin (voir figure 4), il convient que la direction change entre la 2e et la 3e unité. Ainsi, les directions possibles pour la 3e unité sont : bas, derrière, devant et haut, d’où les quatre nœuds représentés à la hauteur n+1. 
-NB : on peut d’ores et déjà remarquer que les directions devant et haut vont déboucher sur une configuration interdite car la prochaine unité créée sortira du cube.
+La figure~\ref{buildCornerChildren} illustre le fonctionnement de l’arbre pour placer la 3e unité du serpent à partir d’un nœud donné. Les flèches indiquent les directions associées au dernier cube placé. À la hauteur n, on a déjà positionné les deux premières unités et la 2e unité a pour direction droite.  Étant donné que la 3e unité est un coin (voir figure~\ref{snakeUnits}), il convient que la direction change entre la 2e et la 3e unité. Ainsi, les directions possibles pour la 3e unité sont : bas, derrière, devant et haut, d’où les quatre nœuds représentés à la hauteur n+1. 
 
 \begin{figure}[h]
  \centering
@@ -79,7 +83,9 @@ NB : on peut d’ores et déjà remarquer que les directions devant et haut von
  \label{buildCornerChildren}
 \end{figure}
 
-\clearpage
+NB : on peut d’ores et déjà remarquer que les directions devant et haut vont déboucher sur une configuration interdite car la prochaine unité créée sortira du cube.
+
+\newpage
 \section{Problème des nœuds initiaux}
 Dans cette partie nous allons exposer la méthode employée pour 	placer la première unité dans le volume final. En effet, la démarche exposée jusqu’ici ne s’applique pas pour les premiers nœuds de l’arbre étant donné qu’elle dépend du nœud père. Ici l’enjeu est double puisqu’il faut également déterminer et éliminer les couples coordonnées-direction symétriques. Afin de simplifier la lecture, les couples coordonnées-direction seront appelés vecteurs dans ce qui va suivre. La figure~\ref{startingPoint} illustre en partie le problème des symétries sur la première face du cube. Dans cet exemple, l’unité marron amènera à la création d’un nœud et les trois autres unités devront être reconnues comme étant redondantes et sans intérêt pour le calcul des solutions. 
 
