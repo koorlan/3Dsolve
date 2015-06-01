@@ -535,12 +535,8 @@ int getInput ( Context* context )
 							app->menu->item[2]->menu->size ++;
 
 						}
-						//app->menu->item[2]->menu->size = i;
-				    //app->menu->item[2]->menu->state = CLOSE;
-				    //app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
 				    calcMenu(app->menu->item[2]->menu);
 				    calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
-
 					}
 					app->state = AS_GAME;
 					break;
@@ -566,6 +562,8 @@ int getInput ( Context* context )
 								(float) gsolver->steps[i].coord.z);
 						}
 						context->playmode = PM_RESOLVE;
+						currentMenu->state = CLOSE;
+						app->menuDepth --;
 					break;
 				case MENU:
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
