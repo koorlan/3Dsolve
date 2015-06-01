@@ -112,6 +112,16 @@ int getInput ( Context* context )
 		context->ratio = ((float)resize_w)/(float)resize_h;
 
 	//	testMenuMesh(app->menu, context->screen_width	, context->screen_height);
+		int i = 0;
+		calcMenu(app->menu);
+		calcMenuMesh(app->menu,context->screen_width,context->screen_height);
+		for(i=0 ; i<3; i++){
+			if(app->menu->item[i]->menu != NULL){
+				calcMenu(app->menu->item[i]->menu);
+				calcMenuMesh(app->menu->item[i]->menu,context->screen_width,context->screen_height);
+			}
+
+		}
 
 		resize_h = -1;
 		resize_w = -1;
@@ -500,7 +510,7 @@ int getInput ( Context* context )
 				break;
 			}
 		}
-		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
+		if (currentMenu != NULL && currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
 					break;
@@ -543,9 +553,7 @@ int getInput ( Context* context )
 						gsolver->currentSolution = app->snake->solutions->head;
 						logWrite("[MENU] Re-init solution menu \n");
 						//Snake Solution
-						Item *tmpitem;
 						app->menu->item[2]->menu->size = 0;
-						char *newName = NULL;
 				    for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
 							char buf[255];
 							char snakeSolution[255] = "solution n°\0";

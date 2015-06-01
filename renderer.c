@@ -604,11 +604,11 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -670,11 +670,13 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 
 
 	if(menu->type == COLUMN){
-		xoffset = -1.f  + menu->margin[0] - menu->bboxRel[0];
-		yoffset = 1.f  - menu->bboxRel[1] - menu->margin[1];
+
+
+		xoffset = -1.f +  menu->margin[0] - menu->bboxRel[0];
+		yoffset = 1.f - menu->bboxRel[1] - menu->margin[1];
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
@@ -739,7 +741,7 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 		glLoadIdentity();
 
 		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += (*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] + (*itemCaller)->bboxRel[2];
+			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
 			yoffset -= (*menuCaller)->margin[1];
 		}
 
