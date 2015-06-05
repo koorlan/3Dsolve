@@ -10,6 +10,7 @@ void resizeCallback (GLFWwindow* window, int width, int height)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	mouse_flags = M_RLEFTONCE; // release pour eviter les demi-rotations
 	if (yoffset>0) mouse_flags |= M_ROLLF;
 	else if (yoffset<0) mouse_flags |= M_ROLLB;
 }
@@ -19,15 +20,21 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 		mouse_flags |= M_RIGHT;
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE && (mouse_flags&M_RIGHT)==M_RIGHT )
 		mouse_flags ^= M_RIGHT;
+
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		mouse_flags |= M_MID;
+	else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE  && (mouse_flags&M_MID)==M_MID )
+		mouse_flags ^= M_MID;
+
 
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		mouse_flags |= M_LEFT;
 		mouse_flags |= M_LEFTONCE;
 	}
-	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE && (mouse_flags&M_LEFT)==M_LEFT )
 	{
 		mouse_flags ^= M_LEFT;
 		mouse_flags |= M_RLEFTONCE;
@@ -106,6 +113,16 @@ int getInput ( Context* context )
 		context->ratio = ((float)resize_w)/(float)resize_h;
 
 	//	testMenuMesh(app->menu, context->screen_width	, context->screen_height);
+		int i = 0;
+		calcMenu(app->menu);
+		calcMenuMesh(app->menu,context->screen_width,context->screen_height);
+		for(i=0 ; i<3; i++){
+			if(app->menu->item[i]->menu != NULL){
+				calcMenu(app->menu->item[i]->menu);
+				calcMenuMesh(app->menu->item[i]->menu,context->screen_width,context->screen_height);
+			}
+
+		}
 
 		resize_h = -1;
 		resize_w = -1;
@@ -118,6 +135,11 @@ int getInput ( Context* context )
 		key_flags = K_NONE;
 		app->state = AS_GAME;
 	}
+	else if (app->state == AS_LOAD)
+	{
+		key_flags = K_NONE;
+		mouse_flags = M_NONE;
+	}	
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
@@ -207,7 +229,7 @@ int getInput ( Context* context )
 				break;
 		}
 
-		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);//DNONE;;
+		Dir curDir = (gsolver->selected == 0 ? RIGHT : DNONE);
 		Dir prevDir = (gsolver->selected == 0 ? BACK : DNONE);
 		int toggle = 0;
 		for (i=0;i<=gsolver->selected;i++)
@@ -398,9 +420,9 @@ int getInput ( Context* context )
 		}
 
 	}
-	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY)
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)==1)
 	{
-		playerHelp(gplayer, app->snake);
+		
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -449,8 +471,10 @@ int getInput ( Context* context )
 
 
 		}
-
 	}
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+		context->errorAlpha = 1.f;
+	
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
@@ -494,7 +518,7 @@ int getInput ( Context* context )
 				break;
 			}
 		}
-		if (currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
+		if (currentMenu != NULL && currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				case RESET:
 					break;
@@ -528,9 +552,7 @@ int getInput ( Context* context )
 						gsolver->currentSolution = app->snake->solutions->head;
 						logWrite("[MENU] Re-init solution menu \n");
 						//Snake Solution
-						Item *tmpitem;
 						app->menu->item[2]->menu->size = 0;
-						char *newName = NULL;
 				    for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
 							char buf[255];
 							char snakeSolution[255] = "solution n°\0";
@@ -544,8 +566,11 @@ int getInput ( Context* context )
 				    calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
 					}
 					app->state = AS_GAME;
+					cameraReset (context->camera);
 					break;
 				case LOADSOL:
+				currentMenu->state = CLOSE;
+				app->menuDepth --;
 				newSolution = app->snake->solutions->head;
 					for(i=0; i<currentMenu->selected;i++){
 						if ( app->snake->solutions != NULL && app->snake->solutions->head != NULL )
@@ -582,6 +607,16 @@ int getInput ( Context* context )
 						app->menuDepth --;
 						break;
 					}
+					break;
+				case HELP:
+					app->state = AS_HELP;
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
+					break;
+				case ABOUT:
+					app->state = AS_ABOUT;
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
 					break;
 				default:
 					break;
@@ -666,6 +701,16 @@ int getInput ( Context* context )
 		context->camera->angle[0]+=0.002f;
 	}
 
+	if ((mouse_flags&M_MID)==M_MID)
+	{
+		float accx = (last_xpos-gxpos) * 0.05f;
+		float accy = (last_ypos-gypos) * 0.05f;
+		context->camera->target[0] += accx * cos(context->camera->angle[0]) + accy * sin(context->camera->angle[0]);
+		context->camera->target[2] += -accx * sin(context->camera->angle[0]) + accy * cos(context->camera->angle[0]);
+		context->drawcenter = 1;
+	} else context->drawcenter = 0;
+
+
 	if ((bhv_flags&BHV_SPREAD)==BHV_SPREAD)
 		context->spread = 1;
 	else context->spread = 0;
@@ -684,9 +729,9 @@ int getInput ( Context* context )
 	//mise à jour de la position/orientation de la camera
 	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
 				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
+	context->camera->eye[2] = context->camera->target[2] + context->camera->distance
 				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
+	context->camera->eye[1] = context->camera->target[1] + context->camera->distance
 				* sin(context->camera->angle[1]);
 
 	return 0;
@@ -849,33 +894,14 @@ void contextInit ( Context* context )
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->itemtex = textureID;
 
-	vec3 vol_offset;
-	vol_offset[0]=(app->snake->volume.max.x%2==0 ? app->snake->volume.max.x /2 - 0.5f : (app->snake->volume.max.x)/2);
-	vol_offset[1]=(app->snake->volume.max.y%2==0 ? app->snake->volume.max.y /2 - 0.5f : (app->snake->volume.max.y)/2);
-	vol_offset[2]=(app->snake->volume.max.z%2==0 ? app->snake->volume.max.z /2 - 0.5f : (app->snake->volume.max.z)/2);
 
 	Camera * camera = cameraCreate();
-	camera->eye[0] = 0.f;
-	camera->eye[1] = 0.f;
-	camera->eye[2] = 0.f;
-	camera->target[0] = vol_offset[0];
-	camera->target[1] = vol_offset[1];
-	camera->target[2] = vol_offset[2];
-	camera->up[0] = 0.f;
-	camera->up[1] = 1.f;
-	camera->up[2] = 0.f;
-	camera->angle[0] = 0.f;
-	camera->angle[1] = 0.5f;
-	camera->fov = 1.6f;
-	camera->distance = 4.f;
+	cameraReset ( camera );
+
 	context->camera = camera;
 	context->drawpick = 0;
-	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
-				* sin(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[2] = context->camera->target[1] + context->camera->distance
-				* cos(context->camera->angle[0]) * cos(context->camera->angle[1]);
-	context->camera->eye[1] = context->camera->target[2] + context->camera->distance
-				* sin(context->camera->angle[1]);
+	context->drawcenter = 0;
+	context->errorAlpha = 0.f;
 
 	glfwMakeContextCurrent ( NULL );
 

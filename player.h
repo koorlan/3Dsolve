@@ -12,7 +12,6 @@
 #include <stdlib.h>
 
 #include "log.h"
-#include "object.h"
 #include "snake.h"
 #include "linmath.h"
 
@@ -102,13 +101,13 @@ void playerDestroy ( Player* player );
 
 /**
  * @ingroup Player
- * @brief Calcule les coordonnées min et max du volume
+ * @brief Calcule les coordonnées min et max des unités placées par le joueur
  * @param  min    Pointeur pour récupérer les coord min
  * @param  max    Pointeur pour récupérer les coord max
- * @param  length ???
+ * @param  length La taille du serpent correspondant aux nombre d'unités déjà placées pas le joueur
  * @param  player Le joueur
- * @param  volume ???
- * @return        ???
+ * @param  volume Le volume à remplir
+  * @return       1 si ce que les unités déjà placées permettent potentiellement de résoudre le Snake, -1 sinon (les cubes se chevauchent ou bien sortent du volume)
  */
 int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volume volume);
 
@@ -124,24 +123,24 @@ int playerCheckSolution (Player *player, Volume volume, int length);
 
 /**
  * @ingroup Player
- * @brief ???
- * @param  solSnake ???
- * @param  snake    ???
- * @param  player   ???
- * @param  min      ???
- * @param  max      ???
- * @param  debugCpt ???
- * @return          ???
+ * @brief Remplit le volume qui servira à l'aie du joueur (volume à remplir moins les unités déjà placées par le joueur)
+ * @param  solSnake Le snake pernettant de calculer les solutions
+ * @param  snake    Le snake initial
+ * @param  player   Le joueur
+ * @param  min      Les valeurs minimum, sur les 3 axes, des unités placées 
+ * @param  max      Les valeurs maximum, sur les 3 axes, des unités placées 
+ * @param  debugCpt Un compteur d'entiers des valeur FILL dans le volume à initialiser (pour le debug)
+ * @return          1 si le volume est bien initialisé, -1 si on se rend compte qu'aucune solution ne peut être trouvée
  */
 int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord max, int *debugCpt);
 
 /**
  * @ingroup Player
- * @brief Aide le joueur à résoudre le casse-tête à partir des mouvement qu'il a
- * commencé à faire
+ * @brief Aide le joueur à résoudre le casse-tête à partir des mouvements qu'il a
+ * déjà effectués
  * @param  player Le joueur
  * @param  snake  Le serpent à résoudre
- * @return        ???
+ * @return        1 si des solutions sont trouvées, -1 sinon.
  */
 int playerHelp(Player *player, Snake * snake);
 
