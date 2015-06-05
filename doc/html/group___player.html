@@ -119,15 +119,15 @@ Fonctions</h2></td></tr>
 <tr class="memdesc:gaf1911ad584cefd37dc547d5a4260cccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détruit un joueur et nettoie la mémoire.  <a href="#gaf1911ad584cefd37dc547d5a4260cccc">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gaf1911ad584cefd37dc547d5a4260cccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga53f05cd74811715faf9a66381e260661"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga53f05cd74811715faf9a66381e260661">playerFindMinMax</a> (<a class="el" href="struct_coord.html">Coord</a> *min, <a class="el" href="struct_coord.html">Coord</a> *max, int length, <a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_volume.html">Volume</a> volume)</td></tr>
-<tr class="memdesc:ga53f05cd74811715faf9a66381e260661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcule les coordonnées min et max du volume.  <a href="#ga53f05cd74811715faf9a66381e260661">Plus de détails...</a><br/></td></tr>
+<tr class="memdesc:ga53f05cd74811715faf9a66381e260661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcule les coordonnées min et max des unités placées par le joueur.  <a href="#ga53f05cd74811715faf9a66381e260661">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga53f05cd74811715faf9a66381e260661"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac9ddd28fb75760a871c7baad7d63c183"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gac9ddd28fb75760a871c7baad7d63c183">playerCheckSolution</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_volume.html">Volume</a> volume, int length)</td></tr>
 <tr class="separator:gac9ddd28fb75760a871c7baad7d63c183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga58ea907ff2ae8824ac0757a9d4c65499">initVolume</a> (<a class="el" href="struct_snake.html">Snake</a> *solSnake, <a class="el" href="struct_snake.html">Snake</a> *snake, <a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_coord.html">Coord</a> min, <a class="el" href="struct_coord.html">Coord</a> max, int *debugCpt)</td></tr>
-<tr class="memdesc:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="mdescLeft">&#160;</td><td class="mdescRight">???  <a href="#ga58ea907ff2ae8824ac0757a9d4c65499">Plus de détails...</a><br/></td></tr>
+<tr class="memdesc:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remplit le volume qui servira à l'aie du joueur (volume à remplir moins les unités déjà placées par le joueur)  <a href="#ga58ea907ff2ae8824ac0757a9d4c65499">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga23496721d29f7a227f7ba20f2ec59734"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga23496721d29f7a227f7ba20f2ec59734">playerHelp</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
-<tr class="memdesc:ga23496721d29f7a227f7ba20f2ec59734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aide le joueur à résoudre le casse-tête à partir des mouvement qu'il a commencé à faire.  <a href="#ga23496721d29f7a227f7ba20f2ec59734">Plus de détails...</a><br/></td></tr>
+<tr class="memdesc:ga23496721d29f7a227f7ba20f2ec59734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aide le joueur à résoudre le casse-tête à partir des mouvements qu'il a déjà effectués.  <a href="#ga23496721d29f7a227f7ba20f2ec59734">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga23496721d29f7a227f7ba20f2ec59734"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
@@ -181,19 +181,19 @@ Fonctions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>??? </p>
+<p>Remplit le volume qui servira à l'aie du joueur (volume à remplir moins les unités déjà placées par le joueur) </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
-    <tr><td class="paramname">solSnake</td><td>??? </td></tr>
-    <tr><td class="paramname">snake</td><td>??? </td></tr>
-    <tr><td class="paramname">player</td><td>??? </td></tr>
-    <tr><td class="paramname">min</td><td>??? </td></tr>
-    <tr><td class="paramname">max</td><td>??? </td></tr>
-    <tr><td class="paramname">debugCpt</td><td>??? </td></tr>
+    <tr><td class="paramname">solSnake</td><td>Le snake pernettant de calculer les solutions </td></tr>
+    <tr><td class="paramname">snake</td><td>Le snake initial </td></tr>
+    <tr><td class="paramname">player</td><td>Le joueur </td></tr>
+    <tr><td class="paramname">min</td><td>Les valeurs minimum, sur les 3 axes, des unités placées </td></tr>
+    <tr><td class="paramname">max</td><td>Les valeurs maximum, sur les 3 axes, des unités placées </td></tr>
+    <tr><td class="paramname">debugCpt</td><td>Un compteur d'entiers des valeur FILL dans le volume à initialiser (pour le debug) </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si le volume est bien initialisé, -1 si on se rend compte qu'aucune solution ne peut être trouvée </dd></dl>
 
 </div>
 </div>
@@ -354,18 +354,18 @@ Fonctions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calcule les coordonnées min et max du volume. </p>
+<p>Calcule les coordonnées min et max des unités placées par le joueur. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">min</td><td>Pointeur pour récupérer les coord min </td></tr>
     <tr><td class="paramname">max</td><td>Pointeur pour récupérer les coord max </td></tr>
-    <tr><td class="paramname">length</td><td>??? </td></tr>
+    <tr><td class="paramname">length</td><td>La taille du serpent correspondant aux nombre d'unités déjà placées pas le joueur </td></tr>
     <tr><td class="paramname">player</td><td>Le joueur </td></tr>
-    <tr><td class="paramname">volume</td><td>??? </td></tr>
+    <tr><td class="paramname">volume</td><td>Le volume à remplir </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si ce que les unités déjà placées permettent potentiellement de résoudre le <a class="el" href="struct_snake.html" title="Définit le snake à résoudre. ">Snake</a>, -1 sinon (les cubes se chevauchent ou bien sortent du volume) </dd></dl>
 
 </div>
 </div>
@@ -435,7 +435,7 @@ Fonctions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Aide le joueur à résoudre le casse-tête à partir des mouvement qu'il a commencé à faire. </p>
+<p>Aide le joueur à résoudre le casse-tête à partir des mouvements qu'il a déjà effectués. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">player</td><td>Le joueur </td></tr>
@@ -443,7 +443,7 @@ Fonctions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>??? </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si des solutions sont trouvées, -1 sinon. </dd></dl>
 
 </div>
 </div>
@@ -526,7 +526,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <li class="footer">Généré le Vendredi 5 Juin 2015 20:18:11 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

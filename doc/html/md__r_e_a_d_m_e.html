@@ -101,14 +101,25 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html','');});
 <li>Rédaction au propre de l'algorithme de résolution du snake (doit être prêt pour la présentation de Jeudi 23/04)</li>
 <li>Rédaction d'un diagramme UML (Anthony is on it)</li>
 <li>Réalisation d'un PPT pour expliquer visuellement le fonctionnement de notre algo (oui/non ?)</li>
-<li>Commencer l'implémentation d'un contexte graphique </li>
+<li>Commencer l'implémentation d'un contexte graphique</li>
 </ol>
+<h3>Cross plateform Compilation</h3>
+<h4>library needed:</h4>
+<ul>
+<li>ftgl</li>
+<li>freetype2</li>
+<li>glfw3</li>
+<li>glew</li>
+<li>for windows ( on MinGW install pthreads-win32 package)</li>
+</ul>
+<p>#Linux Note : libglfw2 just enough if package not present on repo otherwise goto glfw website, download and compile library. ``` $ sudo apt-get install ftgl-dev libftgl2 libfreetype6 libfreetype6-dev libglfw-dev liglfw3 libglew-dev libglew1.10 ```</p>
+<p>#Osx Note : cake brew command ``` $ brew install ftgl freetype pkg-config glew homebrew/versions/glfw3 ``` </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <li class="footer">Généré le Vendredi 5 Juin 2015 20:18:11 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

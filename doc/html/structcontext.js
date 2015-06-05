@@ -2,8 +2,10 @@ var structcontext =
 [
     [ "camera", "structcontext.html#af95833c961e5bd20dcd54e1d46a03c0b", null ],
     [ "cube_mesh", "structcontext.html#aa74c93f4d7a096e690dd12621a484b34", null ],
+    [ "drawcenter", "structcontext.html#a8d7f4c9045fb7c63976525d5d9af55db", null ],
     [ "drawpick", "structcontext.html#a3d99a9e2fdae8652db4aa612f8d9cd96", null ],
     [ "dwoodtex", "structcontext.html#a58097335e8968dc6c85a1eb5d35269a0", null ],
+    [ "errorAlpha", "structcontext.html#a7b00bfb3a7e69c510dd27c1872cbacd3", null ],
     [ "itemtex", "structcontext.html#aca36b9475625e0622faa1143c3b665f0", null ],
     [ "link_mesh", "structcontext.html#add9abf88773799f63b6b61aa3b95a8e3", null ],
     [ "linktex", "structcontext.html#a59dfeb5188fc2b445cdeade60e01bc86", null ],

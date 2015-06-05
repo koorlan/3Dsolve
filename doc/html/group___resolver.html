@@ -123,9 +123,9 @@ Définitions de type</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Fonctions</h2></td></tr>
-<tr class="memitem:ga5e90c99b1b7305225d55b4ea62985b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga5e90c99b1b7305225d55b4ea62985b48">resolverSolveSnake</a> (<a class="el" href="struct_snake.html">Snake</a> *snake, <a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a> helpNode, int maxThreadNb)</td></tr>
-<tr class="memdesc:ga5e90c99b1b7305225d55b4ea62985b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonction principale dans la résolution du snake.  <a href="#ga5e90c99b1b7305225d55b4ea62985b48">Plus de détails...</a><br/></td></tr>
-<tr class="separator:ga5e90c99b1b7305225d55b4ea62985b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab86f5a1fd5d53c26c2f424880222011e"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#gab86f5a1fd5d53c26c2f424880222011e">resolverSolveSnake</a> (void *arg)</td></tr>
+<tr class="memdesc:gab86f5a1fd5d53c26c2f424880222011e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fonction principale dans la résolution du snake.  <a href="#gab86f5a1fd5d53c26c2f424880222011e">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gab86f5a1fd5d53c26c2f424880222011e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga21457eb6ddb29a0e7839013b2689291c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c">resolverSolveNode</a> (void *args)</td></tr>
 <tr class="memdesc:ga21457eb6ddb29a0e7839013b2689291c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cette fonction cherche les solutions à partir du noeud qui lui est passé en paramètre.  <a href="#ga21457eb6ddb29a0e7839013b2689291c">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga21457eb6ddb29a0e7839013b2689291c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -694,32 +694,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga5e90c99b1b7305225d55b4ea62985b48"></a>
+<a class="anchor" id="gab86f5a1fd5d53c26c2f424880222011e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void resolverSolveSnake </td>
+          <td class="memname">void* resolverSolveSnake </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_snake.html">Snake</a> *&#160;</td>
-          <td class="paramname"><em>snake</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group___resolver.html#gae8c0014cf5924af97d3a7bad74cf54eb">Tree</a>&#160;</td>
-          <td class="paramname"><em>helpNode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>maxThreadNb</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -728,7 +712,6 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">snake</td><td>le serpent à résoudre </td></tr>
-    <tr><td class="paramname">maxThreadNb</td><td>le nombre maximal de thread que la fonction est autorisée à utiliser pour résoudre le snake. </td></tr>
   </table>
   </dd>
 </dl>
@@ -945,7 +928,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <li class="footer">Généré le Vendredi 5 Juin 2015 20:18:11 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

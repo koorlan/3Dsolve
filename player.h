@@ -1,4 +1,28 @@
 /**
+ * Projet application - 3DSolve
+ * Version : 1.0
+ *
+ * Programme pour la résolution et la manipulation virtuelle de
+ * casse-tête de type "Snake Cube"
+ *
+ * Auteurs :
+ * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
+ * 	- A.Chazot <alban.chazot@insa-cvl.fr>
+ * 	- K.Colas <korlan.colas@insa-cvl.fr>
+ * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
+ *
+ * Tuteur :
+ * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
+ *
+ * Date : 11 / 06 / 15
+ *
+ * INSA - Centre Val De Loire
+ * 2014-2015
+ * Promotion 2017
+ *
+ */
+
+/**
  * @defgroup Player
  *
  * @brief Ce module, articulé autour de la structure Player permet de modéliser
@@ -127,8 +151,8 @@ int playerCheckSolution (Player *player, Volume volume, int length);
  * @param  solSnake Le snake pernettant de calculer les solutions
  * @param  snake    Le snake initial
  * @param  player   Le joueur
- * @param  min      Les valeurs minimum, sur les 3 axes, des unités placées 
- * @param  max      Les valeurs maximum, sur les 3 axes, des unités placées 
+ * @param  min      Les valeurs minimum, sur les 3 axes, des unités placées
+ * @param  max      Les valeurs maximum, sur les 3 axes, des unités placées
  * @param  debugCpt Un compteur d'entiers des valeur FILL dans le volume à initialiser (pour le debug)
  * @return          1 si le volume est bien initialisé, -1 si on se rend compte qu'aucune solution ne peut être trouvée
  */

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['oppositedir',['oppositeDir',['../group___resolver.html#ga57d5583e8e2300db9f6aec08bbee470e',1,'oppositeDir(Dir srcDir, Dir destDir, char *typeOfAxis):&#160;resolver.c'],['../group___resolver.html#ga57d5583e8e2300db9f6aec08bbee470e',1,'oppositeDir(Dir srcDir, Dir destDir, char *typeOfAxis):&#160;resolver.c']]]
+  ['menudestroy',['menuDestroy',['../group___menu.html#gaa9fd4f292834370034d146b988373df7',1,'menuDestroy(Menu *menu):&#160;menu.c'],['../group___menu.html#gaa9fd4f292834370034d146b988373df7',1,'menuDestroy(Menu *menu):&#160;menu.c']]]
 ];

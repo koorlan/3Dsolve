@@ -2,7 +2,7 @@ var searchData=
 [
   ['segend',['segEnd',['../struct_player.html#adf8cb3ca02fdd7d413e88c3c4c4c0286',1,'Player']]],
   ['segstart',['segStart',['../struct_player.html#a65ade14a0a5b6a72b70f85d4e8342e02',1,'Player']]],
-  ['selected',['selected',['../struct_player.html#a2224ec0958a602aef926b6a3715e094e',1,'Player']]],
+  ['selected',['selected',['../struct_menu.html#a2224ec0958a602aef926b6a3715e094e',1,'Menu::selected()'],['../struct_player.html#a2224ec0958a602aef926b6a3715e094e',1,'Player::selected()']]],
   ['setitembbox',['setItemBbox',['../group___menu.html#gab17a2a7af3ff7524ed050ccf3d515a88',1,'setItemBbox(Item *item, float bbox[]):&#160;menu.c'],['../group___menu.html#gab17a2a7af3ff7524ed050ccf3d515a88',1,'setItemBbox(Item *item, float bbox[]):&#160;menu.c']]],
   ['setitemdescriptor',['setItemDescriptor',['../group___menu.html#ga86c90097087a2d1534151f1604e064da',1,'setItemDescriptor(Item *item, Descriptor descriptor):&#160;menu.c'],['../group___menu.html#ga86c90097087a2d1534151f1604e064da',1,'setItemDescriptor(Item *item, Descriptor descriptor):&#160;menu.c']]],
   ['setitemmargin',['setItemMargin',['../group___menu.html#gaaecd3e1047f9a22e1b167690eb4b9c0c',1,'setItemMargin(Item *item, float margin[]):&#160;menu.c'],['../group___menu.html#gaaecd3e1047f9a22e1b167690eb4b9c0c',1,'setItemMargin(Item *item, float margin[]):&#160;menu.c']]],
@@ -25,7 +25,8 @@ var searchData=
   ['snakerewind',['snakeRewind',['../group___snake.html#ga3842264fc83a1dc5aa86bea7fffa1c7e',1,'snakeRewind(Snake *snake):&#160;snake.c'],['../group___snake.html#ga3842264fc83a1dc5aa86bea7fffa1c7e',1,'snakeRewind(Snake *snake):&#160;snake.c']]],
   ['solution',['Solution',['../struct_solution.html',1,'']]],
   ['solutions',['solutions',['../struct_snake.html#a97be9d71c3998b7a3a97e9403e375979',1,'Snake']]],
-  ['state',['State',['../group___menu.html#ga5d74787dedbc4e11c1ab15bf487e61f8',1,'menu.h']]],
+  ['solver',['solver',['../struct_application.html#a2debe316c6874c013213554b33d598bf',1,'Application']]],
+  ['state',['state',['../struct_application.html#adc6e5733fc3c22f0a7b2914188c49c90',1,'Application::state()'],['../group___menu.html#ga5d74787dedbc4e11c1ab15bf487e61f8',1,'State():&#160;menu.h']]],
   ['step',['Step',['../struct_step.html',1,'Step'],['../struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'Solution::step()'],['../struct_node_tree.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'NodeTree::step()']]],
   ['steps',['steps',['../struct_player.html#a4d629e97dab1ddb8b4348b94f29fd12d',1,'Player']]],
   ['symmetries',['symmetries',['../group___resolver.html#ga32c547fc9326200a8278a52420ba2aba',1,'symmetries(Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis):&#160;resolver.c'],['../group___resolver.html#ga32c547fc9326200a8278a52420ba2aba',1,'symmetries(Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis):&#160;resolver.c']]]

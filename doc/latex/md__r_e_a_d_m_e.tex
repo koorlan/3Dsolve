@@ -7,5 +7,22 @@
 \item Rédaction au propre de l'algorithme de résolution du snake (doit être prêt pour la présentation de Jeudi 23/04)
 \item Rédaction d'un diagramme U\-M\-L (Anthony is on it)
 \item Réalisation d'un P\-P\-T pour expliquer visuellement le fonctionnement de notre algo (oui/non ?)
-\item Commencer l'implémentation d'un contexte graphique 
+\item Commencer l'implémentation d'un contexte graphique
 \end{DoxyEnumerate}
+
+\subsubsection*{Cross plateform Compilation}
+
+\paragraph*{library needed\-:}
+
+
+\begin{DoxyItemize}
+\item ftgl
+\item freetype2
+\item glfw3
+\item glew
+\item for windows ( on Min\-G\-W install pthreads-\/win32 package)
+\end{DoxyItemize}
+
+\#\-Linux Note \-: libglfw2 just enough if package not present on repo otherwise goto glfw website, download and compile library. ``` \$ sudo apt-\/get install ftgl-\/dev libftgl2 libfreetype6 libfreetype6-\/dev libglfw-\/dev liglfw3 libglew-\/dev libglew1.\-10 ```
+
+\#\-Osx Note \-: cake brew command ``` \$ brew install ftgl freetype pkg-\/config glew homebrew/versions/glfw3 ``` 
