@@ -159,8 +159,9 @@ void* resolverSolveSnake(void* argsf)
     logWrite ("[RESOL] Snake solved, found %d solutions in %lf seconds after exploration of %d path\n",
     snake->solutions->size, elapsedTime, exploredWayNb);
 
-    app->updateSolutionMenu = 0; //BUGUED
-    app->state = (oldAppState == AS_LOAD) ? AS_GAME : oldAppState;
+    app->updateSolutionMenu = tmpArgs->resetSolutionMenu;
+    app->state = oldAppState == AS_LOAD ? AS_GAME : oldAppState;
+
     free(tmpArgs);
     return NULL;
 }
@@ -922,16 +923,16 @@ int resolverInitializeHelp(Snake *snake, Step fstStep)
 
   free(currentNode);
   currentNode = NULL;
-  pthread_attr_t attr;
   pthread_t solverThread;
   ThreadArgs* args = malloc(sizeof(ThreadArgs));
   args->snake = snake;
   args->rootNode = rootNode;
+  args->resetSolutionMenu = 0;
 
-  pthread_attr_init(&attr);
-//  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-  pthread_create(&solverThread, &attr, resolverSolveSnake, args);
 
-  pthread_join(solverThread,NULL);
+  pthread_create(&solverThread, NULL, resolverSolveSnake, args);
+
+  pthread_join(solverThread, NULL);
+
   return 0;
 }

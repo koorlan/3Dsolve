@@ -14,7 +14,6 @@ int initMenu(Menu **menu){
   (*menu)->selected = -1;
   (*menu)->opened = -1;
   (*menu)->item = malloc( MAX_MENU_SIZE * sizeof(Item)); // A voir si pas sizeof(*(*menu)->item)
-  memset((*menu)->scale, 1.f,3*sizeof(float));
 
   return 1;
 }
