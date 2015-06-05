@@ -545,14 +545,14 @@ void* renderer ( void *arg )
 			for (z=0;z<app->snake->volume.max.z;z++)
 			{
 				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
-				{	
+				{
 					mat4x4_identity ( WMat );
 					//mat4x4_rotate_X ( WMat, WMat, glfwGetTime() * 0.8f );
 					mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
 					//mat4x4_rotate_Z ( WMat, WMat, glfwGetTime() * 0.2f );
 					mat4x4_translate_in_place ( WMat, x-vol_offset[0], y-vol_offset[1], z-vol_offset[2] );
 					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-			
+
 					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
@@ -664,6 +664,12 @@ void* renderer ( void *arg )
 		glfwSwapBuffers (context->window);
 
 	}
+
+	ftglDestroyFont(titleFont);
+	ftglDestroyFont(pressFont);
+	ftglDestroyFont(textFont);
+	ftglDestroyFont(stextFont);
+
 	app->running = 0;
 	//! [3]
 
@@ -816,42 +822,37 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 	float xoffset = 0.f;
 	float yoffset = 0.f;
 
-	if (!pthread_mutex_trylock(menu->mutex)){
-		glUseProgram (0);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+	glUseProgram (0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	if(*itemCaller != NULL && *menuCaller != NULL){
+		xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
+		yoffset -= (*menuCaller)->margin[1];
+	}
+
+	accumulator = 0.f;
+
+	for ( i = 0;  i < menu->size; i++) {
+		if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
+				*itemCaller = menu->item[i];
+				*menuCaller = menu->item[i]->menu;
+		}
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-
-		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
-			yoffset -= (*menuCaller)->margin[1];
-		}
-
-		accumulator = 0.f;
-
-		for ( i = 0;  i < menu->size; i++) {
-			if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
-					*itemCaller = menu->item[i];
-					*menuCaller = menu->item[i]->menu;
-			}
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			glTranslatef( (xoffset ) *(context->screen_width/2),
-										(yoffset )*(context->screen_height/2),0.f);
-			glTranslatef( (-1.f  + menu->margin[0] ) *(context->screen_width/2),
-										(1.f  -  menu->margin[1] )*(context->screen_height/2),0.f);  //go to the top left of the menu
-			accumulator += menu->item[i]->margin[1] + (menu->item[i]->bbox[3]-menu->item[i]->bbox[1]);
-			glTranslatef(menu->item[i]->margin[0],-accumulator,0.f);
-			accumulator += menu->item[i]->margin[3] ;
-			glScalef(abs(1.f- menu->item[i]->bboxRel[2]),abs(1.f-menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
-			glColor4f (menu->item[i]->descriptor.color.r, menu->item[i]->descriptor.color.g,menu->item[i]->descriptor.color.b,menu->item[i]->descriptor.color.a);
-			ftglRenderFont(menu->item[i]->descriptor.font, menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-		}
-
-
-		pthread_mutex_unlock(menu->mutex);
+		glTranslatef( (xoffset ) *(context->screen_width/2),
+									(yoffset )*(context->screen_height/2),0.f);
+		glTranslatef( (-1.f  + menu->margin[0] ) *(context->screen_width/2),
+									(1.f  -  menu->margin[1] )*(context->screen_height/2),0.f);  //go to the top left of the menu
+		accumulator += menu->item[i]->margin[1] + (menu->item[i]->bbox[3]-menu->item[i]->bbox[1]);
+		glTranslatef(menu->item[i]->margin[0],-accumulator,0.f);
+		accumulator += menu->item[i]->margin[3] ;
+		glScalef(abs(1.f- menu->item[i]->bboxRel[2]),abs(1.f-menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
+		glColor4f (menu->item[i]->descriptor.color.r, menu->item[i]->descriptor.color.g,menu->item[i]->descriptor.color.b,menu->item[i]->descriptor.color.a);
+		ftglRenderFont(menu->item[i]->descriptor.font, menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
 	}
 
 }

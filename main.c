@@ -210,24 +210,21 @@ int main ( int argc, char ** argv )
 				playerDestroy(gsolver);
 				gsolver = playerInit(app->snake);
 				gsolver->currentSolution = app->snake->solutions->head;
-				
+
 				int i;
 				//Snake Solution
 				app->menu->item[2]->menu->size = 0;
-			for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
+				for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++)
+				{
 					char buf[255];
 					char snakeSolution[255] = "solution n°\0";
 					sprintf(buf,"%d",i+1);
 					strcat(snakeSolution,buf);
 					strcpy(app->menu->item[2]->menu->item[i]->descriptor.name,snakeSolution);
 					app->menu->item[2]->menu->size ++;
-
 				}
-				//app->menu->item[2]->menu->size = i;
-			//app->menu->item[2]->menu->state = CLOSE;
-			//app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
-			calcMenu(app->menu->item[2]->menu);
-			calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
+				calcMenu(app->menu->item[2]->menu);
+				calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
 				app->updateSolutionMenu = 0;
 			}
 		}
@@ -240,6 +237,8 @@ int main ( int argc, char ** argv )
 	playerDestroy( gsolver );
 	if(!noGraphics)
 		contextDestroy ( context );
+		
+	menuDestroy(app->menu);
 	applicationDestroy(app);
 	/// [5]
 

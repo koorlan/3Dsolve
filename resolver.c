@@ -12,6 +12,7 @@ const int cornerTruthTable[6][6] =
 
 void* resolverSolveSnake(void* argsf)
 {
+    int oldAppState = app->state;
     app->state = AS_LOAD;
     ThreadArgs* tmpArgs = (ThreadArgs*)(argsf);
     Snake* snake = tmpArgs->snake;
@@ -159,7 +160,7 @@ void* resolverSolveSnake(void* argsf)
     snake->solutions->size, elapsedTime, exploredWayNb);
 
     app->updateSolutionMenu = 1;
-    app->state = AS_GAME;
+    app->state = oldAppState == AS_LOAD ? AS_HOME : oldAppState;
     free(tmpArgs);
     return NULL;
 }

@@ -157,7 +157,6 @@ typedef struct Item
   float margin[4]; //left top right bottom
   Descriptor descriptor;
   Menu *menu;
-  Object *mesh;
   float bboxRel[4];
   float marginRel[4];
 } Item;
@@ -195,7 +194,6 @@ struct Menu{
   float scale[3];
   int selected;
   int opened;
-  pthread_mutex_t *mutex;
 };
 
 /**
@@ -205,6 +203,8 @@ struct Menu{
  * @return      1 si l'initialisation c'est bien passée, 0 sinon
  */
 int initMenu(Menu **menu);
+
+void menuDestroy(Menu* menu);
 
 /**
  * @ingroup Menu
