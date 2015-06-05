@@ -103,7 +103,6 @@ int applicationInitMainMenu(Application *app,int width, int height){
               .color=(struct Color){.r=1.0f,.g=1.0f,.b=1.0f,.a=1.0f},
               .action= MENU});
           break;
-
         case 2:
           setItemDescriptor(tmpitem,(struct Descriptor)
             {	.name="Solution",
@@ -122,7 +121,6 @@ int applicationInitMainMenu(Application *app,int width, int height){
     app->menu->state = OPEN;
     app->menu->mesh = objectLoad("stc/menu.stc");
     calcMenuMesh(app->menu,width,height);
-
 
   //APP menu
     initMenu(&(app->menu->item[0]->menu));

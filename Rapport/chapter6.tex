@@ -1,8 +1,24 @@
 Dans ce chapitre, nous allons aborder les aspects techniques liés au développement de notre application.
 
 \section{Le format de fichier ``.snake''}
-Les différents snakes proposés par l'application sont stockés dans des fichiers ``*.snake'' dans le répertoire ``Snakes''.
+Les différents snakes proposés par l'application sont stockés dans des fichiers ``*.snake'' dans le répertoire ``Snakes''. Le listing~\ref{.snake} ci-après montre le contenu du fichier ``snake.snake'' soit le serpent chargé par défaut par l'application.\newline
 
+La section \verb|[Volume]| permet de définir les caractéristiques du volume final, soit :
+\begin{itemize}
+ \item sa largeur (x);
+ \item sa hauteur (y);
+ \item sa profondeur (z);
+ \item l'état de chacun des sous-cubes le formant (x;y;z;State).
+\end{itemize}
+
+La première ligne indique les dimensions (maximales, sur les trois axes) du volume final. L'exemple présenté ici indique que le volume à remplir est contenu dans un cube de 3x3x3. 
+Ensuite, on associe à chaque triplet de coordonnées un ``état'', matérialisé par la dernière valeur entière de chaque ligne. La valeur 1 signifie que le volume final occupe l'espace à cette coordonnée. La valeur -1 indique au contraire que le volume final ne doit pas occuper cet emplacement.\newline
+
+La section \verb|[Snake]| définit le nombre et l’enchaînement des unités formant le serpent. La valeur 0 indique que l'unité est une extrémité du serpent, la valeur 1 indique une unité de type ``droite'' et la valeur 2 une unité de type ``angle''.\newline
+
+La section \verb|[Symetry]| permet quant à elle de définir quels sont les axes de symétrie à prendre en compte lors de la recherche des vecteurs initiaux (cf partie 3.4). La valeur 1 représente le fait qu'un axe de symétrie est applicable aux faces du volume tandis que la valeur 0 indique qu'il ne convient pas de l'utiliser. Ces quatre entiers correspondent respectivement aux axes de symétrie vertical, horizontal, diagonal anti-slash et diagonal slash.
+
+\newpage
 \begin{lstlisting}[caption=Contenu du fichier snake.snake]
  [Volume]
   3;3;3
@@ -25,23 +41,7 @@ Les différents snakes proposés par l'application sont stockés dans des fichie
   0;1;2;2;2;1;2;2;1;2;2;2;1;2;1;2;2;2;2;1;2;1;2;1;2;1;0;
   [Symetry]
   1;1;1;1
-\end{lstlisting}
-
-\newpage
-La section \verb|[Volume]| permet de définir les caractéristiques du volume final, soit :
-\begin{itemize}
- \item sa largeur (x);
- \item sa hauteur (y);
- \item sa profondeur (z);
- \item l'état de chacun des sous-cubes le formant (x;y;z;State).
-\end{itemize}
-
-La première ligne indique les dimensions (maximales, sur les trois axes) du volume final. L'exemple présenté ici indique que le volume à remplir est contenu dans un cube de 3x3x3. 
-Ensuite, on associe à chaque triplet de coordonnées un ``état'', matérialisé par la dernière valeur entière de chaque ligne. La valeur 1 signifie que le volume final occupe l'espace à cette coordonnée. La valeur -1 indique au contraire que le volume final ne doit pas occuper cet emplacement.
-
-La section \verb|[Snake]| définit le nombre et l’enchaînement des unités formant le serpent. La valeur 0 indique que l'unité est une extrémité du serpent, la valeur 1 indique une unité de type ``droite'' et la valeur 2 une unité de type ``angle''.
-
-La section \verb|[Symetry]| permet quant à elle de définir quels sont les axes de symétrie à prendre en compte lors de la recherche des vecteurs initiaux (cf partie 3.4). La valeur 1 représente le fait qu'un axe de symétrie est applicable aux faces du volume tandis que la valeur 0 indique qu'il ne convient pas de l'utiliser. Ces quatre entiers correspondent respectivement aux axes de symétrie vertical, horizontal, diagonal anti-slash et diagonal slash.
+\end{lstlisting}\label{.snake}
 
 \section{L'utilisation des threads}
 Nous avons dès le départ pris le parti d'utiliser la technique du multithreading afin de séparer l’exécution du rendu 3D et le reste de l'application. Cela permet notamment de faciliter la gestion des animations et, de manière plus générale, de limiter la dépendance du rendu 3D avec les diverses fonctions de calcul. 
