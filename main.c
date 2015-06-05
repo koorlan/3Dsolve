@@ -152,6 +152,7 @@ int main ( int argc, char ** argv )
 	ThreadArgs* args = malloc(sizeof(ThreadArgs));
 	args->snake = app->snake;
 	args->rootNode = NULL;
+	args->resetSolutionMenu = 1;
 
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -237,7 +238,7 @@ int main ( int argc, char ** argv )
 	playerDestroy( gsolver );
 	if(!noGraphics)
 		contextDestroy ( context );
-		
+
 	menuDestroy(app->menu);
 	applicationDestroy(app);
 	/// [5]

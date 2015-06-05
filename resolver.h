@@ -152,6 +152,7 @@ typedef struct ThreadArgs
     Tree rootNode;
     Snake* snake;
 	int exploredWayNb;
+	int resetSolutionMenu;
 } ThreadArgs;
 
 /**

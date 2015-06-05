@@ -139,7 +139,7 @@ int getInput ( Context* context )
 	{
 		key_flags = K_NONE;
 		mouse_flags = M_NONE;
-	}	
+	}
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
@@ -422,7 +422,7 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)==1)
 	{
-		
+
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -472,9 +472,9 @@ int getInput ( Context* context )
 
 		}
 	}
-	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY &&
+				gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
 		context->errorAlpha = 1.f;
-	
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
@@ -547,6 +547,7 @@ int getInput ( Context* context )
 						ThreadArgs* args = malloc(sizeof(ThreadArgs));
 						args->snake = app->snake;
 						args->rootNode = NULL;
+						args->resetSolutionMenu = 1;
 
 						pthread_attr_init(&attr);
 						pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);

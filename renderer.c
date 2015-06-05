@@ -337,7 +337,7 @@ void* renderer ( void *arg )
 						break;
 					}
 
-			//! [5] Color picking (selection d'un cube a la souris)
+			//! [5] Color picking (selection d'un cube à la souris)
 			if ( context->drawpick == 1 )
 			{
 
