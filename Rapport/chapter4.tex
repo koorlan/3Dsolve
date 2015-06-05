@@ -22,40 +22,41 @@ Chaque nœud possède un pointeur vers son père, son frère et son premier fils
 \section{Parcours en profondeur d'une branche}
 Cet algorithme permet de créer à la volée et de parcourir en profondeur une branche de l'arbre à partir d'un nœud initial correspondant au placement du premier élément du serpent. Cet algorithme fait référence au principe exposé dans la partie~\ref{solveNode} (page~\pageref{solveNode}).
 
-\begin{lstlisting}[caption=Algorithme de résolution pour une branche]
-Procedure ResoudreNoeud(racine : Noeud, s : Serpent)
-Variables - noeud : Noeud // Le noeud courant
-            resultatConstruction : entier
-D(*é*)but
-| noeud <- racine
-| Tant que noeud (*$\neq$*) racine OU racine->aJou(*é*) = 0
-| | Si noeud->aJou(*é*) = 0
-| | | resultatConstruction <- ConstructionDesFils(noeud, s)
-| | | Si resultatConstruction = 1 Alors
-| | | // Construction OK
-| | | | noeud <- noeud->enfantCourrant
-| | | Sinon si resultatConstruction = 2 Alors
-| | | // Construction OK et casse-t(*ê*)te r(*é*)solu 
-| | | | sauvegardeSolution(s)
-| | | Fin si
-| | Sinon // Le noeud a d(*é*)j(*à*) jou(*é*)
-| | | serpent->volume.etat[noeud->(*é*)tape.coord.x]
-| | |                     [noeud->(*é*)tape.coord.y]
-| | |                     [noeud->(*é*)tape.coord.z] <- LIBRE
-| | | Si noeud->fr(*è*)re (*$\neq$*) NIL
-| | | | noeud <- noeud->fr(*è*)re
-| | | Sinon
-| | | | noeud <- noeud->p(*è*)re
-| | | | remonterSerpent(s)
-| | | Fin si
-| | Fin si
-| Fin Tant que
-Fin
-\end{lstlisting}
+\begin{algo}[noframe, numbered]
+ \PROC{RésoudreNoeud}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}
+ \VAR
+ \DECLVAR{noeud}{Noeud}
+ \DECLVAR{s}{Serpent}
+ \ENDVAR
+ \BEGIN
+ \STATE{noeud \recoit{} racine}
+ \WHILE{noeud$\not=$racine OU racine->aJoué = 0}
+ \IF{noeud->aJoué = 0}
+ \STATE{resultatConstruction \recoit{} ConstruirFils(noeud, s)}
+ \IF{resultatConstruction = 1}
+ \STATE{noeud \recoit{} noeud->enfantCourant}
+ \ELSEIF{resultatConstruction = 2}
+ \STATE{sauvegardeSolution}
+ \ENDIF
+ \ELSE
+ \STATE{serpent->volume.état[noeud->étape.coord.x]
+			    [noeud->étape.coord.y]
+			    [noeud->étape.coord.z] 
+			    \recoit{} LIBRE}
+ \IF{noeud->frère$\not=$NILL}
+ \STATE{noeud \recoit{} noeud->frère}
+ \ELSE
+ \STATE{noeud \recoit{} noeud->père}
+ \STATE{remonterSerpent(s)}
+ \ENDIF
+ \ENDIF
+ \ENDWHILE
+ \END
+\end{algo}
 
 \newpage
 \paragraph{Explication}
-Tant que l'algorithme n'a pas exploré tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant, s'il ne l'a pas déjà fait. Faire ``jouer'' un nœud revient à créer ses fils grâce à l'algorithme \verb|ContructionDesFils|. 
+Tant que l'algorithme n'a pas exploré tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant, s'il ne l'a pas déjà fait. Faire ``jouer'' un nœud revient à créer ses fils grâce à l'algorithme \verb|ContruirFils|.
 
 Si la construction réussit, cela signifie qu'au moins un fils a été créé, le premier des fils créés devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvements aboutissant à cette solution. 
 
@@ -66,45 +67,47 @@ Lorsque le nœud courant reprend pour valeur celle de la racine et que la racine
 \newpage
 \section{Création des fils}
 
-\begin{lstlisting}[caption=Algorithme de création des fils]
-Fonction ConstructionDesFils(noeud : Noeud, s : Serpent) : entier
-Variables - nCoord : Coordonn(*é*)
-            prochaineUnit(*é*) : entier
-            fils : Noeud
-D(*é*)but
-| nCoord <- CalculCoordonn(*é*)(noeud->(*é*)tape.coord, noeud->(*é*)tape.dir)
-| Si Coordonn(*é*)Valide(nCoord) ET
-| serpent->volume.(*é*)tat[nCoord.x][nCoord.y][nCoord.z] = Libre Alors
-| | SerpentAjouterEtape(s, @(noeud->(*é*)tape))
-| | serpent->volume.(*é*)tat[nCoord.x][nCoord.y][nCoord.z] = Occup(*é*)
-| | noeud->aJou(*é*) = 1
-| | prochaineUnit(*é*) = SerpentProchaineUnit(*é*)(s)
-| | Si prochaineUnit(*é*) = Extr(*é*)mit(*é*) Alors
-| | | fils <- Nouveau(Noued)
-| | | fils->(*é*)tape.dir <- noeud->(*é*)tape.dir
-| | | file->(*é*)tape.coord <- nCoord
-| | | NoeudAjouterFils(noeud, fils)
-| | | Retourner 2
-| | Sinon si prochianeUnit(*é*) = Droit
-| | | fils->(*é*)tape.dir <- noeud->(*é*)tape.dir
-| | | file->(*é*)tape.coord <- nCoord
-| | | NoeudAjouterFils(noeud, fils)
-| | Sinon // C'est un angle
-| | | Pour i de 0 (*à*) 6
-| | | | Si TableV(*é*)rit(*é*)Angle[noeud->(*é*)tape.dir][i] = 1 Alors
-| | | | | fils <- Nouveau(Noeud)
-| | | | | fils->(*é*)tape.dir <- i
-| | | | | fils->(*é*)tape.coord <- nCoord
-| | | | | NoeudAjouterFils(noeud, fils)
-| | | | Fin si
-| | | Fin pour
-| | Fin si
-| | Retourner 1
-| Sinon
-| | Retourner -1
-| Fin si
-Fin
-\end{lstlisting}
+\begin{algo}[noframe, numbered]
+ \FUNCTION{ConstruirFils}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}{entier}
+ \VAR
+ \DECLVAR{nCoord}{Coordonné}
+ \DECLVAR{fils}{Noeud}
+ \DECLVAR{prochaineUnité}{entier}
+ \DECLVAR{i}{entier}
+ \ENDVAR
+ \BEGIN
+  \STATE{nCoord \recoit{} CalculCoordonné(noeud->étape, noeud->étape.dir)}
+  \IF{CoordonnéValide(nCoord) ET serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Libre}
+  \STATE{SerpentAjouterEtape(s, @(noeud->étape))}
+  \STATE{serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Occupé}
+  \STATE{noeud->aJoué = 1}
+  \STATE{prochaineUnité = SerpentProchaineUnité(s)}
+  \IF{prochaineUnité = Extrémité}
+  \STATE{fils \recoit{} Nouveau(Noeud)}
+  \STATE{fils->étape.dir \recoit{} noeud->étape.dir}
+  \STATE{fils->étape.coord \recoit{} nCoord}
+  \STATE{NoeudAjouterFils(noeud, fils)}
+  \RETURN{2}
+  \ELSEIF{prochianeUnité = Droit}
+  \STATE{fils->étape.dir \recoit{} noeud->étape.dir}
+  \STATE{fils->étape.coord \recoit{} nCoord}
+  \STATE{NoeudAjouterFils(noeud, fils)}
+  \ELSE
+  \FORSTEP{i}{0}{6}{1}
+  \IF{TableVéritéAngle[noeud->étape.dir][i] = 1}
+  \STATE{fils \recoit{} Nouveau(Noeud)}
+  \STATE{fils->étape.dir \recoit{} i}
+  \STATE{fils->étape.coord \recoit{} nCoord}
+  \STATE{NoeudAjouterFils(noeud, fils)}
+  \ENDIF
+  \ENDFOR
+  \ENDIF
+  \RETURN{1}
+  \ELSE
+  \RETURN{-1}
+  \ENDIF
+ \END
+\end{algo}
 
 \paragraph{Explications} La première étape dans la construction des fils d'un nœud consiste à vérifier la validité des coordonnées desdits futurs fils. Si les coordonnées sont valides, c'est-à-dire qu'elles sont comprises dans le volume final et que le sous-volume qu'elles repèrent est Libre, alors on ajoute une étape dans la séquence de résolution, on indique que ce nœud a joué et on récupère le type du prochain élément du serpent qu'il faut placer.
 
@@ -112,7 +115,7 @@ Si le type récupéré est ``Extrémité'', cela signifie que c'est le dernier �
 
 Si le type du prochain élément est ''Corner`` alors il existe au maximum 4 manières de l'orienter parmi les 6 directions possibles. Les orientations possibles sont données par \verb|TableVéritéAngle| dont la composition se trouve figure~\ref{truthTable}. Pour chaque direction valide, on crée un fils que l'on accroche au nœud traité et on fini en retournant la valeur 1.
 
-\begin{figure}
+\begin{table}
 \begin{center}
 \begin{tabular}{|*{7}{c|}}
 \hline
@@ -134,4 +137,4 @@ Arrière & 1 & 1 & 1 & 1 & 0 & 0 \\
 \end{center}
 \caption{Table de vérité des angles}
 \label{truthTable}
-\end{figure}
+\end{table}

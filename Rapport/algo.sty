@@ -1,0 +1,814 @@
+% yet
+% another
+% package
+% to
+% typeset
+% algorithms
+%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{algo}[02/01/2008]
+\RequirePackage{ifthen,calc,keyval,float,amssymb}
+\typeout{algo package version 1.4}
+\newif\ifalgoendkeyword
+\newif\ifalgonumbered
+\algoendkeywordtrue
+\algonumberedfalse
+
+\DeclareOption{noendkeyword}{\algoendkeywordfalse}
+\DeclareOption{numbered}{\algonumberedtrue}
+
+\newcommand{\algokeywordof}{}
+\newcommand{\algokeywordalgo}{}
+\newcommand{\algokeywordbegin}{}
+\newcommand{\algokeywordend}{} 
+\newcommand{\algokeywordif}{}
+\newcommand{\algokeywordwhile}{} 
+\newcommand{\algokeywordendwhile}{}
+\newcommand{\algokeywordrepeat}{} 
+\newcommand{\algokeyworduntil}{}
+\newcommand{\algokeywordendif}{} 
+\newcommand{\algokeywordelse}{}
+\newcommand{\algokeywordelseif}{} 
+\newcommand{\algokeyworddo}{}
+\newcommand{\algokeywordthen}{} 
+\newcommand{\algokeywordendforeach}{} 
+\newcommand{\algokeywordforeach}{} 
+\newcommand{\algokeywordendfor}{}
+\newcommand{\algokeywordfor}{} 
+\newcommand{\algokeywordfrom}{}
+\newcommand{\algokeywordto}{} 
+\newcommand{\algokeywordswitch}{}
+\newcommand{\algokeywordchoice}{} 
+\newcommand{\algokeywordendchoice}{}
+\newcommand{\algokeywordendswitch}{} 
+\newcommand{\algokeywordvaut}{}
+\newcommand{\algokeywordcase}{} 
+\newcommand{\algokeywordendcase}{}
+\newcommand{\algokeyworddefault}{} 
+\newcommand{\algokeywordvar}{}
+\newcommand{\algokeywordconst}{} 
+\newcommand{\algokeywordtype}{}
+\newcommand{\algokeywordproc}{} 
+\newcommand{\algokeywordfunc}{}
+\newcommand{\algokeywordfunction}{} 
+\newcommand{\algokeywordreturn}{}
+\newcommand{\algokeywordarray}{}
+\newcommand{\algokeywordrecord}{}
+\newcommand{\algokeywordendrecord}{}
+\newcommand{\algokeywordstep}{}
+\newcommand{\algokeywordpf}{}
+\newcommand{\algokeywordexit}{} 
+\newcommand{\algokeywordbreak}{}
+
+\newcommand{\algofrenchkeywords}{%
+  \renewcommand{\algokeywordalgo}{Algorithme}%
+  \renewcommand{\algokeywordbegin}{D\'ebut}%
+  \renewcommand{\algokeywordend}{Fin}%
+  \renewcommand{\algokeywordif}{Si}%
+  \renewcommand{\algokeywordwhile}{TantQue}%
+  \renewcommand{\algokeywordendwhile}{FinTantQue}%
+  \renewcommand{\algokeywordrepeat}{R\'ep\'eter}%
+  \renewcommand{\algokeyworduntil}{Jusque}%
+  \renewcommand{\algokeywordendif}{FinSi}%
+  \renewcommand{\algokeywordelse}{Sinon}%
+  \renewcommand{\algokeywordelseif}{SinonSi}%
+  \renewcommand{\algokeyworddo}{Faire}%
+  \renewcommand{\algokeywordthen}{Alors}
+  \renewcommand{\algokeywordforeach}{PourChaque}%
+  \renewcommand{\algokeywordendforeach}{FinPourChaque}%  
+  \renewcommand{\algokeywordof}{De}%
+  \renewcommand{\algokeywordfor}{Pour}%
+  \renewcommand{\algokeywordendfor}{FinPour}%
+  \renewcommand{\algokeywordfrom}{variantDe}%
+  \renewcommand{\algokeywordto}{à}%
+  \renewcommand{\algokeywordswitch}{SelonQue}%
+  \renewcommand{\algokeywordchoice}{Choix}%
+  \renewcommand{\algokeywordendchoice}{FinChoix}%
+  \renewcommand{\algokeywordendswitch}{FinSelonQue}%
+  \renewcommand{\algokeywordvaut}{vaut}%
+  \renewcommand{\algokeywordcase}{Cas}%
+  \renewcommand{\algokeywordendcase}{FinCas}%
+  \renewcommand{\algokeyworddefault}{Sinon}%
+  \renewcommand{\algokeywordvar}{Variable}%
+  \renewcommand{\algokeywordconst}{Constante}%
+  \renewcommand{\algokeywordtype}{Type}%
+  \renewcommand{\algokeywordproc}{Proc\'edure}%
+  \renewcommand{\algokeywordfunc}{Fonction}%
+  \renewcommand{\algokeywordfunction}{Routine}%
+  \renewcommand{\algokeywordreturn}{Retourner}%
+  \renewcommand{\algokeywordarray}{Tableau}%
+  \renewcommand{\algokeywordexit}{Stop}%
+  \renewcommand{\algokeywordbreak}{Quitter}%
+  \renewcommand{\algokeywordrecord}{Enregistrement}%
+  \renewcommand{\algokeywordendrecord}{FinEnregistrement}%
+  \renewcommand{\algokeywordstep}{parPasDe}%
+  \renewcommand{\algokeywordpf}{Pf}}
+
+\newcommand{\algoenglishkeywords}{%
+  \renewcommand{\algokeywordalgo}{Algorithm}%
+  \renewcommand{\algokeywordbegin}{Begin}%
+  \renewcommand{\algokeywordend}{End}%
+  \renewcommand{\algokeywordif}{If}%
+  \renewcommand{\algokeywordwhile}{While}%
+  \renewcommand{\algokeywordendwhile}{EndWhile}%
+  \renewcommand{\algokeywordrepeat}{Repeat}%
+  \renewcommand{\algokeyworduntil}{Until}%
+  \renewcommand{\algokeywordendif}{Endif}%
+  \renewcommand{\algokeywordelse}{Else}%
+  \renewcommand{\algokeywordelseif}{Elsif}%
+  \renewcommand{\algokeyworddo}{Do}%
+  \renewcommand{\algokeywordthen}{Then}%
+  \renewcommand{\algokeywordforeach}{ForEach}%
+  \renewcommand{\algokeywordendforeach}{EndForEach}%  
+  \renewcommand{\algokeywordof}{Of}%
+  \renewcommand{\algokeywordfor}{For}%
+  \renewcommand{\algokeywordendfor}{EndFor}%
+  \renewcommand{\algokeywordfrom}{from}%
+  \renewcommand{\algokeywordto}{to}%
+  \renewcommand{\algokeywordswitch}{Switch}%
+  \renewcommand{\algokeywordchoice}{Choice}%
+  \renewcommand{\algokeywordendchoice}{EndChoice}%
+  \renewcommand{\algokeywordendswitch}{EndSwitch}%
+  \renewcommand{\algokeywordvaut}{of}%
+  \renewcommand{\algokeywordcase}{Case}%
+  \renewcommand{\algokeywordendcase}{EndCase}%
+  \renewcommand{\algokeyworddefault}{Default}%
+  \renewcommand{\algokeywordvar}{Variable}%
+  \renewcommand{\algokeywordconst}{Constant}%
+  \renewcommand{\algokeywordtype}{Type}%
+  \renewcommand{\algokeywordproc}{Procedure}%
+  \renewcommand{\algokeywordfunc}{Function}%
+  \renewcommand{\algokeywordfunction}{Routine}%
+  \renewcommand{\algokeywordreturn}{Return}%
+  \renewcommand{\algokeywordarray}{Array}%
+  \renewcommand{\algokeywordreturn}{Return}%
+  \renewcommand{\algokeywordexit}{Exit}%
+  \renewcommand{\algokeywordrecord}{Record}%
+  \renewcommand{\algokeywordendrecord}{EndRecord}%
+  \renewcommand{\algokeywordstep}{Step}%
+  \renewcommand{\algokeywordpf}{Proc}}
+
+\algofrenchkeywords
+\DeclareOption{english}{\algoenglishkeywords}
+
+%
+% la manière d'\'ecrire une d\'eclaration par d\'efaut : identificateur:type
+%
+\newcommand{\algoformatidtype}[2]{##1\kern.2ex:\kern.2ex{\algotypefont##2\/}}
+\let\algo@origkeywordfunction=\algokeywordfunction
+\let\algo@origkeywordfunc=\algokeywordfunc
+\let\algo@origkeywordproc=\algokeywordproc
+\newcommand{\algovoidtype}{void}
+
+\newcommand{\algopascalstyledecls}{%
+  \renewcommand{\algoformatidtype}[2]{##1\kern.2ex:\kern.2ex{\algotypefont##2\/}}%
+  \let\algokeywordfunction=\algo@origkeywordfunction%
+  \let\algokeywordfunc=\algo@origkeywordfunc%
+  \let\algokeywordproc=\algo@origkeywordproc%
+}
+  
+\newcommand{\algocstyledecls}{%
+  \renewcommand{\algoformatidtype}[2]{%
+    {\algotypefont##2\/} ##1}%
+  \let\algo@origkeywordfunction=\algokeywordfunction%
+  \let\algokeywordfunction=\unskip%
+  \let\algo@origkeywordfunc=\algokeywordfunc%
+  \let\algokeywordfunc=\unskip%
+  \let\algo@origkeywordproc=\algokeywordproc%
+  \let\algokeywordproc=\unskip%
+}
+
+\algopascalstyledecls
+\DeclareOption{cstyledecls}{\algocstyledecls}
+
+\ProcessOptions
+
+%
+% marges de l'environnement algo
+%
+\newlength{\algoleftmargin}
+\newlength{\algorightmargin}
+\newlength{\algotopmargin}
+\newlength{\algobottommargin}
+
+\setlength{\algoleftmargin}{15pt}
+\setlength{\algorightmargin}{10pt}
+\setlength{\algotopmargin}{6pt}
+\setlength{\algobottommargin}{6pt}
+
+%
+% longueur de chaque tabulation
+%
+\newlength{\algoindentwidth}
+\setlength{\algoindentwidth}{15pt}
+
+%
+% caract\'eristiques de la boîte englobant l'algo
+%
+\newlength{\algoboxsep}
+\newlength{\algoboxrule}
+\setlength{\algoboxrule}{.4pt}
+\setlength{\algoboxsep}{5pt}
+
+%
+% dimension des barres
+%
+\newlength{\algorulewidth}
+\setlength{\algorulewidth}{1pt}
+
+\newcounter{c@imbrication}         % le niveau d'imbrication des instructions
+\newcounter{c@indentation}         % compteur pour boucler sur l'imbrication
+\newcounter{c@instruction}         % le num\'ero des instructions
+
+%
+% modification du niveau d'imbrication ; macros appel\'ees par les
+% commandes d'affichage des instructions
+%
+\newcommand{\agauchetoute}{\setcounter{c@imbrication}{0}}
+\newcommand{\decaladroite}{\addtocounter{c@imbrication}{1}}
+\newcommand{\decalagauche}{\addtocounter{c@imbrication}{-1}}
+
+%
+% les instructions
+%
+\newcommand{\ALGO}[1]{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{algo} #1}}
+
+\newcommand{\BEGIN}{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{begin}}%
+  \decaladroite{}}
+
+\newcommand{\END}{%
+  \decalagauche%
+  \ecritligne{\textalgokw{end}}%
+  \decalagauche{}}
+
+\newcommand{\STATE}[2][]{%
+  \ecritligne{#2\doinlinecomment{#1}}}
+
+\newcommand{\STATENF}[2][]{%
+  \ecritligne{\formatnotformal{#2}\numbernotformal{#1}}}
+
+\newcommand{\IF}[2][]{%
+  \ecritligne{%
+    \textalgokw{if} #2 \textalgokw{then}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+\newcommand{\ELSEIF}[2][]{%
+  \decalagauche%
+  \ecritligne{%
+    \textalgokw{elseif} #2 \textalgokw{then}\doinlinecomment{#1}}%
+  \decaladroite%
+}
+
+\newcommand{\FOREACH}[3][]{%
+  \ecritligne{%
+    \textalgokw{foreach} 
+    \ifthenelse{\equal{#1}{}}{#2}{#1$\,\rhd\,$#2}
+    \textalgokw{of} #3
+    \textalgokw{do}}%
+  \decaladroite{}%
+}
+
+\newcommand{\FOR}[4][]{%
+  \ecritligne{%
+    \textalgokw{for} #2 \textalgokw{from} 
+    #3 \textalgokw{to} #4 \textalgokw{do}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+\newcommand{\FORGEN}[1]{%
+  \ecritligne{\textalgokw{for} #1 \textalgokw{do}}%
+  \decaladroite{}%
+}
+\newcommand{\FORGENNF}[1]{%
+  \ecritligne{\textalgokw{for} \formatnotformal{#1} \textalgokw{do}}%
+  \decaladroite{}%
+}
+\newcommand{\FORSTEP}[4]{%
+  \ecritligne{%
+    \textalgokw{for} #1 \textalgokw{from} 
+    #2 \textalgokw{a} #3 
+    \textalgokw{step} #4 \textalgokw{do}%
+  }%
+  \decaladroite{}%
+}
+
+
+\newcommand{\WHILE}[2][]{%
+  \ecritligne{%
+    \textalgokw{while} #2 \textalgokw{do}\doinlinecomment{#1}}%
+  \decaladroite%
+}
+\newcommand{\REPEAT}[1][]{%
+  \ecritligne{\textalgokw{repeat}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+
+\newcommand{\ENDREPEAT}[2][until]{%
+  \decalagauche{}%
+  \ecritligne{\textalgokw{#1} #2}%
+}
+
+\newcommand{\ENDREPEATNF}[2][until]{%
+  \decalagauche{}%
+  \ecritligne{\textalgokw{#1} \formatnotformal{#2}}%
+}
+
+\newcommand{\ELSE}[1][]{%
+  \decalagauche%
+  \ecritligne{\textalgokw{else}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+
+\newcommand{\SWITCH}[2][]{%
+  \ecritligne{%
+    \textalgokw{switch} #2 \textalgokw{vaut}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+
+\newcommand{\CHOICE}{%
+  \ecritligne{\textalgokw{choice}}%
+  \decaladroite{}%
+}
+
+
+\newcommand{\CASE}[2][]{%
+  \ecritligne{\textalgokw{case} #2 :\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+
+\newcommand{\SHORTCASE}[2]{%
+  \ecritligne{\textalgokw{case} #1 : #2}%
+}
+
+\newcommand{\DEFAULT}[1][]{%
+  \ecritligne{\textalgokw{default}\doinlinecomment{#1}}%
+  \decaladroite{}%
+}
+
+\newcommand{\ENDWHILE}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endwhile}}\fi%
+}
+
+\newcommand{\ENDFOREACH}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endforeach}}\fi%
+}
+\newcommand{\ENDFOR}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endfor}}\fi%
+}
+\let\ENDFORGEN=\ENDFOR
+\let\ENDFORSTEP=\ENDFORSTEP
+
+\newcommand{\ENDIF}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endif}}\fi%
+}
+
+\newcommand{\ENDSWITCH}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endswitch}}\fi%
+}
+\newcommand{\ENDCHOICE}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endchoice}}\fi%
+}
+
+\newcommand{\ENDCASE}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endcase}}\fi%
+}
+
+\newcommand{\ENDRECORD}{%
+  \decalagauche%
+  \ifalgoendkeyword\ecritligne{\textalgokw{endrecord}}\fi%
+}
+
+\newcommand{\VAR}{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{var}}%
+  \decaladroite{}%
+}
+
+\newcommand{\CONST}{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{const}}%
+  \decaladroite{}%
+}
+
+\newcommand{\TYPE}{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{type}}%
+  \decaladroite{}%
+}
+\newcommand{\ENDPF}{\decalagauche}
+\newcommand{\ENDVAR}{\decalagauche}
+\newcommand{\ENDCONST}{\decalagauche}
+\newcommand{\ENDTYPE}{\decalagauche}
+
+\newcommand{\DECLVAR}[3][]{%
+  \ecritligne{\algoformatidtype{#2}{#3}\doinlinecomment{#1}}}
+
+\newcommand{\DECLTYPE}[3][]{%
+  \ecritligne{{\algotypefont#2\/} = {\algotypefont#3\/}\doinlinecomment{#1}}}
+
+\newcommand{\DECLCONST}[4][]{%
+  \ifthenelse{\equal{#1}{}}%
+  {\ecritligne{#2 = #3\ifthenelse{\equal{#4}{}}{}{\doinlinecomment{#4}}}}%
+  {\ecritligne{\algoformatidtype{#2}{#1} = #3\ifthenelse{\equal{#4}{}}{}{\doinlinecomment{#4}}}}%
+}
+
+\def\DECLCONST{%
+  \@ifnextchar[%]
+  {\alg@declconstcomment}{\alg@declconst}}
+
+\def\alg@declconst#1#2{\ecritligne{#1 = #2}}
+
+\def\alg@declconstcommentwithtype[#1][#2]#3#4{%
+  \ecritligne{\algoformatidtype{#3}{#2}=#4\doinlinecomment{#1}}}
+
+\def\alg@declconstcommentwithouttype[#1]#2#3{%
+  \ecritligne{#2 = #3\doinlinecomment{#1}}}
+
+\def\alg@declconstcomment[#1]{%
+  \@ifnextchar[%]
+  {\alg@declconstcommentwithtype[#1]}%
+  {\alg@declconstcommentwithouttype[#1]}%
+}
+
+
+% ARRAY tableau sans taille 
+\newcounter{c@tabdim}
+\newcommand{\ARRAY}[2][1]{%
+  \textalgokw{array} {\algotypefont#2}
+  \setcounter{c@tabdim}{0}%
+  {\upshape\algotextfont%
+  \whiledo{\value{c@tabdim}<#1}{[]\stepcounter{c@tabdim}}}%
+  }
+
+% DIMARRAY tableau avec taille
+\def\DIMARRAY{%
+  \@ifnextchar[%]
+  {\alg@dimarray}{\alg@defarray}}
+
+\def\alg@dimarray[#1]{%
+  \@ifnextchar[%]
+  {\alg@multidimarray[#1]}%
+  {\alg@monodimarray[#1]}%
+}
+
+\def\alg@multidimarray[#1][#2]{%
+  \@ifnextchar[%]
+  {\alg@tridimarray[#1][#2]}%
+  {\alg@bidimarray[#1][#2]}%
+}
+
+\def\alg@defarray#1{\textalgokw{array} {\algotypefont#1} {\upshape[MAX]}}
+\def\alg@monodimarray[#1]#2{\textalgokw{array} {\algotypefont#2} {\upshape[#1]}}
+\def\alg@bidimarray[#1][#2]#3{\textalgokw{array} {\algotypefont#3} {\upshape[#1][#2]}}
+\def\alg@tridimarray[#1][#2][#3]#4{\textalgokw{array}
+  {\algotypefont#4} {\upshape[#1][#2][#3]}}
+
+
+\newcommand{\RECORD}[1]{%
+  \ecritligne{{\algotypefont#1\/} = \textalgokw{record}}%
+  \decaladroite%
+}
+
+\newcommand{\DECLFIELD}[3][]{%
+  \ecritligne{\algoformatidtype{#2}{#3}\doinlinecomment{#1}}%
+}
+
+\newcommand{\algopfinsymb}{\textsf{\footnotesize D}\kern-.79em$\bigcirc$}
+\newcommand{\algopfoutsymb}{\textsf{\footnotesize R}\kern-.79em$\bigcirc$}
+\newcommand{\algopfinoutsymb}{\textsf{\footnotesize T}\kern-.75em$\bigcirc$}
+
+
+\newcommand{\pfarg}[2]{\algoformatidtype{#1}{#2}}
+\newcommand{\pfargin}[2]{\algopfinsymb{}~\pfarg{#1}{#2}}
+\newcommand{\pfargout}[2]{\algopfoutsymb{}~\pfarg{#1}{#2}}
+\newcommand{\pfarginout}[2]{\algopfinoutsymb{}~\pfarg{#1}{#2}}
+
+
+\newcommand{\txtFUNCTION}[4][]{%
+  {\algotextfont%
+  \ifthenelse{\equal{#4}{}}{%
+    \textalgokw{function} #2(\,#3\,)\doinlinecomment{#1}}
+  {%
+    \algoformatidtype{\textalgokw{function} #2(\,#3\,)}{#4}
+    \doinlinecomment{#1}}}%
+}
+
+
+\newcommand{\FUNCTION}[4][]{%
+  \agauchetoute%
+  \ifthenelse{\equal{#4}{}}{%
+    \ecritligne{\textalgokw{function}
+      #2(\,#3\,)\doinlinecomment{#1}}%
+  }{\ecritligne{%
+    \algoformatidtype{\textalgokw{function} #2(\,#3\,)}{#4}%
+    \doinlinecomment{#1}}}%
+}
+
+
+\newcommand{\PROC}[3][]{%
+  \agauchetoute%
+  \ecritligne{\textalgokw{proc} #2(\,#3\,)\doinlinecomment{#1}}%
+}
+
+\newcommand{\FUNC}[4][]{%
+  \agauchetoute%
+  \ecritligne{%
+    \algoformatidtype{\textalgokw{func} #2(\,#3\,)}{#4}%
+    \doinlinecomment{#1}}
+}
+    
+
+\newcommand{\EXIT}[1][]{%
+  \ecritligne{\textalgokw{exit}\doinlinecomment{#1}}%
+}
+
+\newcommand{\BREAK}[1][]{%
+  \ecritligne{\textalgokw{break}\doinlinecomment{#1}}%
+}
+
+\newcommand{\RETURN}[2][]{%
+  \ecritligne{\textalgokw{return} #2\doinlinecomment{#1}}%
+}
+
+\newcommand{\algocommentbeginchars}{\{}
+\newcommand{\algocommentendchars}{\}}
+
+\newcommand{\formatcomment}[1]{%
+  \algocommentbeginchars\ % caractère de d\'ebut de commentaire et un espace
+  {\algocommentfont #1}\     % le commentaire lui-même dans la bonne fonte
+  \algocommentendchars}   % le caractère de fin de commentaire
+  
+\newcommand{\formatinlinecomment}[1]{%
+  \quad% un espace 
+  \algocommentbeginchars{} % caractère de d\'ebut de commentaire + un espace
+  {\algocommentfont #1}\  % commentaire dans la bonne fonte + un espace
+  \algocommentendchars}   % le caractère de fin de commentaire
+
+\newcommand{\doinlinecomment}[1]{%
+  \ifthenelse{\equal{#1}{}}{}{\formatinlinecomment{#1}}}
+
+\newcommand{\COMMENT}[1]{%
+  \ecritligne{\formatcomment{#1}}%
+}
+
+\newcommand{\ANDCOMMENT}[1]{%
+  \ecritligne{ ET \formatcomment{#1}}%
+}
+
+\newcommand{\formatnotformal}[1]{{\algonftxtfont #1}}
+
+\newcommand{\numbernotformal}[1]{%
+  \ifthenelse{\equal{#1}{}}{}{{\algonfnumfont{$\quad$(#1)}}}}
+
+
+%
+% affichage du num\'ero de l'instruction, appel\'e
+%
+\newcommand{\numerotealgo}{%
+  \makebox[0pt][r]{%
+    \makebox[\algoboxsep+1em+\algoboxrule][l]{%
+      \tiny{\rmfamily\arabic{c@instruction}}}}}
+
+\newcommand{\unnumberedalgo}{\algonumberedfalse}
+\newcommand{\numberedalgo}{\algonumberedtrue}
+
+%
+% instruction appel\'ee pour mettre en place l'instruction à la bonne
+
+%
+% les options que l'on peut passer à l'environnement algo
+%
+\define@key{algopt}{numbered}[true]{%
+  \algonumberedtrue}
+\define@key{algopt}{unnumbered}[true]{%
+  \algonumberedfalse}
+
+\define@key{algopt}{declsstyle}{%
+  \csname algo#1styledecls\endcsname}
+
+\define@key{algopt}{rulewidth}{%
+  \setlength{\algorulewidth}{#1}}
+
+\define@key{algopt}{indentwidth}{%
+  \setlength{\algoindentwidth}{#1}}
+
+
+\define@key{algopt}{endkeyword}[true]{%
+  \algoendkeywordtrue
+}
+\define@key{algopt}{noendkeyword}[true]{%
+  \algoendkeywordfalse  
+}
+
+\newcommand{\algoendkeyword}{\algoendkeywordtrue}
+\newcommand{\noalgoendkeyword}{\algoendkeywordfalse}
+
+\define@key{algopt}{informal}[true]{%
+  \renewcommand{\algotextfont}{\rmfamily\upshape}%
+  \setlength{\algoboxrule}{0pt}%
+  \setlength{\algoboxsep}{0pt}%
+}
+
+\define@key{algopt}{noframe}[true]{%
+  \setlength{\algoboxrule}{0pt}%
+  \setlength{\algoboxsep}{0pt}%
+}
+
+\define@key{algopt}{boxrule}{%
+  \setlength{\algoboxrule}{#1}%
+}
+\define@key{algopt}{boxsep}{%
+  \setlength{\algoboxsep}{#1}%
+}
+\define@key{algopt}{rightmargin}{%
+  \setlength{\algorightmargin}{#1}%
+}
+\define@key{algopt}{leftmargin}{%
+  \setlength{\algoleftmargin}{#1}%
+}
+\define@key{algopt}{topmargin}{%
+  \setlength{\algotopmargin}{#1}%
+}
+\define@key{algopt}{bottommargin}{%
+  \setlength{\algobottommargin}{#1}%
+}
+
+\newif\ifalgosuite
+\define@key{algopt}{continue}[0]{\algosuitetrue}
+
+\newcounter{c@chaineouverte}
+\setcounter{c@chaineouverte}{0}
+
+\newcommand{\chainecaractere}{%
+  \ifthenelse{\value{c@chaineouverte}=0}{%
+    "\algostringfont%
+    \setcounter{c@chaineouverte}{1}}{%
+    \setcounter{c@chaineouverte}{0}%
+    \algotextfont"}}
+
+{\catcode`"=\active\global\let"\chainecaractere}%
+
+
+%
+% la commande pour dessiner le cadre autour de l'algo
+%
+\newcommand{\makealgobox}[1]{%
+  \setlength{\fboxrule}{\algoboxrule}%
+  \setlength{\fboxsep}{\algoboxsep}%
+  \fbox{#1}}
+
+%
+% fontes
+%
+\newcommand{\algotextfont}{\ttfamily\upshape}
+\newcommand{\algostringfont}{\rmfamily\upshape}
+\newcommand{\algocommentfont}{\rmfamily\slshape}
+\newcommand{\algokeywordfont}[1]{{\small\sffamily\upshape\bfseries#1}}
+\newcommand{\algotypefont}{\rmfamily\itshape}
+\newcommand{\algonftxtfont}{\rmfamily\upshape}
+\newcommand{\algonfnumfont}{\sffamily\upshape}
+
+\newcommand{\textalgotxt}[1]{{\algotextfont#1\/}}
+\newcommand{\textalgostr}[1]{{\algostringfont#1\/}}
+\newcommand{\textalgocom}[1]{{\algocommentfont#1\/}}
+\newcommand{\textalgokw}[1]{\algokeywordfont{\csname algokeyword#1\endcsname}}
+\newcommand{\textalgotype}[1]{{\algotypefont#1\/}}
+\newcommand{\textalgonftxt}[1]{{\algonftxtfont#1\/}}
+\newcommand{\textalgonfnum}[1]{{\algonfnumfont#1\/}}
+
+\newlength{\interligne}
+\newlength{\demiinterligne}
+\setlength{\interligne}{1.2\baselineskip}
+\setlength{\demiinterligne}{\interligne/2}
+
+\newlength{\algodim@hb}
+\newlength{\algodim@pb}
+\newlength{\algodim@hl}
+\newlength{\algodim@pl}
+\newlength{\algodim@tmp}
+\newlength{\algorulevsep}
+\setlength{\algorulevsep}{2pt}
+
+% Ecriture d'une ligne de l'algo : on fait une boucle pour ins\'erer des
+% tabulations correspondant au niveau d'imbrication 
+ % (stock\'ee dans c@imbrication)
+
+\newcommand{\ecritligne}[1]{%
+  \setcounter{c@indentation}{0}% compteur d'indentation 
+  \refstepcounter{c@instruction}%
+  \ifalgonumbered%
+  \numerotealgo
+  \fi
+  \settoheight{\algodim@hl}{#1}%
+  \settodepth{\algodim@pl}{#1}%
+  \setlength{\algodim@tmp}{\baselineskip-\lastalgolinedepth-\algodim@hl}
+  \ifthenelse{\lengthtest{\lineskiplimit<\algodim@tmp}}%
+  {\setlength{\algodim@hb}{\baselineskip-\lastalgolinedepth-\algorulevsep}}%
+  {\setlength{\algodim@hb}{\lineskip+\algodim@hl-\algorulevsep}}%
+  \setlength{\algodim@pb}{\algodim@pl+\algorulevsep}%
+  % pour chaque niveau d'imbrication on dessine une barre
+  \whiledo{\value{c@indentation}<\value{c@imbrication}}{%
+    \hspace*{.335\algoindentwidth}% trac\'e de la barre
+    \raisebox{0pt}[0pt][0pt]{\rule[-\algodim@pb]{\algorulewidth}{\algodim@pb+\algodim@hb}}%
+    \hspace*{.665\algoindentwidth}\hspace*{-\algorulewidth}% tabulation       
+    \stepcounter{c@indentation}%
+  }%
+  #1\\% saut de ligne
+  \setlength{\lastalgolinedepth}{\algodim@pl}%
+}
+
+%
+% l'environnement algo lui-même
+%
+\newlength{\lastalgolinedepth}
+\newsavebox{\algobox}
+\newenvironment{algo}[1][]%
+{%
+  \setlength{\lastalgolinedepth}{0pt}%
+  \ifx\NoAutoSpaceBeforeFDP\undefined%
+  \else%
+  \NoAutoSpaceBeforeFDP%
+  \fi%
+  \algosuitefalse%
+  \setkeys{algopt}{#1}%
+  \ifalgosuite%
+  \else%
+  \setcounter{c@imbrication}{0}%
+  \setcounter{c@instruction}{0}%
+  \fi%
+  \catcode`"=\active%
+  \algotextfont%
+  \begin{lrbox}{\algobox}%
+    \begin{minipage}{\linewidth-\algoboxrule-\algoboxrule-\algoboxsep-\algoboxsep-\algorightmargin-\algoleftmargin}%-\rightmargin-\leftmargin}%
+    \begin{flushleft}%
+       \setlength{\baselineskip}{\interligne}%%
+       \setlength{\lineskip}{4pt}%
+       \setlength{\lineskiplimit}{5pt}%
+    \ignorespaces}%
+    {%
+    \end{flushleft}%
+   \end{minipage}%
+  \end{lrbox}%
+  \begin{flushleft}%
+    \leavevmode\unskip\vspace*{\algotopmargin}\noindent%
+    \hspace*{\algoleftmargin}\makealgobox{\usebox{\algobox}}%
+    \vspace*{\algobottommargin}%
+  \end{flushleft}%
+\unskip}
+
+
+%
+% algorithmes flottants
+%
+\floatstyle{ruled}
+\newfloat{floatalgo}{thpb}{loa}
+\floatname{floatalgo}{Algorithme}
+%
+% quelques macros
+%
+\newcommand{\recoit}{$\,\leftarrow\:$}
+\let\assign\recoit
+
+\newcommand{\assoc}[2]{#1$\:\Rightarrow\:$#2}
+
+\newcommand{\fleche}{\raisebox{-1pt}{\Pisymbol{pzd}{219}}}
+%
+% argument de commande \comarg{n} ou \comarg[1]{fichier}  
+%
+\ifx\argument\@undefined
+\newcommand{\argument}[2][]{%
+  {\normalfont%
+    \textsl{$\langle$#2%
+      \ifthenelse{\equal{#1}{}}{}{$\mathit{_{#1}}$}$\rangle$}}}
+\fi
+
+\newcommand{\cmde}[1]{\textbf{\texttt{#1}}}
+\newcommand{\option}[1]{$[$\,#1\,$]$}
+
+
+%
+% Int\'egration dans beamer
+%
+\ifx\only\@undefined
+\else
+\renewcommand<>{\BEGIN}{\onslide#1{\beameroriginal{\BEGIN}}}
+\renewcommand<>{\END}{\onslide#1{\beameroriginal{\END}}}
+\renewcommand<>{\ENDIF}{\onslide#1{\beameroriginal{\ENDIF}}}
+\renewcommand<>{\ENDWHILE}{\onslide#1{\beameroriginal{\ENDWHILE}}}
+\renewcommand<>{\STATE}[2][]{\onslide#3{\beameroriginal{\STATE}[#1]{#2}}}
+\renewcommand<>{\ELSE}[1][]{\onslide#2{\beameroriginal{\ELSE}[#1]}}
+\renewcommand<>{\IF}[2][]{\onslide#3{\beameroriginal{\IF}[#1]{#2}}}
+\renewcommand<>{\WHILE}[2][]{\onslide#3{\beameroriginal{\WHILE}[#1]{#2}}}
+\renewcommand<>{\DECLVAR}[3][]{\onslide#4{%
+     \beameroriginal{\DECLVAR}[#1]{#2}{#3}}}
+\fi

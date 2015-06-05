@@ -76,6 +76,7 @@ typedef struct Application
     double calculTime;
     int state;
     int maxThread;
+    int updateSolutionMenu;
 } Application;
 
 Application* app;

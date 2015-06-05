@@ -139,7 +139,7 @@ int getInput ( Context* context )
 	{
 		key_flags = K_NONE;
 		mouse_flags = M_NONE;
-	}	
+	}
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
@@ -422,7 +422,7 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)==1)
 	{
-		
+
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -474,7 +474,7 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
 		context->errorAlpha = 1.f;
-	
+
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
@@ -526,7 +526,6 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					app->state = AS_LOAD;
 					// Chargement d'un nouveau snake
 					logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
@@ -542,30 +541,18 @@ int getInput ( Context* context )
 					{
 						snakeDestroy(app->snake, 1);
 						app->snake = newSnake;
-						resolverSolveSnake(app->snake, NULL);
-
-						playerDestroy(gplayer);
-						gplayer = playerInit ( app->snake );
-						gplayer->selected = 0;
-						playerDestroy(gsolver);
-						gsolver = playerInit(app->snake);
-						gsolver->currentSolution = app->snake->solutions->head;
-						logWrite("[MENU] Re-init solution menu \n");
-						//Snake Solution
-						app->menu->item[2]->menu->size = 0;
-				    for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
-							char buf[255];
-							char snakeSolution[255] = "solution n°\0";
-							sprintf(buf,"%d",i+1);
-							strcat(snakeSolution,buf);
-							strcpy(app->menu->item[2]->menu->item[i]->descriptor.name,snakeSolution);
-							app->menu->item[2]->menu->size ++;
-
-						}
 				    calcMenu(app->menu->item[2]->menu);
 				    calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
+						pthread_attr_t attr;
+						pthread_t solverThread;
+						ThreadArgs* args = malloc(sizeof(ThreadArgs));
+						args->snake = app->snake;
+						args->rootNode = NULL;
+
+						pthread_attr_init(&attr);
+						pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+						pthread_create(&solverThread, &attr, resolverSolveSnake, args);
 					}
-					app->state = AS_GAME;
 					cameraReset (context->camera);
 					break;
 				case LOADSOL:
@@ -593,7 +580,6 @@ int getInput ( Context* context )
 						}
 						context->playmode = PM_RESOLVE;
 						currentMenu->state = CLOSE;
-						app->menuDepth --;
 					break;
 				case MENU:
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
