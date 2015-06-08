@@ -358,13 +358,13 @@ void* renderer ( void *arg )
 
 				for ( i=0; i <= curPlayer->segEnd; i++ )
 				{
-					glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
+					glUniform3f(pickcolorID, ((float)i)/255.f, 1.f, 0.f);
 
 					mat4x4_identity ( WMat );
 					mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 					mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
 					mat4x4_scale3d(WMat, WMat, scoef);
-					mat4x4_scale3d(WMat, WMat, 0.6f);
+					//mat4x4_scale3d(WMat, WMat, 0.6f);
 
 					glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
 
@@ -787,7 +787,7 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;
 				}
-				glUniform3f(pickcolorID,255.f, (float)((*id))/255.f, 0.f);
+				glUniform3f(pickcolorID,1.f, (float)((*id))/255.f, 0.f);
 				*id += 1 ;
 				mat4x4_identity(WMat);
 				mat4x4_scale3d(WMat, WMat, 1.f);
