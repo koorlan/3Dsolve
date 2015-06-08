@@ -41,6 +41,11 @@
 #define F_FAR 1000.0f
 
 #define abs(X) ((X)<0?-(X):(X))
+#undef max
+#define max(a,b) \
+	({ __typeof__ (a) _a = (a); \
+			__typeof__ (b) _b = (b); \
+		_a > _b ? _a : _b; })
 
 void* renderer ( void *arg );
 void drawMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,Item **itemCaller,mat4x4 viewMat,mat4x4 perMat,mat4x4 PVMat,mat4x4 WMat,unsigned int vpID,unsigned int alphaID, unsigned int wID);

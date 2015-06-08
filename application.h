@@ -69,6 +69,7 @@ typedef struct Application
     Player* player;
     Player* solver;
     Menu *menu;
+    Menu *button;
     int menuDepth;
     int itemSelected;
     int running;
@@ -77,6 +78,7 @@ typedef struct Application
     int state;
     int maxThread;
     int updateSolutionMenu;
+    int buttonPushed;
 } Application;
 
 Application* app;
