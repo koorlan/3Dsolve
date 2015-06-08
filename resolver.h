@@ -152,6 +152,7 @@ typedef struct ThreadArgs
     Tree rootNode;
     Snake* snake;
 	int exploredWayNb;
+	int resetSolutionMenu;
 } ThreadArgs;
 
 /**
@@ -159,7 +160,7 @@ typedef struct ThreadArgs
  * @brief Fonction principale dans la résolution du snake.
  * @param snake le serpent à résoudre
  */
-void resolverSolveSnake(Snake *snake, Tree helpNode);
+void* resolverSolveSnake(void* arg);
 
 
 /**

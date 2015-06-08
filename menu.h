@@ -27,15 +27,13 @@
 
 /**
  * @ingroup Menu
- * @enum ItemType
+ * @enum MenuType
  * @brief Définit le type de l'item.
  *
- * @var ItemType::ITEM
- * Un item (élément d'un menu)
- * @var ItemType::ROW
+ * @var MenuType::ROW
  * Un menu en ligne
- * @var ItemType::COLLUM
- * Un menu en colone
+ * @var MenuType::COLLUM
+ * Un menu en colonne
  */
 typedef enum MenuType {ROW, COLUMN} MenuType;
 
@@ -46,11 +44,36 @@ typedef enum MenuType {ROW, COLUMN} MenuType;
  *
  * @var Action::NONE
  * Aucune action
- * @var Action::OPEN
- *
- * @var Action::CLOSE
- *
+ * @var Action::MENU
+ * Pour un item de type menu
+ * @var Action::RESET
+ * [UNUSED] Action pour reset l'application
  * @var Action::TEST
+ * [UNUSED] Utile pour tester des actions
+ * @var Action::BACKAPP
+ * [UNUSED] Action pour retourner au menu principal
+ * @var Action::EXIT
+ * Quitter l'application
+ * @var Action::HELP
+ * Affiche le menu d'aide
+ * @var Action::ABOUT
+ * Affiche l'ecran "A propos"
+ * @var Action::OPTION
+ * [UNUSED] ---
+ * @var Action::LOADSNAKE
+ * Charge un model de serpent a resoudre
+ * @var Action::SOLUTION
+ * [UNUSED] Regarde si des solutions ont déja été pré calculé
+ * @var Action::GENSOL
+ * [UNUSED] Pour amélioration ne pas résoudre le serpent au chargement, permet la génération de solutions
+ * @var Action::LOADSOL
+ * Charge une solution pré-calculé
+ * @var Action::NEXTSOL
+ * [UNUSED] Systeme de pagination de solutions
+ * @var Action::PREVSOL
+ * [UNUSED] Systeme de pagination de solutions
+ * @var Action::EXPAND
+ * [UNUSED] Pour avoir la vue eclatée du serpent (En jeu appuyer sur Entrée pour la vue éclatée)
  */
 typedef enum Action {NONE, MENU,RESET, TEST,BACKAPP,EXIT,HELP,ABOUT,OPTION,LOADSNAKE,SOLUTION,GENSOL,LOADSOL,NEXTSOL,PREVSOL,EXPAND} Action;
 
@@ -59,13 +82,10 @@ typedef enum Action {NONE, MENU,RESET, TEST,BACKAPP,EXIT,HELP,ABOUT,OPTION,LOADS
  * @enum State
  * @brief Définit un état pour un menu.
  *
- * @var Action::NONE
- * Aucune action
  * @var Action::OPEN
- *
+ * Menu ouvert et donc visible (Traitement par le thread de rendu)
  * @var Action::CLOSE
- *
- * @var Action::TEST
+ * Menu fermé et donc invisible (Traitement par le thread de rendu)
  */
 typedef enum State {OPEN, CLOSE} State;
 
@@ -110,6 +130,8 @@ typedef struct Color {
  * La taille maximale de la police de texte à utiliser
  * @var Descripteur::color
  * La couleur du texte
+ * @var Descripteur::Action
+ * L'action du descripteur de l'objet
  * @var Descripteur::bbox
  * Contient les différantes valeurs permettant de caractériser la zone de
  * rendu de l'item
@@ -136,8 +158,6 @@ typedef struct Descriptor
  * soit déclancher une action ou bien faire apparaitre un autre menu
  * en fonction de Item::type.
  *
- * @var Item::type
- * Le type de l'item
  * @var Item::bbox
  * Les caractéristique de la zone de rendu de l'item
  * @var Item::margin
@@ -146,7 +166,12 @@ typedef struct Descriptor
  * Le descripteur de l'item
  * @var Item::menu
  * Le menu à dérouler au clique. Ce pointeur est égale à NULL si
- * Item::type == ITEM
+ * @var Item::bboxRel
+ * Tableau de 2 vecteurs X,Y calculés pour la boite de rendu relatives (-1.f à 1.f)
+ * [!img/boxdim.png]
+ * @var Item::marginRel
+ * Tableau de 2 vecteurs X,Y calculés pour les marges relatives (-1.f à 1.f)
+ * [!img/boxdim.png]
  */
 
 typedef struct Menu Menu;
@@ -157,7 +182,6 @@ typedef struct Item
   float margin[4]; //left top right bottom
   Descriptor descriptor;
   Menu *menu;
-  Object *mesh;
   float bboxRel[4];
   float marginRel[4];
 } Item;
@@ -174,14 +198,20 @@ typedef struct Item
  * Les marges à appliquer au menu, dans l'ordre : Gauche, Haut, Droite, Bas.
  * @var Menu::bbox
  * Valeurs de description de la zone de rendu du menu
+ * @var Menu::bboxRel
+ * Tableau de 2 vecteurs X,Y calculés pour la boite de rendu relatives (-1.f à 1.f)
+ * [!img/boxdim.png]
  * @var Menu::size
  * Nombre d'item dans le menu
  * @var Menu::item
  * Tableau dynamique de pointeur sur items. Ce sont les items présents
  * dans le menu
- * @var Menu::mutex
- * Mutex protégeant le menu, utilisé lors des calculs de redimentionnement
- * en particulier.
+ * @var Menu::mesh
+ * points et uv-map de l'objet 3D
+ * @var Menu::selected
+ * ID relatif du numéro de l'item selectionné dans ce menu ( ne peux pas dépasser Menu::size )
+ * @var Menu::opened
+ * ID d'un item de type menu qui est ouvert ( Menu::state == OPEN )
  */
 struct Menu{
   State state;
@@ -192,10 +222,8 @@ struct Menu{
   int size;
   Item **item;
   Object *mesh;
-  float scale[3];
   int selected;
   int opened;
-  pthread_mutex_t *mutex;
 };
 
 /**
@@ -205,6 +233,8 @@ struct Menu{
  * @return      1 si l'initialisation c'est bien passée, 0 sinon
  */
 int initMenu(Menu **menu);
+
+void menuDestroy(Menu* menu);
 
 /**
  * @ingroup Menu
@@ -397,7 +427,15 @@ int reduceMenu(Menu *menu);
  */
 int increaseMenu(Menu *menu);
 
-
+/**
+ * @ingroup Menu
+ * @brief Calcul et remplissage des coordonées RELATIVES de chaque Item ainsi que la taille relative du Menu
+ *
+ * @param  menu le menu
+ * @param  width Largeur de la fenêtre
+ * @param  menu Hauteur de la fenêtre
+ * @return      Valeur de contrôle, 1 si l'opération s'est bien passée, 0 sinon
+ */
 int calcMenuMesh(Menu *menu,int width, int height);
 
 

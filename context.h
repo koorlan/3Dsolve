@@ -95,9 +95,13 @@ typedef struct context
 	GLuint linktex;
 	GLuint menutex;
 	GLuint itemtex;
+	GLuint rbutton_tex;
+	GLuint lbutton_tex;
 	Object* cube_mesh;
 	Object* square_mesh;
 	Object* link_mesh;
+	Object* rbutton_mesh;
+	Object* lbutton_mesh;
 	Camera* camera;
 	float ratio;
 	int drawpick;

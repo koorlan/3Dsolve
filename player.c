@@ -365,7 +365,7 @@ int playerHelp(Player *player, Snake * snake)
 			exit(-1);
 		}
 	}
-	
+
 
 	for(i = 0; i < solSnake->volume.max.x; i++)
 	{	for(j = 0; j < solSnake->volume.max.y; j++)

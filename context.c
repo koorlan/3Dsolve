@@ -105,6 +105,16 @@ int getInput ( Context* context )
 	resize_w = -1;
 	glfwPollEvents ();
 
+	if (app->buttonPushed == 0){
+		logWrite("[BTN] Right button Pushed\n");
+		key_flags |= K_RT ;
+		app->buttonPushed = -1;
+	}else if(app->buttonPushed == 1 ){
+		logWrite("[BTN] Left button Pushed\n");
+		key_flags |= K_LF ;
+		app->buttonPushed = -1;
+	}
+
 	if (resize_h!=-1 || resize_w!=-1)
 	{
 
@@ -139,7 +149,7 @@ int getInput ( Context* context )
 	{
 		key_flags = K_NONE;
 		mouse_flags = M_NONE;
-	}	
+	}
 	else if ( (key_flags&K_ENTER)==K_ENTER )
 	{
 		bhv_flags ^= BHV_SPREAD;
@@ -422,7 +432,7 @@ int getInput ( Context* context )
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)==1)
 	{
-		
+
 		int i;
 		for (i=0;i<=gplayer->selected;i++)
 			mat4x4_translate(gplayer->realCubePos[i],
@@ -472,9 +482,10 @@ int getInput ( Context* context )
 
 		}
 	}
-	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY && gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY &&
+				gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
 		context->errorAlpha = 1.f;
-	
+
 
 	if ((mouse_flags&M_RLEFTONCE)==M_RLEFTONCE)
 	{
@@ -526,7 +537,6 @@ int getInput ( Context* context )
 					app->running = 0;
 					break;
 				case LOADSNAKE:
-					app->state = AS_LOAD;
 					// Chargement d'un nouveau snake
 					logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
@@ -542,34 +552,19 @@ int getInput ( Context* context )
 					{
 						snakeDestroy(app->snake, 1);
 						app->snake = newSnake;
-						resolverSolveSnake(app->snake, NULL);
-
-						playerDestroy(gplayer);
-						gplayer = playerInit ( app->snake );
-						gplayer->selected = 0;
-						playerDestroy(gsolver);
-						gsolver = playerInit(app->snake);
-						gsolver->currentSolution = app->snake->solutions->head;
-						logWrite("[MENU] Re-init solution menu \n");
-						//Snake Solution
-						app->menu->item[2]->menu->size = 0;
-				    for (i=0 ; i<app->snake->solutions->size && i<MAX_MENU_SIZE; i++){
-							char buf[255];
-							char snakeSolution[255] = "solution n°\0";
-							sprintf(buf,"%d",i+1);
-							strcat(snakeSolution,buf);
-							strcpy(app->menu->item[2]->menu->item[i]->descriptor.name,snakeSolution);
-							app->menu->item[2]->menu->size ++;
-
-						}
-						//app->menu->item[2]->menu->size = i;
-				    //app->menu->item[2]->menu->state = CLOSE;
-				    //app->menu->item[2]->menu->mesh = objectLoad("stc/menu.stc");
 				    calcMenu(app->menu->item[2]->menu);
 				    calcMenuMesh(app->menu->item[2]->menu,context->screen_width,context->screen_height);
+						pthread_attr_t attr;
+						pthread_t solverThread;
+						ThreadArgs* args = malloc(sizeof(ThreadArgs));
+						args->snake = app->snake;
+						args->rootNode = NULL;
+						args->resetSolutionMenu = 1;
 
+						pthread_attr_init(&attr);
+						pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+						pthread_create(&solverThread, &attr, resolverSolveSnake, args);
 					}
-					app->state = AS_GAME;
 					cameraReset (context->camera);
 					break;
 				case LOADSOL:
@@ -596,6 +591,7 @@ int getInput ( Context* context )
 								(float) gsolver->steps[i].coord.z);
 						}
 						context->playmode = PM_RESOLVE;
+						currentMenu->state = CLOSE;
 					break;
 				case MENU:
 					if(currentMenu->item[currentMenu->selected]->menu != NULL && currentMenu->item[currentMenu->selected]->menu->state == CLOSE){
@@ -837,6 +833,8 @@ void contextInit ( Context* context )
 	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
 	context->square_mesh = objectLoad ( "stc/square.stc" );
 	context->link_mesh = objectLoad ( "stc/link.stc" );
+	context->rbutton_mesh = objectLoad ( "stc/rbutton.stc" );
+	context->lbutton_mesh = objectLoad ( "stc/lbutton.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
@@ -895,6 +893,26 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->itemtex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/button.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->rbutton_tex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/button.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->lbutton_tex = textureID;
 
 
 	Camera * camera = cameraCreate();

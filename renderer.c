@@ -337,7 +337,7 @@ void* renderer ( void *arg )
 						break;
 					}
 
-			//! [5] Color picking (selection d'un cube a la souris)
+			//! [5] Color picking (selection d'un cube à la souris)
 			if ( context->drawpick == 1 )
 			{
 
@@ -390,6 +390,36 @@ void* renderer ( void *arg )
 					menuCaller = tmpMenu;
 					tmpMenu = NULL;
 				}
+
+				//==========Boutons==========
+				#ifdef __APPLE__
+					glBindVertexArrayAPPLE (context->rbutton_mesh->vao_id);
+				#else
+					glBindVertexArray (context->rbutton_mesh->vao_id);
+				#endif
+				glUniform3f(pickcolorID, 255.f, 255.f, 0.f);
+				float xoffset = 0.6f;
+				float yoffset = -0.8f;
+				mat4x4_identity(WMat);
+				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
+				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glDrawArrays(GL_TRIANGLES, 0, context->rbutton_mesh->nb_faces);
+
+				#ifdef __APPLE__
+					glBindVertexArrayAPPLE (context->lbutton_mesh->vao_id);
+				#else
+					glBindVertexArray (context->lbutton_mesh->vao_id);
+				#endif
+				glUniform3f(pickcolorID, 255.f, 255.f, 1.f/255.f);
+				xoffset = -0.6f;
+				yoffset = -0.8f;
+				mat4x4_identity(WMat);
+				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
+				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glDrawArrays(GL_TRIANGLES, 0, context->lbutton_mesh->nb_faces);
+
 				glFlush();
 				glFinish();
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -399,16 +429,22 @@ void* renderer ( void *arg )
 
 				//if (data[0] == gplayer->selected)
 				//	playerRotate(gplayer, gplayer->selected, context->snake);
-				if( (data[1]==255?-1:data[1]) != -1)
+				if( (data[1]==255?-1:data[1]) != -1){
 					app->itemSelected = (data[1]==255?-1:data[1]);
-				else{
+					app->buttonPushed = -1;
+					gplayer->selected = -1;
+				}else if((data[0]==255?-1:data[0]) != -1){
 					app->itemSelected = -1;
+					app->buttonPushed = -1;
 					gplayer->selected = (data[0]==255?-1:data[0]);
+				}else if((data[2]==255?-1:data[2]) != -1){
+					app->itemSelected = -1;
+					app->buttonPushed = (data[2]==255?-1:data[2]);
 				}
 				//if (gplayer->selected != -1)
 				//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
-				logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
+				//logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
 
 				context->drawpick = 0;  //Comment for debug
 				////Draw for debug
@@ -545,14 +581,14 @@ void* renderer ( void *arg )
 			for (z=0;z<app->snake->volume.max.z;z++)
 			{
 				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
-				{	
+				{
 					mat4x4_identity ( WMat );
 					//mat4x4_rotate_X ( WMat, WMat, glfwGetTime() * 0.8f );
 					mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
 					//mat4x4_rotate_Z ( WMat, WMat, glfwGetTime() * 0.2f );
 					mat4x4_translate_in_place ( WMat, x-vol_offset[0], y-vol_offset[1], z-vol_offset[2] );
 					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
-			
+
 					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
 					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
 					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
@@ -594,6 +630,38 @@ void* renderer ( void *arg )
 
 				glDrawArrays(GL_TRIANGLES, 0, context->square_mesh->nb_faces);
 			}
+
+			//==========Boutons==========
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->rbutton_mesh->vao_id);
+			#else
+				glBindVertexArray (context->rbutton_mesh->vao_id);
+			#endif
+			glBindTexture(GL_TEXTURE_2D, context->rbutton_tex);
+
+			xoffset = 0.6f;
+			yoffset = -0.8f;
+			mat4x4_identity(WMat);
+			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, context->rbutton_mesh->nb_faces);
+
+			#ifdef __APPLE__
+				glBindVertexArrayAPPLE (context->lbutton_mesh->vao_id);
+			#else
+				glBindVertexArray (context->lbutton_mesh->vao_id);
+			#endif
+			glBindTexture(GL_TEXTURE_2D, context->lbutton_tex);
+
+			xoffset = -0.6f;
+			yoffset = -0.8f;
+			mat4x4_identity(WMat);
+			mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
+			mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
+			glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, context->lbutton_mesh->nb_faces);
+
 
 			// textes d'infos
 			glUseProgram (0);
@@ -664,6 +732,12 @@ void* renderer ( void *arg )
 		glfwSwapBuffers (context->window);
 
 	}
+
+	ftglDestroyFont(titleFont);
+	ftglDestroyFont(pressFont);
+	ftglDestroyFont(textFont);
+	ftglDestroyFont(stextFont);
+
 	app->running = 0;
 	//! [3]
 
@@ -725,12 +799,14 @@ void drawMenuTemplate(Context *context, Menu *menu,Menu **menuCaller,Item **item
 				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
 				if(i == menu->opened){
 					glBindTexture(GL_TEXTURE_2D, context->itemtex);
+					glUniform1f(alphaID, 0.5f);
 					glDrawArrays(GL_TRIANGLES, 0, menu->mesh->nb_faces);
 					glBindTexture(GL_TEXTURE_2D, context->menutex);
 					accumulator -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/context->screen_height);
 					continue;
 				}
 				//glBindTexture(GL_TEXTURE_2D, context->itemtex);
+				glUniform1f(alphaID, 0.0f);
 				glDrawArrays(GL_TRIANGLES, 0, menu->mesh->nb_faces);
 				accumulator -= (menu->item[i]->bboxRel[1] - menu->item[i]->bboxRel[3]) + 2*(menu->item[i]->margin[3]/context->screen_height);
 			}
@@ -816,42 +892,37 @@ void drawMenuText(Context *context, Menu *menu,Menu **menuCaller,Item **itemCall
 	float xoffset = 0.f;
 	float yoffset = 0.f;
 
-	if (!pthread_mutex_trylock(menu->mutex)){
-		glUseProgram (0);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+	glUseProgram (0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-context->screen_width/2,context->screen_width/2,-context->screen_height/2,context->screen_height/2,0,1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	if(*itemCaller != NULL && *menuCaller != NULL){
+		xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
+		yoffset -= (*menuCaller)->margin[1];
+	}
+
+	accumulator = 0.f;
+
+	for ( i = 0;  i < menu->size; i++) {
+		if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
+				*itemCaller = menu->item[i];
+				*menuCaller = menu->item[i]->menu;
+		}
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-
-		if(*itemCaller != NULL && *menuCaller != NULL){
-			xoffset += 2*(*menuCaller)->margin[0] - (*menuCaller)->bboxRel[0] + (*menuCaller)->bboxRel[2] ;//+ (*itemCaller)->bboxRel[2];
-			yoffset -= (*menuCaller)->margin[1];
-		}
-
-		accumulator = 0.f;
-
-		for ( i = 0;  i < menu->size; i++) {
-			if(menu->item[i]->menu != NULL && menu->item[i]->menu->state == OPEN){
-					*itemCaller = menu->item[i];
-					*menuCaller = menu->item[i]->menu;
-			}
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			glTranslatef( (xoffset ) *(context->screen_width/2),
-										(yoffset )*(context->screen_height/2),0.f);
-			glTranslatef( (-1.f  + menu->margin[0] ) *(context->screen_width/2),
-										(1.f  -  menu->margin[1] )*(context->screen_height/2),0.f);  //go to the top left of the menu
-			accumulator += menu->item[i]->margin[1] + (menu->item[i]->bbox[3]-menu->item[i]->bbox[1]);
-			glTranslatef(menu->item[i]->margin[0],-accumulator,0.f);
-			accumulator += menu->item[i]->margin[3] ;
-			glScalef(abs(1.f- menu->item[i]->bboxRel[2]),abs(1.f-menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
-			glColor4f (menu->item[i]->descriptor.color.r, menu->item[i]->descriptor.color.g,menu->item[i]->descriptor.color.b,menu->item[i]->descriptor.color.a);
-			ftglRenderFont(menu->item[i]->descriptor.font, menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
-		}
-
-
-		pthread_mutex_unlock(menu->mutex);
+		glTranslatef( (xoffset ) *(context->screen_width/2),
+									(yoffset )*(context->screen_height/2),0.f);
+		glTranslatef( (-1.f  + menu->margin[0] ) *(context->screen_width/2),
+									(1.f  -  menu->margin[1] )*(context->screen_height/2),0.f);  //go to the top left of the menu
+		accumulator += menu->item[i]->margin[1] + (menu->item[i]->bbox[3]-menu->item[i]->bbox[1]);
+		glTranslatef(menu->item[i]->margin[0],-accumulator,0.f);
+		accumulator += menu->item[i]->margin[3] ;
+		glScalef(abs(1.f- menu->item[i]->bboxRel[2]),abs(1.f-menu->item[i]->bboxRel[1]),0.f);  //Fit the beast
+		glColor4f (menu->item[i]->descriptor.color.r, menu->item[i]->descriptor.color.g,menu->item[i]->descriptor.color.b,menu->item[i]->descriptor.color.a);
+		ftglRenderFont(menu->item[i]->descriptor.font, menu->item[i]->descriptor.name, FTGL_RENDER_ALL);
 	}
 
 }

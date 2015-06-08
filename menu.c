@@ -12,12 +12,31 @@ int initMenu(Menu **menu){
   memset((*menu)->bboxRel, 0.f,4*sizeof(float));
   (*menu)->size = 0;
   (*menu)->selected = -1;
+  (*menu)->opened = -1;
   (*menu)->item = malloc( MAX_MENU_SIZE * sizeof(Item)); // A voir si pas sizeof(*(*menu)->item)
-  (*menu)->mutex = malloc( sizeof(pthread_mutex_t));
-  memset((*menu)->scale, 1.f,3*sizeof(float));
-  pthread_mutex_init((*menu)->mutex, NULL);
 
   return 1;
+}
+
+void menuDestroy(Menu* menu)
+{
+    Item* currentItem;
+    int i;
+
+    for(i = 0; i < menu->size; i++)
+    {
+        currentItem = menu->item[i];
+        if(currentItem->menu != NULL)
+            menuDestroy(currentItem->menu);
+        if(currentItem->descriptor.action != LOADSOL)
+            ftglDestroyFont(currentItem->descriptor.font);
+        free(currentItem->descriptor.name);
+        free(currentItem);
+    }
+
+    free(menu->item);
+    objectDestroy(menu->mesh);
+    free(menu);
 }
 
 int getMenuMargin(Menu *menu, float margin[]){
@@ -188,14 +207,12 @@ int setItemDescriptor(Item *item, Descriptor descriptor){
     return 0;
   //maybe some other control
 
-  if (item->descriptor.name == NULL){
-    item->descriptor.name = malloc(strlen(descriptor.name)* sizeof(char));
-    strcpy(item->descriptor.name,descriptor.name);
-  }else{
+  if(item->descriptor.name != NULL)
     free(item->descriptor.name);
-    item->descriptor.name = malloc(strlen(descriptor.name)* sizeof(char));
+
+    item->descriptor.name = malloc((strlen(descriptor.name) + 1)* sizeof(char));
     strcpy(item->descriptor.name,descriptor.name);
-  }
+
   item->descriptor.font = descriptor.font;
   item->descriptor.fontSize = (descriptor.fontSize < 1 ) ? DEFAULT_MAX_FONT_SIZE : descriptor.fontSize ;
   item->descriptor.maxFontSize = (descriptor.maxFontSize < 1 ) ?  DEFAULT_MAX_FONT_SIZE : descriptor.maxFontSize ;
