@@ -156,7 +156,7 @@ void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 		mat4x4_identity(player->realCubeRot[i]);
 	}
 	if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
-		bhv_flags |= BHV_ROTATE;
+		bhv_flags |= BHV_WIN;
 }
 void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet)
 {
@@ -285,7 +285,7 @@ int playerCheckSolution (Player *player, Volume volume, int length)
 			return -1;
 		}
 	}
-	printf("\033[36;01mPlayer found the solution\033[00m\n");
+	//printf("\033[36;01mPlayer found the solution\033[00m\n");
 	return 1;
 }
 
@@ -306,7 +306,7 @@ int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord 
 			player->steps[i].coord.y + min.y < solSnake->volume.max.y &&
 			player->steps[i].coord.z + min.z < solSnake->volume.max.z &&
 			solSnake->volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] == FREE))
-		{	printf("\033[31;01mPlayer didn't find the solution - en dehors du vol ou chevauchement\033[00m\n");
+		{	//printf("\033[31;01mPlayer didn't find the solution - en dehors du vol ou chevauchement\033[00m\n");
 
 			return -1;
 		}

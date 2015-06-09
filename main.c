@@ -185,7 +185,7 @@ int main ( int argc, char ** argv )
 	{
 		context->playmode = PM_PLAY;
 		gplayer = playerInit ( app->snake );
-		gplayer->selected = 0;
+		gplayer->selected = -1;
 		gsolver = playerInit ( app->snake );
 		gsolver->currentSolution = app->snake->solutions->head;
 		contextInit ( context );
@@ -207,7 +207,7 @@ int main ( int argc, char ** argv )
 			{
 				playerDestroy(gplayer);
 				gplayer = playerInit ( app->snake );
-				gplayer->selected = 0;
+				gplayer->selected = -1;
 				playerDestroy(gsolver);
 				gsolver = playerInit(app->snake);
 				gsolver->currentSolution = app->snake->solutions->head;

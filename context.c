@@ -481,9 +481,12 @@ int getInput ( Context* context )
 
 
 		}
+		if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
+			bhv_flags |= BHV_WIN;
+
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY &&
-				gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+				gplayer->selected >= 0 && gplayer->selected < app->snake->length -1 && playerHelp(gplayer, app->snake)!=1 )
 		context->errorAlpha = 1.f;
 
 
@@ -624,7 +627,7 @@ int getInput ( Context* context )
 		}
 	}
 
-		if (gplayer->selected!=0)
+		if (gplayer->selected!=-1)
 		{
 			if(context->playmode == PM_RESOLVE){
 				int i;
@@ -713,6 +716,13 @@ int getInput ( Context* context )
 		context->spread = 1;
 	else context->spread = 0;
 
+	if ((bhv_flags&BHV_WIN)==BHV_WIN)
+	{
+		bhv_flags ^= BHV_WIN;
+		context->winAlpha = 1.f;
+	}
+
+
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
 		context->camera->distance-=0.4f;
@@ -723,6 +733,7 @@ int getInput ( Context* context )
 		context->camera->distance+=0.4f;
 		mouse_flags = M_NONE;
 	}
+
 
 	//mise à jour de la position/orientation de la camera
 	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
@@ -922,6 +933,7 @@ void contextInit ( Context* context )
 	context->drawpick = 0;
 	context->drawcenter = 0;
 	context->errorAlpha = 0.f;
+	context->winAlpha = 0.f;
 
 	glfwMakeContextCurrent ( NULL );
 

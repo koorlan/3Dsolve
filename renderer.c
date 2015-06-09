@@ -684,6 +684,14 @@ void* renderer ( void *arg )
 				context->errorAlpha -= 0.0075f;
 				ftglRenderFont( pressFont, "Pas de solution", FTGL_RENDER_ALL);
 			}
+			if (context->winAlpha>0)
+			{
+				glLoadIdentity();
+				glTranslatef ( -115.f, 0.f, 0.f );
+				glColor4f ( 0.f, 1.f, 0.f, context->winAlpha );
+				context->winAlpha -= 0.0035f;
+				ftglRenderFont( pressFont, "Casse-tête résolu !", FTGL_RENDER_ALL);
+			}
 
 			//==========menu==========
 
