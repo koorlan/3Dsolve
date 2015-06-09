@@ -46,4 +46,19 @@ La section \verb|[Symetry]| permet quant à elle de définir quels sont les axes
 \section{L'utilisation des threads}
 Nous avons dès le départ pris le parti d'utiliser la technique du multithreading afin de séparer l’exécution du rendu 3D et le reste de l'application. Cela permet notamment de faciliter la gestion des animations et, de manière plus générale, de limiter la dépendance du rendu 3D avec les diverses fonctions de calcul. 
 
-Plus tard dans le développement de l'application, nous avons étendu l'utilisation des threads au calcul des solutions. Cette parallélisation a permis d'améliorer le temps de calcul, en particulier pour le Snake Cube de taille 4x4x4.
+Plus tard dans le développement de l'application, nous avons étendu l'utilisation des threads au calcul des solutions. Cette parallélisation a permit d'améliorer le temps de calcul, en particulier pour le Snake Cube de taille 4x4x4.\newline
+
+Le schéma suivant (Fig.\ref{threads}) montre l'organisation des threads de notre programme. On distingue 4 types de threads :
+\begin{itemize}
+ \item Le thread principal, qui a pour rôle de créer les autres thread et qui fait donc office de thread de contrôle. C'est également lui qui se charge de l’interaction homme/machine (récupération et interprétation des entrées clavier/sourie).
+ \item Le thread graphique à qui il incombe d'actualiser l'écran de sorte à avoir dans l'idéal une fréquence de 60 images par seconde. Ce thread est démarré au lancement du programme et se termine lors de la fermeture du l'application.
+ \item Le thread de calcul, dont le rôle est de répartir le travail de recherche des solutions au différents threads de résolution de noeud. Se thread permet de calculer les solutions pour un snake tout en laissant la possibilité à l'utilisateur d'interagir avec l'application (pression sur la touche ``échap'' notamment. Ce thread est démarré en mode détaché pour recherché toutes les solutions lorsque l'utilisateur charge un nouveau serpent. Il peu également être lancé en mode attaché (attente de la fin de l’exécution) lorsque l'utilisateur demande une aide à la résolution. Ce démarrage en mode attaché représente une contrainte que nous n'avons pas eu le temps de contourné. En effet, quand ce thread est en mode attaché, il perd sa capacité à totalement paralléliser le travail de recherche. L'utilisateur ne peut donc plus interagir avec l'application pendant le calcul, le thread principal étant bloqué par l'attente de la fin de l'exécution du thread de calcul.
+ \item Les thread de résolution de noeud; ces threads sont créés par le thread de calcul. Il permette d'explorer plusieurs branche de l'arbre de recherche en même temps, permettant ainsi de réduire le temps de calcul. Le nombre de point de départ (de branches) à explorer pour chaque thread de résolution de noeud est définit de la manière suivante : soit n le nombre de thread de résolution de noeud à utiliser et x le nombre de point de départ possible pour résoudre le snake. Le nombre de point départ affectés au n-1 premier thread sera a = x / n. Pour le n\up{ième} thread, le nombre de point de départ affectés sera b = n - ((n-1) * a). Nous verrons dans la partie ``Résultats'' que cette façon de faire présente un inconvénient.
+\end{itemize}
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale=0.4,keepaspectratio=true]{img/threads.png}
+ \caption{Organisation des threads}
+ \label{threads}
+\end{figure}

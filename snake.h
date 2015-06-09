@@ -83,7 +83,7 @@ typedef enum
  * @var Unit::CORNER
  * Elément de type angle, impique un changement de direction
  */
-typedef enum
+typedef enum Unit
 {
 	EDGE,
 	STRAIGHT,
@@ -208,7 +208,7 @@ Snake* snakeInit(char* templatePath);
 
 /**
  * @ingroup Snake
- * @breif Copie un snake.
+ * @brief Copie un snake.
  *
  * @param destination Destination de la Copie
  * @param source      Source de la copie
