@@ -129,6 +129,16 @@ int getInput ( Context* context )
 	resize_w = -1;
 	glfwPollEvents ();
 
+	if (app->buttonPushed == 0){
+		logWrite("[BTN] Right button Pushed\n");
+		key_flags |= K_RT ;
+		app->buttonPushed = -1;
+	}else if(app->buttonPushed == 1 ){
+		logWrite("[BTN] Left button Pushed\n");
+		key_flags |= K_LF ;
+		app->buttonPushed = -1;
+	}
+
 	if (resize_h!=-1 || resize_w!=-1)
 	{
 
@@ -847,6 +857,8 @@ void contextInit ( Context* context )
 	context->cube_mesh = objectLoad ( "stc/woodcube4.obj" );
 	context->square_mesh = objectLoad ( "stc/square.stc" );
 	context->link_mesh = objectLoad ( "stc/link.stc" );
+	context->rbutton_mesh = objectLoad ( "stc/rbutton.stc" );
+	context->lbutton_mesh = objectLoad ( "stc/lbutton.stc" );
 
 	unsigned char* buffer;
 	unsigned int width, height;
@@ -905,6 +917,26 @@ void contextInit ( Context* context )
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	context->itemtex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/button.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->rbutton_tex = textureID;
+
+	lodepng_decode32_file(&buffer, &width, &height, "textures/button.png");
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	context->lbutton_tex = textureID;
 
 
 	Camera * camera = cameraCreate();
