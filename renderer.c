@@ -572,26 +572,17 @@ void* renderer ( void *arg )
 				glBindVertexArray (context->cube_mesh->vao_id);
 			#endif
 
-			int x,y,z;
-			int cnt=0;
-			for (x=0;x<app->snake->volume.max.x;x++)
-			for (y=0;y<app->snake->volume.max.y;y++)
-			for (z=0;z<app->snake->volume.max.z;z++)
+			for (i=0;i<app->snake->length;i++)
 			{
-				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
-				{
-					mat4x4_identity ( WMat );
-					//mat4x4_rotate_X ( WMat, WMat, glfwGetTime() * 0.8f );
-					mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
-					//mat4x4_rotate_Z ( WMat, WMat, glfwGetTime() * 0.2f );
-					mat4x4_translate_in_place ( WMat, x-vol_offset[0], y-vol_offset[1], z-vol_offset[2] );
-					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				mat4x4_identity ( WMat );
+				mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
+				mat4x4_translate_in_place (WMat, -vol_offset[0], -vol_offset[1], -vol_offset[2]);
+				mat4x4_mul (WMat, WMat, curPlayer->finishedCubePos[i]);
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
-					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-				}
-				cnt++;
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 
 

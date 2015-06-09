@@ -45,6 +45,7 @@ Player* playerInit ( Snake* snake )
 	playerFlatten ( player, snake, 0 );
 
 	player->realCubePos = malloc ( snake->length * 16 * sizeof(float) );
+	player->finishedCubePos = malloc ( snake->length * 16 * sizeof(float) );
 	player->realCubeRot = malloc ( snake->length * 16 * sizeof(float) );
 	player->flatCubePos = malloc ( snake->length * 3 * sizeof(float) );
 	int i;
@@ -58,6 +59,12 @@ Player* playerInit ( Snake* snake )
 		player->flatCubePos[i][0] = (float) player->steps[i].coord.x;
 		player->flatCubePos[i][1] = (float) player->steps[i].coord.y;
 		player->flatCubePos[i][2] = (float) player->steps[i].coord.z;
+		if (app->snake->solutions != NULL && app->snake->solutions->head != NULL)
+			mat4x4_translate(player->finishedCubePos[i],
+				(float) app->snake->solutions->head->step[i].coord.x,
+				(float) app->snake->solutions->head->step[i].coord.y,
+				(float) app->snake->solutions->head->step[i].coord.z);
+			
 	}
 
 	player->segStart = -1;
