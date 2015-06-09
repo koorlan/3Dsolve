@@ -427,24 +427,22 @@ void* renderer ( void *arg )
 				glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
 						GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-				//if (data[0] == gplayer->selected)
-				//	playerRotate(gplayer, gplayer->selected, context->snake);
+				int oldsel = gplayer->selected;
+				gplayer->selected = -1;
 				if( (data[1]==255?-1:data[1]) != -1){
 					app->itemSelected = (data[1]==255?-1:data[1]);
 					app->buttonPushed = -1;
-					gplayer->selected = -1;
 				}else if((data[0]==255?-1:data[0]) != -1){
 					app->itemSelected = -1;
 					app->buttonPushed = -1;
 					gplayer->selected = (data[0]==255?-1:data[0]);
 				}else if((data[2]==255?-1:data[2]) != -1){
+					gplayer->selected = oldsel;
 					app->itemSelected = -1;
 					app->buttonPushed = (data[2]==255?-1:data[2]);
 				}
-				//if (gplayer->selected != -1)
-				//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
-				//logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
+				//printf("selected: %d\n", data[0]);
 
 				context->drawpick = 0;  //Comment for debug
 				////Draw for debug

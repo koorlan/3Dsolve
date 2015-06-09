@@ -38,6 +38,8 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 	{
 		mouse_flags ^= M_LEFT;
 		mouse_flags |= M_RLEFTONCE;
+		if ((bhv_flags & BHV_BLOCKED) == BHV_BLOCKED)
+			bhv_flags ^= BHV_BLOCKED;
 	}
 }
 
@@ -105,12 +107,15 @@ int getInput ( Context* context )
 	resize_w = -1;
 	glfwPollEvents ();
 
+
 	if (app->buttonPushed == 0){
-		logWrite("[BTN] Right button Pushed\n");
+		//logWrite("[BTN] Right button Pushed\n");
+		bhv_flags |= BHV_BLOCKED;
 		key_flags |= K_RT ;
 		app->buttonPushed = -1;
 	}else if(app->buttonPushed == 1 ){
-		logWrite("[BTN] Left button Pushed\n");
+		//logWrite("[BTN] Left button Pushed\n");
+		bhv_flags |= BHV_BLOCKED;
 		key_flags |= K_LF ;
 		app->buttonPushed = -1;
 	}
@@ -506,7 +511,7 @@ int getInput ( Context* context )
 			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {
 			accumulator += currentMenu->size;
-			logWrite("accumulator %d \n",accumulator);
+			//logWrite("accumulator %d \n",accumulator);
 			if(app->itemSelected >= accumulator){
 				if(currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size)
 					currentMenu = currentMenu->item[currentMenu->opened]->menu;
@@ -514,7 +519,7 @@ int getInput ( Context* context )
 					break;
 			}
 			else{
-				logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
+				//logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
 				currentMenu->selected = app->itemSelected - accumulator + currentMenu->size;
 				if (currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size){
 					menuToClose = currentMenu->item[currentMenu->opened]->menu;
@@ -534,6 +539,8 @@ int getInput ( Context* context )
 		}
 		if (currentMenu != NULL && currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
+				char* snakeName;
+				char* snakePath;
 				case RESET:
 					break;
 				case EXIT:
@@ -541,12 +548,12 @@ int getInput ( Context* context )
 					break;
 				case LOADSNAKE:
 					// Chargement d'un nouveau snake
-					logWrite("[MENU] New snake requested\n");
+					//logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
-					char* snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
-					char* snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
+					snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
+					snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
 					sprintf(snakePath, "Snakes/%s", snakeName);
-					logWrite("[MENU] Loading Snake : %s\n", snakePath);
+					//logWrite("[MENU] Loading Snake : %s\n", snakePath);
 					Snake* newSnake = snakeInit(snakePath);
 					free(snakePath);
 					currentMenu->state = CLOSE;
@@ -663,7 +670,7 @@ int getInput ( Context* context )
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
-		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
+		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 && (bhv_flags & BHV_BLOCKED) == 0)
 		{
 			if ( abs(accx) > abs(accy) )
 			{
