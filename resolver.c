@@ -185,7 +185,6 @@ void* resolverSolveSnake(void* argsf)
 
     app->updateSolutionMenu = tmpArgs->resetSolutionMenu;
     app->state = oldAppState == AS_LOAD ? AS_GAME : oldAppState;
-
     free(tmpArgs);
     return NULL;
 }

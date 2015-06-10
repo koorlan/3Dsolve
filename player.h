@@ -69,6 +69,7 @@ typedef struct Player
 	Solution* currentSolution;
 	mat4x4* realCubePos;
 	mat4x4* realCubeRot;
+	mat4x4* finishedCubePos;
 	vec3* flatCubePos;
 	int segStart;
 	int segEnd;

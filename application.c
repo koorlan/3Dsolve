@@ -39,6 +39,7 @@ Application* applicationCreate()
     app->running = 1;
     app->state = AS_HOME;
     app->itemSelected = -1;
+    app->buttonPushed = -1;
 
     return app;
 }

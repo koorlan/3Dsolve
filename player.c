@@ -69,6 +69,7 @@ Player* playerInit ( Snake* snake )
 	playerFlatten ( player, snake, 0 );
 
 	player->realCubePos = malloc ( snake->length * 16 * sizeof(float) );
+	player->finishedCubePos = malloc ( snake->length * 16 * sizeof(float) );
 	player->realCubeRot = malloc ( snake->length * 16 * sizeof(float) );
 	player->flatCubePos = malloc ( snake->length * 3 * sizeof(float) );
 	int i;
@@ -82,6 +83,12 @@ Player* playerInit ( Snake* snake )
 		player->flatCubePos[i][0] = (float) player->steps[i].coord.x;
 		player->flatCubePos[i][1] = (float) player->steps[i].coord.y;
 		player->flatCubePos[i][2] = (float) player->steps[i].coord.z;
+		if (app->snake->solutions != NULL && app->snake->solutions->head != NULL)
+			mat4x4_translate(player->finishedCubePos[i],
+				(float) app->snake->solutions->head->step[i].coord.x,
+				(float) app->snake->solutions->head->step[i].coord.y,
+				(float) app->snake->solutions->head->step[i].coord.z);
+			
 	}
 
 	player->segStart = -1;
@@ -180,7 +187,7 @@ void playerRotate ( Player* player, int stepIndex, Snake * snake, int magnet )
 		mat4x4_identity(player->realCubeRot[i]);
 	}
 	if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
-		bhv_flags |= BHV_ROTATE;
+		bhv_flags |= BHV_WIN;
 }
 void playerFakeRotate ( Player* player, int stepIndex, Snake * snake, int magnet)
 {
@@ -309,7 +316,7 @@ int playerCheckSolution (Player *player, Volume volume, int length)
 			return -1;
 		}
 	}
-	printf("\033[36;01mPlayer found the solution\033[00m\n");
+	//printf("\033[36;01mPlayer found the solution\033[00m\n");
 	return 1;
 }
 
@@ -330,7 +337,7 @@ int initVolume(Snake *solSnake, Snake *snake, Player * player, Coord min, Coord 
 			player->steps[i].coord.y + min.y < solSnake->volume.max.y &&
 			player->steps[i].coord.z + min.z < solSnake->volume.max.z &&
 			solSnake->volume.state[player->steps[i].coord.x + min.x][player->steps[i].coord.y + min.y][player->steps[i].coord.z + min.z] == FREE))
-		{	printf("\033[31;01mPlayer didn't find the solution - en dehors du vol ou chevauchement\033[00m\n");
+		{	//printf("\033[31;01mPlayer didn't find the solution - en dehors du vol ou chevauchement\033[00m\n");
 
 			return -1;
 		}

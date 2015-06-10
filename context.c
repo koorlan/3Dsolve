@@ -62,6 +62,8 @@ void buttonCallback(GLFWwindow* window, int button, int action, int modes)
 	{
 		mouse_flags ^= M_LEFT;
 		mouse_flags |= M_RLEFTONCE;
+		if ((bhv_flags & BHV_BLOCKED) == BHV_BLOCKED)
+			bhv_flags ^= BHV_BLOCKED;
 	}
 }
 
@@ -83,6 +85,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 			{
 				case GLFW_KEY_ESCAPE:
 					glfwSetWindowShouldClose(window, GL_TRUE);
+					break;
+				case GLFW_KEY_F9:
+					bhv_flags |= BHV_DRAWPICK;
 					break;
 				case GLFW_KEY_PAGE_UP:
 					key_flags |= K_PGUP;
@@ -110,6 +115,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		case GLFW_RELEASE:
 			switch(key)
 			{
+				case GLFW_KEY_F9:
+					if ((bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK) bhv_flags ^= BHV_DRAWPICK;
 				default:
 					break;
 			}
@@ -129,12 +136,15 @@ int getInput ( Context* context )
 	resize_w = -1;
 	glfwPollEvents ();
 
+
 	if (app->buttonPushed == 0){
-		logWrite("[BTN] Right button Pushed\n");
+		//logWrite("[BTN] Right button Pushed\n");
+		bhv_flags |= BHV_BLOCKED;
 		key_flags |= K_RT ;
 		app->buttonPushed = -1;
 	}else if(app->buttonPushed == 1 ){
-		logWrite("[BTN] Left button Pushed\n");
+		//logWrite("[BTN] Left button Pushed\n");
+		bhv_flags |= BHV_BLOCKED;
 		key_flags |= K_LF ;
 		app->buttonPushed = -1;
 	}
@@ -505,9 +515,12 @@ int getInput ( Context* context )
 
 
 		}
+		if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
+			bhv_flags |= BHV_WIN;
+
 	}
 	else if ((key_flags&K_RT)==K_RT && context->playmode == PM_PLAY &&
-				gplayer->selected >= 0 && playerHelp(gplayer, app->snake)!=1)
+				gplayer->selected >= 0 && gplayer->selected < app->snake->length -1 && playerHelp(gplayer, app->snake)!=1 )
 		context->errorAlpha = 1.f;
 
 
@@ -527,7 +540,7 @@ int getInput ( Context* context )
 			//From 279 to 307 , Magic...do not touch !
 		for ( i = 0; i < app->menuDepth; i++) {
 			accumulator += currentMenu->size;
-			logWrite("accumulator %d \n",accumulator);
+			//logWrite("accumulator %d \n",accumulator);
 			if(app->itemSelected >= accumulator){
 				if(currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size)
 					currentMenu = currentMenu->item[currentMenu->opened]->menu;
@@ -535,7 +548,7 @@ int getInput ( Context* context )
 					break;
 			}
 			else{
-				logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
+				//logWrite("itemSelected : %d , acc %d, menusize %d \n",app->itemSelected , accumulator ,currentMenu->size);
 				currentMenu->selected = app->itemSelected - accumulator + currentMenu->size;
 				if (currentMenu->opened >= 0 && currentMenu->opened < currentMenu->size){
 					menuToClose = currentMenu->item[currentMenu->opened]->menu;
@@ -555,6 +568,8 @@ int getInput ( Context* context )
 		}
 		if (currentMenu != NULL && currentMenu->selected > -1 && currentMenu->selected < currentMenu->size){
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
+				char* snakeName;
+				char* snakePath;
 				case RESET:
 					break;
 				case EXIT:
@@ -562,12 +577,12 @@ int getInput ( Context* context )
 					break;
 				case LOADSNAKE:
 					// Chargement d'un nouveau snake
-					logWrite("[MENU] New snake requested\n");
+					//logWrite("[MENU] New snake requested\n");
 					// Récupération du nom du snake
-					char* snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
-					char* snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
+					snakeName = currentMenu->item[currentMenu->selected]->descriptor.name;
+					snakePath = malloc((10 + strlen(snakeName)) * sizeof(char));
 					sprintf(snakePath, "Snakes/%s", snakeName);
-					logWrite("[MENU] Loading Snake : %s\n", snakePath);
+					//logWrite("[MENU] Loading Snake : %s\n", snakePath);
 					Snake* newSnake = snakeInit(snakePath);
 					free(snakePath);
 					currentMenu->state = CLOSE;
@@ -648,7 +663,7 @@ int getInput ( Context* context )
 		}
 	}
 
-		if (gplayer->selected!=0)
+		if (gplayer->selected!=-1)
 		{
 			if(context->playmode == PM_RESOLVE){
 				int i;
@@ -684,7 +699,7 @@ int getInput ( Context* context )
 		}
 		float accx = (last_xpos-gxpos)*0.01f;
 		float accy = (last_ypos-gypos)*0.01f;
-		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 )
+		if ( ( accx!=0.f || accy!=0.f ) && gplayer->selected != -1 && (bhv_flags & BHV_BLOCKED) == 0)
 		{
 			if ( abs(accx) > abs(accy) )
 			{
@@ -737,6 +752,13 @@ int getInput ( Context* context )
 		context->spread = 1;
 	else context->spread = 0;
 
+	if ((bhv_flags&BHV_WIN)==BHV_WIN)
+	{
+		bhv_flags ^= BHV_WIN;
+		context->winAlpha = 1.f;
+	}
+
+
 	if ((mouse_flags&M_ROLLF)==M_ROLLF)
 	{
 		context->camera->distance-=0.4f;
@@ -747,6 +769,7 @@ int getInput ( Context* context )
 		context->camera->distance+=0.4f;
 		mouse_flags = M_NONE;
 	}
+
 
 	//mise à jour de la position/orientation de la camera
 	context->camera->eye[0] = context->camera->target[0] + context->camera->distance
@@ -946,6 +969,7 @@ void contextInit ( Context* context )
 	context->drawpick = 0;
 	context->drawcenter = 0;
 	context->errorAlpha = 0.f;
+	context->winAlpha = 0.f;
 
 	glfwMakeContextCurrent ( NULL );
 

@@ -78,10 +78,11 @@
 #define K_ANY		0b10000000
 #define K_NONE		0b00000000
 
-
-
 #define BHV_ROTATE	0b00000001
 #define BHV_SPREAD	0b00000010
+#define BHV_WIN		0b00000100
+#define BHV_BLOCKED	0b00001000
+#define BHV_DRAWPICK	0b00010000
 
 #define PM_PLAY		0
 #define PM_RESOLVE	1
@@ -132,6 +133,7 @@ typedef struct context
 	int playmode;
 	int spread;
 	int drawcenter;
+	float winAlpha;
 	float errorAlpha;
 } Context;
 

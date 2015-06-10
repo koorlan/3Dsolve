@@ -362,7 +362,7 @@ void* renderer ( void *arg )
 					}
 
 			//! [5] Color picking (selection d'un cube à la souris)
-			if ( context->drawpick == 1 )
+			if ( context->drawpick == 1 || (bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK )
 			{
 
 				glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
@@ -382,13 +382,13 @@ void* renderer ( void *arg )
 
 				for ( i=0; i <= curPlayer->segEnd; i++ )
 				{
-					glUniform3f(pickcolorID, ((float)i)/255.f, 255.f, 0.f);
+					glUniform3f(pickcolorID, ((float)i)/255.f, 1.f, 0.f);
 
 					mat4x4_identity ( WMat );
 					mat4x4_mul (WMat, WMat, curPlayer->realCubePos[i]);
 					mat4x4_mul (WMat, WMat, curPlayer->realCubeRot[i]);
 					mat4x4_scale3d(WMat, WMat, scoef);
-					mat4x4_scale3d(WMat, WMat, 0.6f);
+					//mat4x4_scale3d(WMat, WMat, 0.6f);
 
 					glUniformMatrix4fv ( wID2, 1, GL_FALSE, &WMat[0][0] );
 
@@ -451,29 +451,29 @@ void* renderer ( void *arg )
 				glReadPixels(gxpos, context->screen_height-gypos, 1, 1,
 						GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-				//if (data[0] == gplayer->selected)
-				//	playerRotate(gplayer, gplayer->selected, context->snake);
+				int oldsel = gplayer->selected;
+				gplayer->selected = -1;
 				if( (data[1]==255?-1:data[1]) != -1){
 					app->itemSelected = (data[1]==255?-1:data[1]);
 					app->buttonPushed = -1;
-					gplayer->selected = -1;
 				}else if((data[0]==255?-1:data[0]) != -1){
 					app->itemSelected = -1;
 					app->buttonPushed = -1;
 					gplayer->selected = (data[0]==255?-1:data[0]);
 				}else if((data[2]==255?-1:data[2]) != -1){
+					gplayer->selected = oldsel;
 					app->itemSelected = -1;
 					app->buttonPushed = (data[2]==255?-1:data[2]);
 				}
-				//if (gplayer->selected != -1)
-				//	printf ("cube %d gplayer->selected, dir=%d\n", gplayer->selected, gplayer->steps[gplayer->selected].dir);
 
-				//logWrite("[DRAWPICK] id menu selected %d \n",app->itemSelected);
+				//printf("selected: %d\n", data[0]);
 
-				context->drawpick = 0;  //Comment for debug
-				////Draw for debug
-				//glfwSwapBuffers(context->window);
-				//continue;
+				context->drawpick = 0;
+				if ((bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK)
+				{
+					glfwSwapBuffers(context->window);
+					continue;
+				}
 
 			}
 			//! [5]
@@ -598,26 +598,17 @@ void* renderer ( void *arg )
 				glBindVertexArray (context->cube_mesh->vao_id);
 			#endif
 
-			int x,y,z;
-			int cnt=0;
-			for (x=0;x<app->snake->volume.max.x;x++)
-			for (y=0;y<app->snake->volume.max.y;y++)
-			for (z=0;z<app->snake->volume.max.z;z++)
+			for (i=0;i<app->snake->length;i++)
 			{
-				if ( app->snake->volume.state[x][y][z] != FORBIDDEN )
-				{
-					mat4x4_identity ( WMat );
-					//mat4x4_rotate_X ( WMat, WMat, glfwGetTime() * 0.8f );
-					mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
-					//mat4x4_rotate_Z ( WMat, WMat, glfwGetTime() * 0.2f );
-					mat4x4_translate_in_place ( WMat, x-vol_offset[0], y-vol_offset[1], z-vol_offset[2] );
-					glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
+				mat4x4_identity ( WMat );
+				mat4x4_rotate_Y ( WMat, WMat, glfwGetTime() * 0.4f );
+				mat4x4_translate_in_place (WMat, -vol_offset[0], -vol_offset[1], -vol_offset[2]);
+				mat4x4_mul (WMat, WMat, curPlayer->finishedCubePos[i]);
+				glUniformMatrix4fv ( wID, 1, GL_FALSE, &WMat[0][0] );
 
-					if (cnt%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
-					else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
-					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
-				}
-				cnt++;
+				if (i%2==0) glBindTexture(GL_TEXTURE_2D, context->dwoodtex);
+				else glBindTexture(GL_TEXTURE_2D, context->lwoodtex);
+				glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 			}
 
 
@@ -707,6 +698,14 @@ void* renderer ( void *arg )
 				glColor4f ( 1.f, 0.f, 0.f, context->errorAlpha );
 				context->errorAlpha -= 0.0075f;
 				ftglRenderFont( pressFont, "Pas de solution", FTGL_RENDER_ALL);
+			}
+			if (context->winAlpha>0)
+			{
+				glLoadIdentity();
+				glTranslatef ( -115.f, 0.f, 0.f );
+				glColor4f ( 0.f, 1.f, 0.f, context->winAlpha );
+				context->winAlpha -= 0.0035f;
+				ftglRenderFont( pressFont, "Casse-tête résolu !", FTGL_RENDER_ALL);
 			}
 
 			//==========menu==========
@@ -887,7 +886,7 @@ void drawPickMenuTemplate(struct context *context, Menu *menu,Menu **menuCaller,
 						*itemCaller = menu->item[i];
 						*menuCaller = menu->item[i]->menu;
 				}
-				glUniform3f(pickcolorID,255.f, (float)((*id))/255.f, 0.f);
+				glUniform3f(pickcolorID,1.f, (float)((*id))/255.f, 0.f);
 				*id += 1 ;
 				mat4x4_identity(WMat);
 				mat4x4_scale3d(WMat, WMat, 1.f);
