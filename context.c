@@ -62,6 +62,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_ESCAPE:
 					glfwSetWindowShouldClose(window, GL_TRUE);
 					break;
+				case GLFW_KEY_F9:
+					bhv_flags |= BHV_DRAWPICK;
+					break;
 				case GLFW_KEY_PAGE_UP:
 					key_flags |= K_PGUP;
 					break;
@@ -88,6 +91,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		case GLFW_RELEASE:
 			switch(key)
 			{
+				case GLFW_KEY_F9:
+					if ((bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK) bhv_flags ^= BHV_DRAWPICK;
 				default:
 					break;
 			}

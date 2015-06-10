@@ -338,7 +338,7 @@ void* renderer ( void *arg )
 					}
 
 			//! [5] Color picking (selection d'un cube à la souris)
-			if ( context->drawpick == 1 )
+			if ( context->drawpick == 1 || (bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK )
 			{
 
 				glClearColor( 1.0f, 1.0f, 1.0f, 1.f );
@@ -444,10 +444,12 @@ void* renderer ( void *arg )
 
 				//printf("selected: %d\n", data[0]);
 
-				context->drawpick = 0;  //Comment for debug
-				////Draw for debug
-				//glfwSwapBuffers(context->window);
-				//continue;
+				context->drawpick = 0;
+				if ((bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK)
+				{
+					glfwSwapBuffers(context->window);
+					continue;
+				}
 
 			}
 			//! [5]
