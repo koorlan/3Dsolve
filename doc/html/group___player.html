@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('group___player.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Structures de données</a> &#124;
 <a href="#func-members">Fonctions</a>  </div>
   <div class="headertitle">
 <div class="title">Player</div>  </div>
@@ -101,6 +102,12 @@ $(document).ready(function(){initNavTree('group___player.html','');});
 <p>Ce module, articulé autour de la structure <a class="el" href="struct_player.html" title="Modélise un joueur, soit un utilisateur de l&#39;application. ">Player</a> permet de modéliser un joueur et de gérer l'interaction de celui-ci avec l'application.  
 <a href="#details">Plus de détails...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Structures de données</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_player.html">Player</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modélise un joueur, soit un utilisateur de l'application.  <a href="struct_player.html#details">Plus de détails...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Fonctions</h2></td></tr>
 <tr class="memitem:gad1a97fdf7e216abbe0d12112b0eff2b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_player.html">Player</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gad1a97fdf7e216abbe0d12112b0eff2b7">playerInit</a> (<a class="el" href="struct_snake.html">Snake</a> *snake)</td></tr>
@@ -122,6 +129,7 @@ Fonctions</h2></td></tr>
 <tr class="memdesc:ga53f05cd74811715faf9a66381e260661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcule les coordonnées min et max des unités placées par le joueur.  <a href="#ga53f05cd74811715faf9a66381e260661">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga53f05cd74811715faf9a66381e260661"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac9ddd28fb75760a871c7baad7d63c183"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#gac9ddd28fb75760a871c7baad7d63c183">playerCheckSolution</a> (<a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_volume.html">Volume</a> volume, int length)</td></tr>
+<tr class="memdesc:gac9ddd28fb75760a871c7baad7d63c183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie si le joueur à résolu le casse tête ou non.  <a href="#gac9ddd28fb75760a871c7baad7d63c183">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gac9ddd28fb75760a871c7baad7d63c183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___player.html#ga58ea907ff2ae8824ac0757a9d4c65499">initVolume</a> (<a class="el" href="struct_snake.html">Snake</a> *solSnake, <a class="el" href="struct_snake.html">Snake</a> *snake, <a class="el" href="struct_player.html">Player</a> *player, <a class="el" href="struct_coord.html">Coord</a> min, <a class="el" href="struct_coord.html">Coord</a> max, int *debugCpt)</td></tr>
 <tr class="memdesc:ga58ea907ff2ae8824ac0757a9d4c65499"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remplit le volume qui servira à l'aie du joueur (volume à remplir moins les unités déjà placées par le joueur)  <a href="#ga58ea907ff2ae8824ac0757a9d4c65499">Plus de détails...</a><br/></td></tr>
@@ -241,7 +249,8 @@ Fonctions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Vérifie si le joueur à résolu le casse tête ou non </p>
+
+<p>Vérifie si le joueur à résolu le casse tête ou non. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">player</td><td>Le joueur </td></tr>
@@ -541,7 +550,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Vendredi 5 Juin 2015 20:45:59 pour 3DSolve par
+    <li class="footer">Généré le Mardi 9 Juin 2015 17:02:45 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -7,14 +7,14 @@ var group___menu =
       [ "r", "struct_color.html#a514f1b439f404f86f77090fa9edc96ce", null ]
     ] ],
     [ "Descriptor", "struct_descriptor.html", [
-      [ "action", "struct_descriptor.html#aa9cf7d0afedceb0d21dd5f412fe08c18", null ],
-      [ "bbox", "struct_descriptor.html#aecad081a6e74b13ae85769ea926e4bab", null ],
-      [ "color", "struct_descriptor.html#aa5f4d1eda21c196bd8401ff73f105073", null ],
-      [ "font", "struct_descriptor.html#ab8a4393b4d588cfcfacd2cf70f98240a", null ],
-      [ "fontSize", "struct_descriptor.html#a78dc3704e7e01da52c9a93a70c5bc45d", null ],
-      [ "maxFontSize", "struct_descriptor.html#ad2f026ef507eebd51d303e15fba46305", null ],
-      [ "minFontSize", "struct_descriptor.html#a0623f13cf01e6db3599a38b2cb2b2062", null ],
-      [ "name", "struct_descriptor.html#a5ac083a645d964373f022d03df4849c8", null ]
+      [ "action", "struct_descriptor.html#a2f4ab7bf743142dae2e459aa18f9f1d4", null ],
+      [ "bbox", "struct_descriptor.html#a8d17b90ab7f595b93df0a4cebc741c79", null ],
+      [ "color", "struct_descriptor.html#a37dbdc30935031c05304482e1be89d8f", null ],
+      [ "font", "struct_descriptor.html#af18bb9025627467c42857f6b57902a47", null ],
+      [ "fontSize", "struct_descriptor.html#a68eb0df9d5fd433bb6fe691f00a0878f", null ],
+      [ "maxFontSize", "struct_descriptor.html#ac4010bb8293f7d74eccc663d10ad3352", null ],
+      [ "minFontSize", "struct_descriptor.html#ae2c2fcfebb41a54335b8cd41a1bfb1ab", null ],
+      [ "name", "struct_descriptor.html#ab74e6bf80237ddc4109968cedc58c151", null ]
     ] ],
     [ "Item", "struct_item.html", [
       [ "bbox", "struct_item.html#ab1e7b66e25d69d3e159d3d96fdce9558", null ],
@@ -33,8 +33,8 @@ var group___menu =
       [ "opened", "struct_menu.html#ae93c9257881d1af0c66fd4a2974576af", null ],
       [ "selected", "struct_menu.html#a2224ec0958a602aef926b6a3715e094e", null ],
       [ "size", "struct_menu.html#aa3d6656320f1a7278c0c2c7fdf07617c", null ],
-      [ "state", "struct_menu.html#a876b486d3a5241a126bd5751c5f70f79", null ],
-      [ "type", "struct_menu.html#a46d12b2b1afe38ce510e426234b96749", null ]
+      [ "state", "struct_menu.html#adc6e5733fc3c22f0a7b2914188c49c90", null ],
+      [ "type", "struct_menu.html#a7aead736a07eaf25623ad7bfa1f0ee2d", null ]
     ] ],
     [ "Action", "group___menu.html#ga8bb1ef53467e4f61410d12822d922498", null ],
     [ "MenuType", "group___menu.html#gae5c7b6b4f6e696391cd7faaea6571bb4", null ],

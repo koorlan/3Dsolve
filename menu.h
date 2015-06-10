@@ -56,7 +56,7 @@
  *
  * @var MenuType::ROW
  * Un menu en ligne
- * @var MenuType::COLLUM
+ * @var MenuType::COLUMN
  * Un menu en colonne
  */
 typedef enum MenuType {ROW, COLUMN} MenuType;
@@ -142,21 +142,21 @@ typedef struct Color {
  *
  * Le Descripteur contient les différantes valeurs caractérisant un item.
  *
- * @var Descripteur::name
+ * @var Descriptor::name
  * Le texte à afficher
- * @var Descripteur::font
+ * @var Descriptor::font
  * La police de texte à utiliser pour rendre le texte
- * @var Descripteur::fontSize
+ * @var Descriptor::fontSize
  * La taille de la police de texte
- * @var Descripteur::minFontSize
+ * @var Descriptor::minFontSize
  * La taille minimale de la police de texte
- * @var Descripteur::maxFontSize
+ * @var Descriptor::maxFontSize
  * La taille maximale de la police de texte à utiliser
- * @var Descripteur::color
+ * @var Descriptor::color
  * La couleur du texte
- * @var Descripteur::Action
+ * @var Descriptor::action
  * L'action du descripteur de l'objet
- * @var Descripteur::bbox
+ * @var Descriptor::bbox
  * Contient les différantes valeurs permettant de caractériser la zone de
  * rendu de l'item
  */
@@ -218,6 +218,10 @@ typedef struct Item
  * Un menu est un ensemble d'item qui peuvent eux-même déclancher l'ouverture
  * de sous-menu autorisant ainsi d'avoir des menus en cascade.
  *
+ * @var Menu::state
+ * L'état du menu (ouvert ou fermé)
+ * @var Menu::type
+ * Le type du menu
  * @var Menu::margin
  * Les marges à appliquer au menu, dans l'ordre : Gauche, Haut, Droite, Bas.
  * @var Menu::bbox
@@ -362,7 +366,7 @@ int getItemBbox(Item *item, float bbox[]);
  * @ingroup Menu
  * @brief Permet de récupérer les marges d'un item
  * @param  item     l'item
- * @param  mergin le tableau dans lequel récupérer les valeurs
+ * @param  margin le tableau dans lequel récupérer les valeurs
  * @return          valeur de contrôle, 1 si l'opération s'est bien passé, 0 sinon
  */
 int getItemMargin(Item *item, float margin[]);
@@ -463,7 +467,7 @@ int increaseMenu(Menu *menu);
  *
  * @param  menu le menu
  * @param  width Largeur de la fenêtre
- * @param  menu Hauteur de la fenêtre
+ * @param  height Hauteur de la fenêtre
  * @return      Valeur de contrôle, 1 si l'opération s'est bien passée, 0 sinon
  */
 int calcMenuMesh(Menu *menu,int width, int height);

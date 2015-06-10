@@ -26,8 +26,9 @@ var searchData=
   ['solution',['Solution',['../struct_solution.html',1,'']]],
   ['solutions',['solutions',['../struct_snake.html#a97be9d71c3998b7a3a97e9403e375979',1,'Snake']]],
   ['solver',['solver',['../struct_application.html#a2debe316c6874c013213554b33d598bf',1,'Application']]],
-  ['state',['state',['../struct_application.html#adc6e5733fc3c22f0a7b2914188c49c90',1,'Application::state()'],['../group___menu.html#ga5d74787dedbc4e11c1ab15bf487e61f8',1,'State():&#160;menu.h']]],
+  ['state',['state',['../struct_application.html#adc6e5733fc3c22f0a7b2914188c49c90',1,'Application::state()'],['../struct_menu.html#adc6e5733fc3c22f0a7b2914188c49c90',1,'Menu::state()'],['../struct_volume.html#adc6e5733fc3c22f0a7b2914188c49c90',1,'Volume::state()'],['../group___menu.html#ga5d74787dedbc4e11c1ab15bf487e61f8',1,'State():&#160;menu.h']]],
   ['step',['Step',['../struct_step.html',1,'Step'],['../struct_solution.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'Solution::step()'],['../struct_node_tree.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae',1,'NodeTree::step()']]],
   ['steps',['steps',['../struct_player.html#a4d629e97dab1ddb8b4348b94f29fd12d',1,'Player']]],
+  ['symetries',['symetries',['../struct_snake.html#af0fd2b78c237d732b558aa24f3a1d68c',1,'Snake']]],
   ['symmetries',['symmetries',['../group___resolver.html#ga32c547fc9326200a8278a52420ba2aba',1,'symmetries(Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis):&#160;resolver.c'],['../group___resolver.html#ga32c547fc9326200a8278a52420ba2aba',1,'symmetries(Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Line horizontalAxis, Line diagonalAxis, Line slashAxis):&#160;resolver.c']]]
 ];

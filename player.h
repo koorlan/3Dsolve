@@ -23,7 +23,7 @@
  */
 
 /**
- * @defgroup Player
+ * @defgroup Player Player
  *
  * @brief Ce module, articulé autour de la structure Player permet de modéliser
  * un joueur et de gérer l'interaction de celui-ci avec l'application.
@@ -40,7 +40,7 @@
 #include "linmath.h"
 
 /**
- * @ingoup Player
+ * @ingroup Player
  * @struct Player
  * @brief Modélise un joueur, soit un utilisateur de l'application.
  *
@@ -137,7 +137,7 @@ int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volum
 
 /**
  * @ingroup Player
- * @breif Vérifie si le joueur à résolu le casse tête ou non
+ * @brief Vérifie si le joueur à résolu le casse tête ou non
  * @param  player Le joueur
  * @param  volume Le volume à remplir pour résoudre le casse-tête
  * @param  length La longueur du serpent

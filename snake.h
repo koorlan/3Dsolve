@@ -150,7 +150,7 @@ typedef enum
  * @brief Définit la forme que le snake possède dans son état résolu
  * @var Volume::max
  * Dimention (x*y*z) du volume
- * @var state
+ * @var Volume::state
  * Tableau 3D définisant le volume
  */
 typedef struct Volume
@@ -184,6 +184,8 @@ typedef struct Volume
  * Liste des solutions
  * @var Snake::volume
  * Volume que le snake doit remplir pour être solutionné
+ * @var Snake::symetries
+ * Indique les différents axes de symétrie relatifs au snake
  */
 typedef struct Snake
 {
@@ -193,13 +195,13 @@ typedef struct Snake
 	int currentUnit;
 	ListSolution* solutions;
 	Volume volume;
-	int symetries[4]; // Indique les différents axes de symétrie relatifs au snake
+	int symetries[4];
 } Snake;
 
 /**
  * @ingroup Snake
  * @brief Initialise un snake en lisant les donnée depuis
- * le fichier spécifier par <templatePath>
+ * le fichier spécifier par \a templatePath
  * @param  templatePath Chemin absolu ou relatif à l'exécutable du fichier
  * à charger
  * @return              Le snake chargé, ou NULL si une erreur est survenue

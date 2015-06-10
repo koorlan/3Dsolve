@@ -36,8 +36,6 @@ Application* applicationCreate()
     app->snake = NULL;
     app->player = NULL;
     app->solver = NULL;
-    app->pathExplored = 0;
-    app->calculTime = 0;
     app->running = 1;
     app->state = AS_HOME;
     app->itemSelected = -1;

@@ -87,10 +87,6 @@
  * @var Application::running
  * Ce champ est utilisé comme un flag afin d'indiquer si l'application est active ou non.
  * C'est la mise à 0 de ce champ qui permet de quitter l'application.
- * @var Application::pathExplored
- * Le nombre de chemin exploré pour trouver toutes les solutions
- * @var Application::calculTime
- * Le temps pris pour le calcul des solutions
  * @var Application::state
  * Décrit l'état de l'application : en jeu, en calcul de solution, en attente à l'écran
  * d'accueil, affichage l'aide ou du menu "à propos". Cette variable conditionne le comportement
@@ -104,6 +100,8 @@
  * Ce champ est utilisé comme un flag pour informer le thread principal de la nécessité ou non
  * d'actualiser le menu des solutions. Utilisé par le thread de calcul une fois toutes les
  * solutions trouvées.
+ * @var Application::buttonPushed
+ * Identifiant du boutton (gauche ou droite) qui a été cliqué.
  */
 typedef struct Application
 {
@@ -114,12 +112,9 @@ typedef struct Application
     Player* player;
     Player* solver;
     Menu *menu;
-    Menu *button;
     int menuDepth;
     int itemSelected;
     int running;
-    unsigned int pathExplored;
-    double calculTime;
     int state;
     int maxThread;
     int updateSolutionMenu;

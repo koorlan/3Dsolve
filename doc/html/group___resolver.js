@@ -7,6 +7,11 @@ var group___resolver =
       [ "parent", "struct_node_tree.html#a457d913bff1ebc8671c1eca1c9d5fc03", null ],
       [ "step", "struct_node_tree.html#ae5f3bfeb7e3cb5c8bc769d5504ebeeae", null ]
     ] ],
+    [ "FloatCoord", "struct_float_coord.html", [
+      [ "x", "struct_float_coord.html#a9336ebf25087d91c818ee6e9ec29f8c1", null ],
+      [ "y", "struct_float_coord.html#a2fb1c5cf58867b5bbc9a1b145a86f3a0", null ],
+      [ "z", "struct_float_coord.html#a25ed1bcb423b0b7200f485fc5ff71c8e", null ]
+    ] ],
     [ "Line", "struct_line.html", [
       [ "a", "struct_line.html#a4124bc0a9335c27f086f24ba207a4912", null ],
       [ "b", "struct_line.html#a21ad0bd836b90d08f4cf640b4c298e7c", null ],
@@ -16,7 +21,7 @@ var group___resolver =
     ] ],
     [ "ThreadArgs", "struct_thread_args.html", [
       [ "exploredWayNb", "struct_thread_args.html#ade20f35c133efc37e4b900794a7e9b38", null ],
-      [ "resetSolutionMenu", "struct_thread_args.html#aa3c62d64fc3bdfd196b2e51b0c44cb79", null ],
+      [ "resetSolutionMenu", "struct_thread_args.html#a62cc775f052878ec7bef4d56dcd9124a", null ],
       [ "rootNode", "struct_thread_args.html#a057f9de4afe85dad22a6bedc06424f58", null ],
       [ "snake", "struct_thread_args.html#aa798779259654cac04213978cf4297ab", null ]
     ] ],
@@ -40,6 +45,5 @@ var group___resolver =
     [ "symmetries", "group___resolver.html#ga32c547fc9326200a8278a52420ba2aba", null ],
     [ "validCoord", "group___resolver.html#ga12fbaaab641e2d2632d83785080631b0", null ],
     [ "validCoordSym", "group___resolver.html#ga0189b788cfe43109fa9e519f9c57358b", null ],
-    [ "validVectCube", "group___resolver.html#ga286d323a1e52a093aa00218af4a17931", null ],
-    [ "x", "group___resolver.html#ga9336ebf25087d91c818ee6e9ec29f8c1", null ]
+    [ "validVectCube", "group___resolver.html#ga286d323a1e52a093aa00218af4a17931", null ]
 ];

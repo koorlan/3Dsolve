@@ -8,6 +8,6 @@ var struct_menu =
     [ "opened", "struct_menu.html#ae93c9257881d1af0c66fd4a2974576af", null ],
     [ "selected", "struct_menu.html#a2224ec0958a602aef926b6a3715e094e", null ],
     [ "size", "struct_menu.html#aa3d6656320f1a7278c0c2c7fdf07617c", null ],
-    [ "state", "struct_menu.html#a876b486d3a5241a126bd5751c5f70f79", null ],
-    [ "type", "struct_menu.html#a46d12b2b1afe38ce510e426234b96749", null ]
+    [ "state", "struct_menu.html#adc6e5733fc3c22f0a7b2914188c49c90", null ],
+    [ "type", "struct_menu.html#a7aead736a07eaf25623ad7bfa1f0ee2d", null ]
 ];
