@@ -40,6 +40,7 @@ var group___resolver =
     [ "printLine", "group___resolver.html#gab41fb96ca2f03baa37109c18a9636813", null ],
     [ "printSnake", "group___resolver.html#ga6ece3acf45a9cf3a4f43d24be4b8ceb0", null ],
     [ "printTree", "group___resolver.html#gafb462b1cee08e8d549f077b204369ece", null ],
+    [ "resolverInitializeHelp", "group___resolver.html#ga2dba7c7b460ded86e48405a927a19d8b", null ],
     [ "resolverSolveNode", "group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c", null ],
     [ "resolverSolveSnake", "group___resolver.html#gab86f5a1fd5d53c26c2f424880222011e", null ],
     [ "symmetries", "group___resolver.html#ga32c547fc9326200a8278a52420ba2aba", null ],

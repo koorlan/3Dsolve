@@ -1,25 +1,25 @@
-/**
- * Projet application - 3DSolve
- * Version : 1.0
- *
- * Programme pour la résolution et la manipulation virtuelle de
- * casse-tête de type "Snake Cube"
- *
- * Auteurs :
- * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
- * 	- A.Chazot <alban.chazot@insa-cvl.fr>
- * 	- K.Colas <korlan.colas@insa-cvl.fr>
- * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
- *
- * Tuteur :
- * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
- *
- * Date : 11 / 06 / 15
- *
- * INSA - Centre Val De Loire
- * 2014-2015
- * Promotion 2017
- *
+/*
+  Projet application - 3DSolve
+  Version : 1.0
+
+  Programme pour la résolution et la manipulation virtuelle de
+  casse-tête de type "Snake Cube"
+
+  Auteurs :
+  	- L.Aubry <lisa.aubry@insa-cvl.fr>
+  	- A.Chazot <alban.chazot@insa-cvl.fr>
+  	- K.Colas <korlan.colas@insa-cvl.fr>
+  	- A.Gourd <anthony.gourd@insa-cvl.fr>
+
+  Tuteur :
+  	- P.Clemente <patrice.clemente@insa-cvl.fr>
+
+  Date : 11 / 06 / 15
+
+  INSA - Centre Val De Loire
+  2014-2015
+  Promotion 2017
+
  */
 
 /**
@@ -287,8 +287,8 @@ int cptNode (Tree rootNode);
  * @brief Affiche les caractéristique de \a line dans la console.
  *
  * Les caractéristiques affichées sont :
- * 	- les coordonnées des deux point utilisés pour définir la droite
- * 	- les valeurs des coefficients dans son écriture cartésienne
+ * 	* les coordonnées des deux point utilisés pour définir la droite
+ * 	* les valeurs des coefficients dans son écriture cartésienne
  * @param line Ligne que l'on veut afficher
  */
 void printLine (Line line);
@@ -408,6 +408,15 @@ Tree createAllInitialVectors(Volume volume);
  */
 int validVectCube(Coord nCoord, Dir dir, int max);
 
+/**
+ * @ingroup Resolver
+ * @brief Lance les thread de résolutions pour aider le joueur.
+ *
+ * Cheche les solutions à partir des déplacements effectués par le joueur.
+ * @param  snake   Le serpent à résoudre
+ * @param  fstStep Etape à partir de laquelle on cherche les solutions
+ * @return         1 si des solutions sont trouvées, -1 sinon.
+ */
 int resolverInitializeHelp(Snake *snake, Step fstStep);
 
 #endif // RESOLVER_H

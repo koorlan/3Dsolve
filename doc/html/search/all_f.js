@@ -7,6 +7,7 @@ var searchData=
   ['resetsolutionmenu',['resetSolutionMenu',['../struct_thread_args.html#a62cc775f052878ec7bef4d56dcd9124a',1,'ThreadArgs']]],
   ['reshapemenu',['reshapeMenu',['../group___menu.html#gad61893edf96d6b639312e606f85605e5',1,'reshapeMenu(Menu *menu, int width, int height):&#160;menu.c'],['../group___menu.html#gad61893edf96d6b639312e606f85605e5',1,'reshapeMenu(Menu *menu, int width, int height):&#160;menu.c']]],
   ['resolver',['Resolver',['../group___resolver.html',1,'']]],
+  ['resolverinitializehelp',['resolverInitializeHelp',['../group___resolver.html#ga2dba7c7b460ded86e48405a927a19d8b',1,'resolverInitializeHelp(Snake *snake, Step fstStep):&#160;resolver.c'],['../group___resolver.html#ga2dba7c7b460ded86e48405a927a19d8b',1,'resolverInitializeHelp(Snake *snake, Step fstStep):&#160;resolver.c']]],
   ['resolversolvenode',['resolverSolveNode',['../group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c',1,'resolverSolveNode(void *args):&#160;resolver.c'],['../group___resolver.html#ga21457eb6ddb29a0e7839013b2689291c',1,'resolverSolveNode(void *args):&#160;resolver.c']]],
   ['resolversolvesnake',['resolverSolveSnake',['../group___resolver.html#gab86f5a1fd5d53c26c2f424880222011e',1,'resolverSolveSnake(void *argsf):&#160;resolver.c'],['../group___resolver.html#gab86f5a1fd5d53c26c2f424880222011e',1,'resolverSolveSnake(void *arg):&#160;resolver.c']]],
   ['rootnode',['rootNode',['../struct_thread_args.html#a057f9de4afe85dad22a6bedc06424f58',1,'ThreadArgs']]],
