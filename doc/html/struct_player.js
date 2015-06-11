@@ -1,6 +1,7 @@
 var struct_player =
 [
     [ "currentSolution", "struct_player.html#ae16babfa5704af311a6ddc0bffc0a264", null ],
+    [ "finishedCubePos", "struct_player.html#aa7bd23e69cda4ac68ae01cc9b27a7279", null ],
     [ "flatCubePos", "struct_player.html#a3e020c150630118544b7ee8d5a0fa342", null ],
     [ "realCubePos", "struct_player.html#a33f9f6271dd8ca0d6ddb202e89e9389d", null ],
     [ "realCubeRot", "struct_player.html#a0b0f175736e3ad0ce95b00b920f6a326", null ],

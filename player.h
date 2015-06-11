@@ -1,25 +1,25 @@
-/**
- * Projet application - 3DSolve
- * Version : 1.0
- *
- * Programme pour la résolution et la manipulation virtuelle de
- * casse-tête de type "Snake Cube"
- *
- * Auteurs :
- * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
- * 	- A.Chazot <alban.chazot@insa-cvl.fr>
- * 	- K.Colas <korlan.colas@insa-cvl.fr>
- * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
- *
- * Tuteur :
- * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
- *
- * Date : 11 / 06 / 15
- *
- * INSA - Centre Val De Loire
- * 2014-2015
- * Promotion 2017
- *
+/*
+  Projet application - 3DSolve
+  Version : 1.0
+
+  Programme pour la résolution et la manipulation virtuelle de
+  casse-tête de type "Snake Cube"
+
+  Auteurs :
+  	- L.Aubry <lisa.aubry@insa-cvl.fr>
+  	- A.Chazot <alban.chazot@insa-cvl.fr>
+  	- K.Colas <korlan.colas@insa-cvl.fr>
+  	- A.Gourd <anthony.gourd@insa-cvl.fr>
+
+  Tuteur :
+  	- P.Clemente <patrice.clemente@insa-cvl.fr>
+
+  Date : 11 / 06 / 15
+
+  INSA - Centre Val De Loire
+  2014-2015
+  Promotion 2017
+
  */
 
 /**
@@ -50,13 +50,15 @@
  * @var Player::selected
  * Identifiant de l'élément du snake-cube sélectionné par le joueur
  * @var Player::currentSolution
- * ???
+ * Solution en cour de visualisation
  * @var Player::realCubePos
- * ???
+ * Les coordonnées des cubes dans l'espace de représentation
  * @var Player::realCubeRot
- * ???
+ * La rotation des cubes dans l'espace de représentation
+ * @var Player::finishedCubePos
+ * Position des éléments de forme finale en haut à droite.
  * @var Player::flatCubePos
- * ???
+ * Position des cubes représentant le serpent déplié
  * @var Player::segStart
  * Indentifiant du premier cube du segment sélectionné
  * @var Player::segEnd
@@ -90,7 +92,8 @@ Player* playerInit ( Snake* snake );
 
 /**
  * @ingroup Player
- * @brief ???
+ * @brief Déplie le serpent
+ *
  * @param player    Le joueur
  * @param snake     Le serpent
  * @param fromIndex l'index de début
@@ -99,21 +102,28 @@ void playerFlatten ( Player* player, Snake* snake, int fromIndex );
 
 /**
  * @ingroup Player
- * @brief ???
+ * @brief Rotation effective d'un élement du serpent
+ *
+ * Cette fonction valide la rotation effectuée par le joueur. Elle modifie la
+ * séquence des mouvements du joueur.
  * @param player    Le joueur
- * @param stepIndex ???
+ * @param stepIndex L'index de l'élément que l'on tourne
  * @param snake     Le serpent
- * @param magnet    ???
+ * @param magnet    Entier utilisé comme flag pour déterminer le sens de rotation
  */
 void playerRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 
 /**
  * @ingroup Player
- * @brief ???
+ * @brief Rotation d'un élement du serpent.
+ *
+ * Cette fonction permet de faire tourner un élément du serpent de manière
+ * linéaire (utile pour l'affichage) lorsque l'utilisateur est en train d'effectuer
+ * la rotation.
  * @param player    Le joueur
- * @param stepIndex [description]
+ * @param stepIndex L'index de l'élément que l'on tourne
  * @param snake     Le serpent
- * @param magnet    [description]
+ * @param magnet    Entier utilisé comme flag pour déterminer le sens de rotation
  */
 void playerFakeRotate ( Player* player, int stepIndex, Snake* snake, int magnet );
 
@@ -129,16 +139,19 @@ void playerDestroy ( Player* player );
  * @brief Calcule les coordonnées min et max des unités placées par le joueur
  * @param  min    Pointeur pour récupérer les coord min
  * @param  max    Pointeur pour récupérer les coord max
- * @param  length La taille du serpent correspondant aux nombre d'unités déjà placées pas le joueur
+ * @param  length La taille du serpent correspondant aux nombre d'unités
+ * déjà placées pas le joueur
  * @param  player Le joueur
  * @param  volume Le volume à remplir
-  * @return       1 si ce que les unités déjà placées permettent potentiellement de résoudre le Snake, -1 sinon (les cubes se chevauchent ou bien sortent du volume)
+ * @return       1 si ce que les unités déjà placées permettent
+ * potentiellement de résoudre le Snake, -1 sinon (les cubes se chevauchent
+ * ou bien sortent du volume)
  */
 int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volume volume);
 
 /**
  * @ingroup Player
- * @brief Vérifie si le joueur à résolu le casse tête ou non
+ * @brief  Vérifie si le joueur à résolu le casse tête ou non
  * @param  player Le joueur
  * @param  volume Le volume à remplir pour résoudre le casse-tête
  * @param  length La longueur du serpent

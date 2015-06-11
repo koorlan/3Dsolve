@@ -1,4 +1,3 @@
-<!-- HTML header for doxygen 1.8.6-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,7 +8,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="navtree.js"></script>
@@ -23,14 +21,23 @@
   $(document).ready(function() { searchBox.OnSelectItem(0); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div class="container-fluid">
-    <div class="row">
-        <h1 class="text-left col-sm-6"><a role="button" class="btn" href="http://www.3dsolve.auxisuite.fr"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a> 3DSolve Documentation</h1>
-    </div>
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="Logo.png"/></td>
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">3DSolve
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+   <div id="projectbrief">Application pour la résolution de casse-tête de type Snake Cube</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
 </div>
 <!-- end header part -->
 <!-- Généré par Doxygen 1.8.6 -->
@@ -96,27 +103,27 @@ $(document).ready(function(){initNavTree('application_8h_source.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Projet application - 3DSolve</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Version : 1.0</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Programme pour la résolution et la manipulation virtuelle de</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * casse-tête de type &quot;Snake Cube&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * Auteurs :</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *  - L.Aubry &lt;lisa.aubry@insa-cvl.fr&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *  - A.Chazot &lt;alban.chazot@insa-cvl.fr&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *  - K.Colas &lt;korlan.colas@insa-cvl.fr&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *  - A.Gourd &lt;anthony.gourd@insa-cvl.fr&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * Tuteur :</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *  - P.Clemente &lt;patrice.clemente@insa-cvl.fr&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * Date : 11 / 06 / 15</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * INSA - Centre Val De Loire</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> * 2014-2015</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> * Promotion 2017</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  Projet application - 3DSolve</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  Version : 1.0</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">  Programme pour la résolution et la manipulation virtuelle de</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">  casse-tête de type &quot;Snake Cube&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">  Auteurs :</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">    - L.Aubry &lt;lisa.aubry@insa-cvl.fr&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">    - A.Chazot &lt;alban.chazot@insa-cvl.fr&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">    - K.Colas &lt;korlan.colas@insa-cvl.fr&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">    - A.Gourd &lt;anthony.gourd@insa-cvl.fr&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">  Tuteur :</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">    - P.Clemente &lt;patrice.clemente@insa-cvl.fr&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">  Date : 11 / 06 / 15</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">  INSA - Centre Val De Loire</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">  2014-2015</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">  Promotion 2017</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef APPLICATION_H</span></div>
@@ -179,12 +186,12 @@ $(document).ready(function(){initNavTree('application_8h_source.html','');});
 <div class="ttc" id="struct_application_html_a3a29af741927410caf6c6451e6c10464"><div class="ttname"><a href="struct_application.html#a3a29af741927410caf6c6451e6c10464">Application::snakeNumber</a></div><div class="ttdeci">int snakeNumber</div><div class="ttdef"><b>Definition:</b> application.h:109</div></div>
 <div class="ttc" id="struct_application_html_a46afbb77ee4b53026dff7b4f65384dc4"><div class="ttname"><a href="struct_application.html#a46afbb77ee4b53026dff7b4f65384dc4">Application::player</a></div><div class="ttdeci">Player * player</div><div class="ttdef"><b>Definition:</b> application.h:112</div></div>
 <div class="ttc" id="struct_menu_html"><div class="ttname"><a href="struct_menu.html">Menu</a></div><div class="ttdoc">Définit un menu. </div><div class="ttdef"><b>Definition:</b> menu.h:244</div></div>
-<div class="ttc" id="group___application_html_gab243f6748e6131855c0587d4818f1fd2"><div class="ttname"><a href="group___application.html#gab243f6748e6131855c0587d4818f1fd2">applicationInitMainMenu</a></div><div class="ttdeci">int applicationInitMainMenu(Application *app, int width, int height)</div><div class="ttdoc">Initialise le menu de l&#39;application. </div><div class="ttdef"><b>Definition:</b> application.c:94</div></div>
-<div class="ttc" id="group___application_html_ga5508eba2a2487982278e064b4cb3b6aa"><div class="ttname"><a href="group___application.html#ga5508eba2a2487982278e064b4cb3b6aa">applicationDestroy</a></div><div class="ttdeci">void applicationDestroy(Application *app)</div><div class="ttdoc">Supprime app de la mémoire. </div><div class="ttdef"><b>Definition:</b> application.c:46</div></div>
+<div class="ttc" id="group___application_html_gab243f6748e6131855c0587d4818f1fd2"><div class="ttname"><a href="group___application.html#gab243f6748e6131855c0587d4818f1fd2">applicationInitMainMenu</a></div><div class="ttdeci">int applicationInitMainMenu(Application *app, int width, int height)</div><div class="ttdoc">Initialise le menu de l&#39;application. </div><div class="ttdef"><b>Definition:</b> application.c:95</div></div>
+<div class="ttc" id="group___application_html_ga5508eba2a2487982278e064b4cb3b6aa"><div class="ttname"><a href="group___application.html#ga5508eba2a2487982278e064b4cb3b6aa">applicationDestroy</a></div><div class="ttdeci">void applicationDestroy(Application *app)</div><div class="ttdoc">Supprime app de la mémoire. </div><div class="ttdef"><b>Definition:</b> application.c:47</div></div>
 <div class="ttc" id="struct_application_html_a2debe316c6874c013213554b33d598bf"><div class="ttname"><a href="struct_application.html#a2debe316c6874c013213554b33d598bf">Application::solver</a></div><div class="ttdeci">Player * solver</div><div class="ttdef"><b>Definition:</b> application.h:113</div></div>
 <div class="ttc" id="struct_application_html_aa798779259654cac04213978cf4297ab"><div class="ttname"><a href="struct_application.html#aa798779259654cac04213978cf4297ab">Application::snake</a></div><div class="ttdeci">Snake * snake</div><div class="ttdef"><b>Definition:</b> application.h:111</div></div>
 <div class="ttc" id="struct_application_html_a069532a02de6c73a417aeb5c97e6a77f"><div class="ttname"><a href="struct_application.html#a069532a02de6c73a417aeb5c97e6a77f">Application::maxThread</a></div><div class="ttdeci">int maxThread</div><div class="ttdef"><b>Definition:</b> application.h:119</div></div>
-<div class="ttc" id="group___application_html_ga8539e671d5894da3c638fb0da66684b5"><div class="ttname"><a href="group___application.html#ga8539e671d5894da3c638fb0da66684b5">applicationFindSnakes</a></div><div class="ttdeci">void applicationFindSnakes(Application *app)</div><div class="ttdoc">Parcours le dossier &quot;Snakes&quot; de l&#39;application à la recherche des snakes disponibles. </div><div class="ttdef"><b>Definition:</b> application.c:57</div></div>
+<div class="ttc" id="group___application_html_ga8539e671d5894da3c638fb0da66684b5"><div class="ttname"><a href="group___application.html#ga8539e671d5894da3c638fb0da66684b5">applicationFindSnakes</a></div><div class="ttdeci">void applicationFindSnakes(Application *app)</div><div class="ttdoc">Parcours le dossier &quot;Snakes&quot; de l&#39;application à la recherche des snakes disponibles. </div><div class="ttdef"><b>Definition:</b> application.c:58</div></div>
 <div class="ttc" id="struct_application_html"><div class="ttname"><a href="struct_application.html">Application</a></div><div class="ttdoc">Représente l&#39;état de l&#39;application. </div><div class="ttdef"><b>Definition:</b> application.h:106</div></div>
 <div class="ttc" id="group___application_html_ga6bdd12f5379556ea419ee3e215e19970"><div class="ttname"><a href="group___application.html#ga6bdd12f5379556ea419ee3e215e19970">applicationCreate</a></div><div class="ttdeci">Application * applicationCreate()</div><div class="ttdoc">Crée une nouvelle application. </div><div class="ttdef"><b>Definition:</b> application.c:27</div></div>
 <div class="ttc" id="struct_application_html_a905479d79c2aa8410d2fc374bc75cc5b"><div class="ttname"><a href="struct_application.html#a905479d79c2aa8410d2fc374bc75cc5b">Application::menu</a></div><div class="ttdeci">Menu * menu</div><div class="ttdef"><b>Definition:</b> application.h:114</div></div>
@@ -195,7 +202,7 @@ $(document).ready(function(){initNavTree('application_8h_source.html','');});
 <div class="ttc" id="struct_snake_html"><div class="ttname"><a href="struct_snake.html">Snake</a></div><div class="ttdoc">Définit le snake à résoudre. </div><div class="ttdef"><b>Definition:</b> snake.h:190</div></div>
 <div class="ttc" id="struct_application_html_a2a6e5820d61b17d558aea5e1e4958df5"><div class="ttname"><a href="struct_application.html#a2a6e5820d61b17d558aea5e1e4958df5">Application::menuDepth</a></div><div class="ttdeci">int menuDepth</div><div class="ttdef"><b>Definition:</b> application.h:115</div></div>
 <div class="ttc" id="struct_application_html_a1a015fe02c9cea18a5cf62656e257c97"><div class="ttname"><a href="struct_application.html#a1a015fe02c9cea18a5cf62656e257c97">Application::running</a></div><div class="ttdeci">int running</div><div class="ttdef"><b>Definition:</b> application.h:117</div></div>
-<div class="ttc" id="struct_player_html"><div class="ttname"><a href="struct_player.html">Player</a></div><div class="ttdoc">Modélise un joueur, soit un utilisateur de l&#39;application. </div><div class="ttdef"><b>Definition:</b> player.h:65</div></div>
+<div class="ttc" id="struct_player_html"><div class="ttname"><a href="struct_player.html">Player</a></div><div class="ttdoc">Modélise un joueur, soit un utilisateur de l&#39;application. </div><div class="ttdef"><b>Definition:</b> player.h:67</div></div>
 <div class="ttc" id="struct_application_html_a431afcada7d842aad844fa2bad7c8471"><div class="ttname"><a href="struct_application.html#a431afcada7d842aad844fa2bad7c8471">Application::snakeNames</a></div><div class="ttdeci">char ** snakeNames</div><div class="ttdef"><b>Definition:</b> application.h:108</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -203,7 +210,7 @@ $(document).ready(function(){initNavTree('application_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>application.h</b></li>
-    <li class="footer">Généré le Mardi 9 Juin 2015 17:02:45 pour 3DSolve par
+    <li class="footer">Généré le Jeudi 11 Juin 2015 15:54:25 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
