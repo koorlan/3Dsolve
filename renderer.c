@@ -271,11 +271,11 @@ void* renderer ( void *arg )
 			glLoadIdentity();
 			glTranslatef (myX, 0,0.f);
 			glColor4f (1.f, 1.f, 1.f, 1.f);
-			ftglRenderFont( textFont, "F8 : Maintenir préssé pour afficher uniquement les liens", FTGL_RENDER_ALL);
+			ftglRenderFont( textFont, "F8 : Maintenir pressé pour afficher uniquement les liens", FTGL_RENDER_ALL);
 			glLoadIdentity();
 			glTranslatef (myX, -40,0.f);
 			glColor4f (1.f, 1.f, 1.f, 1.f);
-			ftglRenderFont( textFont, "F9 : Maintenir préssé pour afficher le rendu du color-picking", FTGL_RENDER_ALL);
+			ftglRenderFont( textFont, "F9 : Maintenir pressé pour afficher le rendu du color-picking", FTGL_RENDER_ALL);
 			glLoadIdentity();
 			glTranslatef (myX, -80,0.f);
 			glColor4f (1.f, 1.f, 1.f, 1.f);

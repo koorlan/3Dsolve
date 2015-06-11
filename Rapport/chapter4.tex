@@ -7,13 +7,13 @@ Afin de présenter certains des algorithmes que nous avons mis en place dans not
 \paragraph{Etape (Step)} Structure représentant une étape de la solution c’est-à-dire un champ coord (type Coord) et un champ dir (type Dir).
 \paragraph{VolumeState} Type énuméré qui permet d’indiquer dans le volume final si une position est libre, occupée ou interdite
 \paragraph{Volume} Type structuré qui contient un champ max (type Coord) définissant les limites du volume dans l’espace et selon les trois coordonnées, et un champ état (state) (tableau 3D de VolumeState)
-\paragraph{Serpent (snake)} Type structuré qui contient : 
+\paragraph{Serpent (snake)} Type structuré qui contient :
 \begin{itemize}
- \item Un entier, taille (length), indiquant le nombre d’unités du serpent 
+ \item Un entier, taille (length), indiquant le nombre d’unités du serpent
  \item volume, un élément de type Volume qui définit le volume final
- \item units, qui pointe sur les unités du serpent 
- \item currentUnit, pointant sur l’unité en cous de traitement 
- \item solutions, pointeur sur la liste des solutions 
+ \item units, qui pointe sur les unités du serpent
+ \item currentUnit, pointant sur l’unité en cous de traitement
+ \item solutions, pointeur sur la liste des solutions
  \item symetries, tableau de quatre entiers correspondant aux différents axes de symétrie
 \end{itemize}
 \paragraph{Nœud (TreeNode)} Structure de données représentant un nœud dans l'arbre de recherche des solutions. Un nœud représente une étape dans l'enchaînement en cour de recherche. Si cet enchaînement abouti à une solution alors le mouvement (l'étape) porté par le nœud deviendra une étape de la solution.
@@ -56,7 +56,7 @@ Cet algorithme permet de créer à la volée et de parcourir en profondeur une b
 \paragraph{Explication}
 Tant que l'algorithme n'a pas exploré tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant, s'il ne l'a pas déjà fait. Faire ``jouer'' un nœud revient à créer ses fils grâce à l'algorithme \verb|ContruireFils|.
 
-Si la construction réussit, cela signifie qu'au moins un fils a été créé, le premier des fils créés devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvements aboutissant à cette solution. 
+Si la construction réussit, cela signifie qu'au moins un fils a été créé, le premier des fils créés devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvements aboutissant à cette solution.
 
 Si la construction échoue, cela signifie que le chemin emprunté ne peut pas aboutir à une solution et rien ne se passe. Si le nœud courant a déjà joué alors on réinitialise l'état du sous-volume qu'il occupe à Libre. Autrement dit, on enlève cet élément et le mouvement qui lui est associé de la suite de mouvements en cours de calcul. Si le nœud possède un frère, alors son frère devient le nœud courant. Sinon, c'est son père qui devient nœud courant, ce qui signifie que l'on ``remonte'' d'une étape dans la recherche de la solution.
 
