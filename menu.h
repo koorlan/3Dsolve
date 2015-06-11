@@ -1,4 +1,28 @@
 /**
+ * Projet application - 3DSolve
+ * Version : 1.0
+ *
+ * Programme pour la résolution et la manipulation virtuelle de
+ * casse-tête de type "Snake Cube"
+ *
+ * Auteurs :
+ * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
+ * 	- A.Chazot <alban.chazot@insa-cvl.fr>
+ * 	- K.Colas <korlan.colas@insa-cvl.fr>
+ * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
+ *
+ * Tuteur :
+ * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
+ *
+ * Date : 11 / 06 / 15
+ *
+ * INSA - Centre Val De Loire
+ * 2014-2015
+ * Promotion 2017
+ *
+ */
+
+/**
  * @defgroup Menu Menu
  *
  * @brief Module de gestion des menus.
@@ -32,7 +56,7 @@
  *
  * @var MenuType::ROW
  * Un menu en ligne
- * @var MenuType::COLLUM
+ * @var MenuType::COLUMN
  * Un menu en colonne
  */
 typedef enum MenuType {ROW, COLUMN} MenuType;
@@ -118,21 +142,21 @@ typedef struct Color {
  *
  * Le Descripteur contient les différantes valeurs caractérisant un item.
  *
- * @var Descripteur::name
+ * @var Descriptor::name
  * Le texte à afficher
- * @var Descripteur::font
+ * @var Descriptor::font
  * La police de texte à utiliser pour rendre le texte
- * @var Descripteur::fontSize
+ * @var Descriptor::fontSize
  * La taille de la police de texte
- * @var Descripteur::minFontSize
+ * @var Descriptor::minFontSize
  * La taille minimale de la police de texte
- * @var Descripteur::maxFontSize
+ * @var Descriptor::maxFontSize
  * La taille maximale de la police de texte à utiliser
- * @var Descripteur::color
+ * @var Descriptor::color
  * La couleur du texte
- * @var Descripteur::Action
+ * @var Descriptor::action
  * L'action du descripteur de l'objet
- * @var Descripteur::bbox
+ * @var Descriptor::bbox
  * Contient les différantes valeurs permettant de caractériser la zone de
  * rendu de l'item
  */
@@ -168,10 +192,10 @@ typedef struct Descriptor
  * Le menu à dérouler au clique. Ce pointeur est égale à NULL si
  * @var Item::bboxRel
  * Tableau de 2 vecteurs X,Y calculés pour la boite de rendu relatives (-1.f à 1.f)
- * [!img/boxdim.png]
+ * ![Illustration bboxRel](img/boxdim.png)
  * @var Item::marginRel
  * Tableau de 2 vecteurs X,Y calculés pour les marges relatives (-1.f à 1.f)
- * [!img/boxdim.png]
+ * ![Illustration bboxRel](img/boxdim.png)
  */
 
 typedef struct Menu Menu;
@@ -192,15 +216,19 @@ typedef struct Item
  * @brief Définit un menu.
  *
  * Un menu est un ensemble d'item qui peuvent eux-même déclancher l'ouverture
- * de sous-menu autorisant ainsi q'avoir des menus en cascade.
+ * de sous-menu autorisant ainsi d'avoir des menus en cascade.
  *
+ * @var Menu::state
+ * L'état du menu (ouvert ou fermé)
+ * @var Menu::type
+ * Le type du menu
  * @var Menu::margin
  * Les marges à appliquer au menu, dans l'ordre : Gauche, Haut, Droite, Bas.
  * @var Menu::bbox
  * Valeurs de description de la zone de rendu du menu
  * @var Menu::bboxRel
  * Tableau de 2 vecteurs X,Y calculés pour la boite de rendu relatives (-1.f à 1.f)
- * [!img/boxdim.png]
+ * ![Illustration bboxRel](img/boxdim.png)
  * @var Menu::size
  * Nombre d'item dans le menu
  * @var Menu::item
@@ -234,6 +262,12 @@ struct Menu{
  */
 int initMenu(Menu **menu);
 
+/**
+ * @ingroup Menu
+ * @brief Permet de détruir récursivement un menu et ses sous-menu
+ *
+ * @param menu Le menu à détruir
+ */
 void menuDestroy(Menu* menu);
 
 /**
@@ -332,7 +366,7 @@ int getItemBbox(Item *item, float bbox[]);
  * @ingroup Menu
  * @brief Permet de récupérer les marges d'un item
  * @param  item     l'item
- * @param  mergin le tableau dans lequel récupérer les valeurs
+ * @param  margin le tableau dans lequel récupérer les valeurs
  * @return          valeur de contrôle, 1 si l'opération s'est bien passé, 0 sinon
  */
 int getItemMargin(Item *item, float margin[]);
@@ -433,7 +467,7 @@ int increaseMenu(Menu *menu);
  *
  * @param  menu le menu
  * @param  width Largeur de la fenêtre
- * @param  menu Hauteur de la fenêtre
+ * @param  height Hauteur de la fenêtre
  * @return      Valeur de contrôle, 1 si l'opération s'est bien passée, 0 sinon
  */
 int calcMenuMesh(Menu *menu,int width, int height);

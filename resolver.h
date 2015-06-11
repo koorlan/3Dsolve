@@ -1,4 +1,28 @@
 /**
+ * Projet application - 3DSolve
+ * Version : 1.0
+ *
+ * Programme pour la résolution et la manipulation virtuelle de
+ * casse-tête de type "Snake Cube"
+ *
+ * Auteurs :
+ * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
+ * 	- A.Chazot <alban.chazot@insa-cvl.fr>
+ * 	- K.Colas <korlan.colas@insa-cvl.fr>
+ * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
+ *
+ * Tuteur :
+ * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
+ *
+ * Date : 11 / 06 / 15
+ *
+ * INSA - Centre Val De Loire
+ * 2014-2015
+ * Promotion 2017
+ *
+ */
+
+/**
  * @file resolver.h
  * @brief Structures et fonctions utilisées pour la réslution des "snake cube"
  * @authors Lisa Aubry <lisa.aubry@insa-cvl.fr>, Alban Chazot <alban.chazot@insa-cvl.fr>,
@@ -82,7 +106,7 @@ typedef struct NodeTree
 
 /**
  * @ingroup Resolver
- * @struc FloatCoord
+ * @struct FloatCoord
  * @brief Coordonnée en précision flotante.
  * @var FloatCoord::x
  * La coordonnée sur l'axe x
@@ -146,6 +170,9 @@ typedef NodeTree * Tree;
  * @var ThreadArgs::exploredWayNb
  * Pointeur sur entier qui sera valuer par le thread afin d'informer le
  * thread principal du nombre de chemin explorés.
+ * @var ThreadArgs::resetSolutionMenu
+ * Utilisé comme un flag afin d'informé le thread de résolution s'il doit demander
+ * une mise à jour de la liste des solutions après le résolution ou non.
  */
 typedef struct ThreadArgs
 {
@@ -157,8 +184,9 @@ typedef struct ThreadArgs
 
 /**
  * @ingroup Resolver
- * @brief Fonction principale dans la résolution du snake.
- * @param snake le serpent à résoudre
+ * @brief Fonction principale pour le thread de calcul des solutions.
+ * @param arg les arguments pour le thread de résolution
+ * @see ThreadArgs
  */
 void* resolverSolveSnake(void* arg);
 
@@ -206,7 +234,7 @@ void copyStep (Step * dest, Step src);
  * @brief Ajoute un noeud dans un arbre.
  *
  * Créer un nouveau noeud et renseigne son champ Step grâce au paramètres envoyés.
- * Le nouveau noeud est accroché <rootNode>
+ * Le nouveau noeud est accroché \a rootNode
  * @param rootNode : le noeud racine auquel sera attaché le nouveau noeud
  * @param x : la coordonnée x
  * @param y : la coordonnée y
@@ -217,21 +245,21 @@ void addInitialVector(Tree rootNode, int x, int y, int z, Dir newDir);
 
 /**
  * @ingroup Resolver
- * @brief Affiche les caractéristique de <currentNode> dans la console.
+ * @brief Affiche les caractéristique de \a currentNode dans la console.
  *
  * Les caractéristique affichée sont les coordonnées ainsi
  * que la direction du cube qui a été posé à l'étape de la résolution
- * modélisé par <currentNode>
+ * modélisé par \a currentNode
  * @param currentNode Le noeud à afficher
  */
 void printCurrentNode(Tree currentNode);
 
 /**
  * @ingroup Resolver
- * @brief Construit les enfants directs de <currentNode>.
+ * @brief Construit les enfants directs de \a currentNode.
  *
  * Lors du procésus de création des fils, les caractéristiques
- * de <snake> seront modifiée (elément courrant, et état du volume)
+ * de \a snake seront modifiée (elément courrant, et état du volume)
  * @param  currentNode Le noeud pour lequel on veux créer les fils
  * @param  snake       Le snake à résoudre.
  * @return             -1 si aucun fils ne peut être créé, 1 si au moins un fils a pu être créé et 2 si le dernier élement du snake a été placé.
@@ -240,7 +268,7 @@ int buildChildren(Tree currentNode, Snake * snake);
 
 /**
  * @ingroup Resolver
- * @brief Affiche <rootNode> dans la console.
+ * @brief Affiche \a rootNode dans la console.
  *
  * Fonctione de la même manière que printCurrentNode en affichant tous les
  * noeuds pour une hauteur donnée.
@@ -256,7 +284,7 @@ int cptNode (Tree rootNode);
 
 /**
  * @ingroup Resolver
- * @brief Affiche les caractéristique de <line> dans la console.
+ * @brief Affiche les caractéristique de \a line dans la console.
  *
  * Les caractéristiques affichées sont :
  * 	- les coordonnées des deux point utilisés pour définir la droite
@@ -267,14 +295,14 @@ void printLine (Line line);
 
 /**
  * @ingroup Resolver
- * @brief Calcul l'équation linéaire de <line>.
+ * @brief Calcul l'équation linéaire de \a line.
  * @param line Ligne dont on veut calculer l'équation linéaire
  */
 void linearEquation (Line *line);
 
 /**
  * @ingroup Resolver
- * @brief Vérifie si <srcDir> et <destDir> sont opposées par rapport à <typeOfAxis>.
+ * @brief Vérifie si \a srcDir et \a destDir sont opposées par rapport à \a typeOfAxis.
  * @param  srcDir     1er destination à comparer
  * @param  destDir    2eme destination à comparer
  * @param  typeOfAxis type de l'axe de sysmétrie utilisé pour la compéraison
@@ -284,7 +312,7 @@ int oppositeDir(Dir srcDir, Dir destDir, char * typeOfAxis);
 
 /**
  * @ingroup Resolver
- * @brief Copie <src> dans <dest>.
+ * @brief Copie \a src dans \a dest.
  * @param dest Destination de la copie
  * @param src  Source de la copie
  */
@@ -309,13 +337,13 @@ int symmetries (Step initialStep, Coord nCoord, Dir nDir, Line verticalAxis, Lin
  * @ingroup Resolver
  * @brief Construit une liste de vecteurs initiaux dans un volume donné.
  *
- * - On détermine le centre du volume
- * - On considère tour à tour chacune des faces de cette figure
- * - On projette orthogonalement le centre de la figure sur une face
- * - On construit les axes de symétrie passant par le centre
- * - On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique
- * @param  volume Le volume sur lequel effectuer le calcul
- * @param vectorNb un pointer sur int pour stocker le nombre de vecteur initiaux
+ * * On détermine le centre du volume
+ * * On considère tour à tour chacune des faces de cette figure
+ * * On projette orthogonalement le centre de la figure sur une face
+ * * On construit les axes de symétrie passant par le centre
+ * * On peut alors comparer les vecteurs deux à deux pour ne garder que ceux qui n'ont pas déjà un symétrique
+ * @param  snake Le snake duquel on veut déterminer les vecteurs initiaux
+ * @param initialVectorNb un pointer sur int pour stocker le nombre de vecteur initiaux
  * @return        L'arbre contenant les vecteurs initiaux
  */
 Tree findInitialVectors(Snake *snake, int* initialVectorNb);
@@ -331,14 +359,14 @@ Coord calcCoord(Coord coord,Dir dir);
 
 /**
  * @ingroup Resolver
- * @brief Vérifie la validé de <coord>.
+ * @brief Vérifie la validé de \a coord.
  *
  * Des coordonnées sont valides si pour chacune de leurs
  * composante, sa valeur est comprise entre 0 et la valeur maximale
- * donnée par <max>
+ * donnée par \a max
  * @param  coord Les coordonnées à vérifier
  * @param  max   Les coordonnées maximales
- * @return       1 si <coord> est valide, 0 sinon
+ * @return       1 si \a coord est valide, 0 sinon
  */
 int validCoord(Coord coord, Coord max);
 
@@ -347,7 +375,7 @@ int validCoord(Coord coord, Coord max);
  * @brief Même prinicipe que la fonction valideCoord mais avec des inégalitées larges.
  * @param  coord Les coordonnées à vérifier
  * @param  max   Les coordonnées maximales
- * @return       1 si <coord> est valide, 0 sinon
+ * @return       1 si \a coord est valide, 0 sinon
  * @see valideCoord
  */
 int validCoordSym(Coord coord, FloatCoord max);
@@ -381,6 +409,5 @@ Tree createAllInitialVectors(Volume volume);
 int validVectCube(Coord nCoord, Dir dir, int max);
 
 int resolverInitializeHelp(Snake *snake, Step fstStep);
-
 
 #endif // RESOLVER_H

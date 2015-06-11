@@ -120,6 +120,11 @@ Structures de données</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Énumérations</h2></td></tr>
+<tr class="memitem:gae5c7b6b4f6e696391cd7faaea6571bb4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#gae5c7b6b4f6e696391cd7faaea6571bb4">MenuType</a> { <b>ROW</b>, 
+<b>COLUMN</b>
+ }</td></tr>
+<tr class="memdesc:gae5c7b6b4f6e696391cd7faaea6571bb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit le type de l'item. <br/></td></tr>
+<tr class="separator:gae5c7b6b4f6e696391cd7faaea6571bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8bb1ef53467e4f61410d12822d922498"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga8bb1ef53467e4f61410d12822d922498">Action</a> { <br/>
 &#160;&#160;<b>NONE</b>, 
 <b>MENU</b>, 
@@ -128,7 +133,7 @@ Structures de données</h2></td></tr>
 <br/>
 &#160;&#160;<b>BACKAPP</b>, 
 <b>EXIT</b>, 
-<b>CONTROL</b>, 
+<b>HELP</b>, 
 <b>ABOUT</b>, 
 <br/>
 &#160;&#160;<b>OPTION</b>, 
@@ -155,6 +160,9 @@ Fonctions</h2></td></tr>
 <tr class="memitem:ga693f18700302e12bbedd998b3f85b9ff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga693f18700302e12bbedd998b3f85b9ff">initMenu</a> (<a class="el" href="struct_menu.html">Menu</a> **menu)</td></tr>
 <tr class="memdesc:ga693f18700302e12bbedd998b3f85b9ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise un menu.  <a href="#ga693f18700302e12bbedd998b3f85b9ff">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga693f18700302e12bbedd998b3f85b9ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa9fd4f292834370034d146b988373df7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#gaa9fd4f292834370034d146b988373df7">menuDestroy</a> (<a class="el" href="struct_menu.html">Menu</a> *menu)</td></tr>
+<tr class="memdesc:gaa9fd4f292834370034d146b988373df7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet de détruir récursivement un menu et ses sous-menu.  <a href="#gaa9fd4f292834370034d146b988373df7">Plus de détails...</a><br/></td></tr>
+<tr class="separator:gaa9fd4f292834370034d146b988373df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad31f95c5b6210e377d8ccf8aa9cb6cd2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#gad31f95c5b6210e377d8ccf8aa9cb6cd2">getMenuMargin</a> (<a class="el" href="struct_menu.html">Menu</a> *menu, float margin[])</td></tr>
 <tr class="memdesc:gad31f95c5b6210e377d8ccf8aa9cb6cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Permet d'obtenir les marges d'un menu.  <a href="#gad31f95c5b6210e377d8ccf8aa9cb6cd2">Plus de détails...</a><br/></td></tr>
 <tr class="separator:gad31f95c5b6210e377d8ccf8aa9cb6cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,9 +223,27 @@ Fonctions</h2></td></tr>
 <tr class="memitem:ga7bbaaa1981517f4b797967a7b8f0d28a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga7bbaaa1981517f4b797967a7b8f0d28a">increaseMenu</a> (<a class="el" href="struct_menu.html">Menu</a> *menu)</td></tr>
 <tr class="memdesc:ga7bbaaa1981517f4b797967a7b8f0d28a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Augmente la taille d'un menu.  <a href="#ga7bbaaa1981517f4b797967a7b8f0d28a">Plus de détails...</a><br/></td></tr>
 <tr class="separator:ga7bbaaa1981517f4b797967a7b8f0d28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga788e151b166b5c9afd10d8442450d0ad"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___menu.html#ga788e151b166b5c9afd10d8442450d0ad">calcMenuMesh</a> (<a class="el" href="struct_menu.html">Menu</a> *menu, int width, int height)</td></tr>
+<tr class="memdesc:ga788e151b166b5c9afd10d8442450d0ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcul et remplissage des coordonées RELATIVES de chaque <a class="el" href="struct_item.html" title="Un élément d&#39;un menu. ">Item</a> ainsi que la taille relative du <a class="el" href="struct_menu.html" title="Définit un menu. ">Menu</a>.  <a href="#ga788e151b166b5c9afd10d8442450d0ad">Plus de détails...</a><br/></td></tr>
+<tr class="separator:ga788e151b166b5c9afd10d8442450d0ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
 <p>Module de gestion des menus. </p>
+<p>Projet application - 3DSolve Version : 1.0</p>
+<p>Programme pour la résolution et la manipulation virtuelle de casse-tête de type "Snake Cube"</p>
+<p>Auteurs :</p>
+<ul>
+<li>L.Aubry <a href="#" onclick="location.href='mai'+'lto:'+'lis'+'a.'+'aub'+'ry'+'@in'+'sa'+'-cv'+'l.'+'fr'; return false;">lisa.<span style="display: none;">.nosp@m.</span>aubr<span style="display: none;">.nosp@m.</span>y@ins<span style="display: none;">.nosp@m.</span>a-cv<span style="display: none;">.nosp@m.</span>l.fr</a></li>
+<li>A.Chazot <a href="#" onclick="location.href='mai'+'lto:'+'alb'+'an'+'.ch'+'az'+'ot@'+'in'+'sa-'+'cv'+'l.f'+'r'; return false;">alban<span style="display: none;">.nosp@m.</span>.cha<span style="display: none;">.nosp@m.</span>zot@i<span style="display: none;">.nosp@m.</span>nsa-<span style="display: none;">.nosp@m.</span>cvl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+<li>K.Colas <a href="#" onclick="location.href='mai'+'lto:'+'kor'+'la'+'n.c'+'ol'+'as@'+'in'+'sa-'+'cv'+'l.f'+'r'; return false;">korla<span style="display: none;">.nosp@m.</span>n.co<span style="display: none;">.nosp@m.</span>las@i<span style="display: none;">.nosp@m.</span>nsa-<span style="display: none;">.nosp@m.</span>cvl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+<li>A.Gourd <a href="#" onclick="location.href='mai'+'lto:'+'ant'+'ho'+'ny.'+'go'+'urd'+'@i'+'nsa'+'-c'+'vl.'+'fr'; return false;">antho<span style="display: none;">.nosp@m.</span>ny.g<span style="display: none;">.nosp@m.</span>ourd@<span style="display: none;">.nosp@m.</span>insa<span style="display: none;">.nosp@m.</span>-cvl.<span style="display: none;">.nosp@m.</span>fr</a></li>
+</ul>
+<p>Tuteur :</p>
+<ul>
+<li>P.Clemente <a href="#" onclick="location.href='mai'+'lto:'+'pat'+'ri'+'ce.'+'cl'+'eme'+'nt'+'e@i'+'ns'+'a-c'+'vl'+'.fr'; return false;">patri<span style="display: none;">.nosp@m.</span>ce.c<span style="display: none;">.nosp@m.</span>lemen<span style="display: none;">.nosp@m.</span>te@i<span style="display: none;">.nosp@m.</span>nsa-c<span style="display: none;">.nosp@m.</span>vl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+</ul>
+<p>Date : 11 / 06 / 15</p>
+<p>INSA - Centre Val De Loire 2014-2015 Promotion 2017 </p>
 <h2 class="groupheader">Documentation des fonctions</h2>
 <a class="anchor" id="ga45465bd6059e38a35d0aa7ff1e660542"></a>
 <div class="memitem">
@@ -274,6 +300,49 @@ Fonctions</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">menu</td><td>le menu </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Valeur de contrôle, 1 si l'opération s'est bien passée, 0 sinon </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga788e151b166b5c9afd10d8442450d0ad"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int calcMenuMesh </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_menu.html">Menu</a> *&#160;</td>
+          <td class="paramname"><em>menu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calcul et remplissage des coordonées RELATIVES de chaque <a class="el" href="struct_item.html" title="Un élément d&#39;un menu. ">Item</a> ainsi que la taille relative du <a class="el" href="struct_menu.html" title="Définit un menu. ">Menu</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">menu</td><td>le menu </td></tr>
+    <tr><td class="paramname">width</td><td>Largeur de la fenêtre </td></tr>
+    <tr><td class="paramname">height</td><td>Hauteur de la fenêtre </td></tr>
   </table>
   </dd>
 </dl>
@@ -381,7 +450,7 @@ Fonctions</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramname">item</td><td>l'item </td></tr>
-    <tr><td class="paramname">mergin</td><td>le tableau dans lequel récupérer les valeurs </td></tr>
+    <tr><td class="paramname">margin</td><td>le tableau dans lequel récupérer les valeurs </td></tr>
   </table>
   </dd>
 </dl>
@@ -604,7 +673,46 @@ Fonctions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>1 si l'initialisation c'est bien passée, 0 sinon </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>1 si l'initialisation c'est bien passée, 0 sinon</dd></dl>
+<p>Projet application - 3DSolve Version : 1.0</p>
+<p>Programme pour la résolution et la manipulation virtuelle de casse-tête de type "Snake Cube"</p>
+<p>Auteurs :</p>
+<ul>
+<li>L.Aubry <a href="#" onclick="location.href='mai'+'lto:'+'lis'+'a.'+'aub'+'ry'+'@in'+'sa'+'-cv'+'l.'+'fr'; return false;">lisa.<span style="display: none;">.nosp@m.</span>aubr<span style="display: none;">.nosp@m.</span>y@ins<span style="display: none;">.nosp@m.</span>a-cv<span style="display: none;">.nosp@m.</span>l.fr</a></li>
+<li>A.Chazot <a href="#" onclick="location.href='mai'+'lto:'+'alb'+'an'+'.ch'+'az'+'ot@'+'in'+'sa-'+'cv'+'l.f'+'r'; return false;">alban<span style="display: none;">.nosp@m.</span>.cha<span style="display: none;">.nosp@m.</span>zot@i<span style="display: none;">.nosp@m.</span>nsa-<span style="display: none;">.nosp@m.</span>cvl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+<li>K.Colas <a href="#" onclick="location.href='mai'+'lto:'+'kor'+'la'+'n.c'+'ol'+'as@'+'in'+'sa-'+'cv'+'l.f'+'r'; return false;">korla<span style="display: none;">.nosp@m.</span>n.co<span style="display: none;">.nosp@m.</span>las@i<span style="display: none;">.nosp@m.</span>nsa-<span style="display: none;">.nosp@m.</span>cvl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+<li>A.Gourd <a href="#" onclick="location.href='mai'+'lto:'+'ant'+'ho'+'ny.'+'go'+'urd'+'@i'+'nsa'+'-c'+'vl.'+'fr'; return false;">antho<span style="display: none;">.nosp@m.</span>ny.g<span style="display: none;">.nosp@m.</span>ourd@<span style="display: none;">.nosp@m.</span>insa<span style="display: none;">.nosp@m.</span>-cvl.<span style="display: none;">.nosp@m.</span>fr</a></li>
+</ul>
+<p>Tuteur :</p>
+<ul>
+<li>P.Clemente <a href="#" onclick="location.href='mai'+'lto:'+'pat'+'ri'+'ce.'+'cl'+'eme'+'nt'+'e@i'+'ns'+'a-c'+'vl'+'.fr'; return false;">patri<span style="display: none;">.nosp@m.</span>ce.c<span style="display: none;">.nosp@m.</span>lemen<span style="display: none;">.nosp@m.</span>te@i<span style="display: none;">.nosp@m.</span>nsa-c<span style="display: none;">.nosp@m.</span>vl.f<span style="display: none;">.nosp@m.</span>r</a></li>
+</ul>
+<p>Date : 11 / 06 / 15</p>
+<p>INSA - Centre Val De Loire 2014-2015 Promotion 2017 </p>
+
+</div>
+</div>
+<a class="anchor" id="gaa9fd4f292834370034d146b988373df7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void menuDestroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_menu.html">Menu</a> *&#160;</td>
+          <td class="paramname"><em>menu</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Permet de détruir récursivement un menu et ses sous-menu. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">menu</td><td>Le menu à détruir </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -933,7 +1041,7 @@ Fonctions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <li class="footer">Généré le Mardi 9 Juin 2015 17:02:45 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

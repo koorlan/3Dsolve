@@ -32,7 +32,7 @@ Cet algorithme permet de créer à la volée et de parcourir en profondeur une b
  \STATE{noeud \recoit{} racine}
  \WHILE{noeud$\not=$racine OU racine->aJoué = 0}
  \IF{noeud->aJoué = 0}
- \STATE{resultatConstruction \recoit{} ConstruirFils(noeud, s)}
+ \STATE{resultatConstruction \recoit{} ConstruireFils(noeud, s)}
  \IF{resultatConstruction = 1}
  \STATE{noeud \recoit{} noeud->enfantCourant}
  \ELSEIF{resultatConstruction = 2}
@@ -40,9 +40,7 @@ Cet algorithme permet de créer à la volée et de parcourir en profondeur une b
  \ENDIF
  \ELSE
  \STATE{serpent->volume.état[noeud->étape.coord.x]
-			    [noeud->étape.coord.y]
-			    [noeud->étape.coord.z] 
-			    \recoit{} LIBRE}
+ [noeud->étape.coord.y][noeud->étape.coord.z]\recoit{} LIBRE}
  \IF{noeud->frère$\not=$NILL}
  \STATE{noeud \recoit{} noeud->frère}
  \ELSE
@@ -56,7 +54,7 @@ Cet algorithme permet de créer à la volée et de parcourir en profondeur une b
 
 \newpage
 \paragraph{Explication}
-Tant que l'algorithme n'a pas exploré tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant, s'il ne l'a pas déjà fait. Faire ``jouer'' un nœud revient à créer ses fils grâce à l'algorithme \verb|ContruirFils|.
+Tant que l'algorithme n'a pas exploré tous les chemins possibles découlant du nœud initial (\verb|racine|), il fait ``jouer'' le nœud courant, s'il ne l'a pas déjà fait. Faire ``jouer'' un nœud revient à créer ses fils grâce à l'algorithme \verb|ContruireFils|.
 
 Si la construction réussit, cela signifie qu'au moins un fils a été créé, le premier des fils créés devient alors le nœud courant. Si la construction a réussi et qu'en plus, le dernier élément du serpent a été posé, alors le casse-tête est résolu. On enregistre donc la séquence de mouvements aboutissant à cette solution. 
 
@@ -68,15 +66,15 @@ Lorsque le nœud courant reprend pour valeur celle de la racine et que la racine
 \section{Création des fils}
 
 \begin{algo}[noframe, numbered]
- \FUNCTION{ConstruirFils}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}{entier}
+ \FUNCTION{ConstruireFils}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}{entier}
  \VAR
- \DECLVAR{nCoord}{Coordonné}
+ \DECLVAR{nCoord}{Coordonnée}
  \DECLVAR{fils}{Noeud}
  \DECLVAR{prochaineUnité}{entier}
  \DECLVAR{i}{entier}
  \ENDVAR
  \BEGIN
-  \STATE{nCoord \recoit{} CalculCoordonné(noeud->étape, noeud->étape.dir)}
+  \STATE{nCoord \recoit{} CalculCoordonnée(noeud->étape, noeud->étape.dir)}
   \IF{CoordonnéValide(nCoord) ET serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Libre}
   \STATE{SerpentAjouterEtape(s, @(noeud->étape))}
   \STATE{serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Occupé}

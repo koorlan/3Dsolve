@@ -120,15 +120,10 @@ Champs de données</h2></td></tr>
 <tr class="separator:a6c2b7d06bc817fcc172b03d61e64c938"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905479d79c2aa8410d2fc374bc75cc5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_menu.html">Menu</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_item.html#a905479d79c2aa8410d2fc374bc75cc5b">menu</a></td></tr>
 <tr class="separator:a905479d79c2aa8410d2fc374bc75cc5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25c8282f1b105ab7aef4997cef114673"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a25c8282f1b105ab7aef4997cef114673"></a>
-<a class="el" href="structobject.html">Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>mesh</b></td></tr>
-<tr class="separator:a25c8282f1b105ab7aef4997cef114673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb695d6a01d95bfb40d64c86edbe9b13"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb695d6a01d95bfb40d64c86edbe9b13"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>bboxRel</b> [4]</td></tr>
-<tr class="separator:aeb695d6a01d95bfb40d64c86edbe9b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e3484cd036235fba459e46747b6604"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85e3484cd036235fba459e46747b6604"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>marginRel</b> [4]</td></tr>
-<tr class="separator:a85e3484cd036235fba459e46747b6604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a186358256560e2790b91414cf72aa060"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_item.html#a186358256560e2790b91414cf72aa060">bboxRel</a> [4]</td></tr>
+<tr class="separator:a186358256560e2790b91414cf72aa060"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2137761acb7edfadcb4e50d253769fda"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_item.html#a2137761acb7edfadcb4e50d253769fda">marginRel</a> [4]</td></tr>
+<tr class="separator:a2137761acb7edfadcb4e50d253769fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
 <div class="textblock"><p>Un élément d'un menu. </p>
@@ -145,6 +140,22 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>marginRel</b> [4]</t
 </div><div class="memdoc">
 <p>Les caractéristique de la zone de rendu de l'item </p>
 
+</div>
+</div>
+<a class="anchor" id="a186358256560e2790b91414cf72aa060"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bboxRel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tableau de 2 vecteurs X,Y calculés pour la boite de rendu relatives (-1.f à 1.f) </p>
+<div class="image">
+<img src="img/boxdim.png"  alt="Illustration bboxRel"/>
+</div>
+ 
 </div>
 </div>
 <a class="anchor" id="a6c2b7d06bc817fcc172b03d61e64c938"></a>
@@ -173,6 +184,22 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>marginRel</b> [4]</t
 
 </div>
 </div>
+<a class="anchor" id="a2137761acb7edfadcb4e50d253769fda"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">marginRel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tableau de 2 vecteurs X,Y calculés pour les marges relatives (-1.f à 1.f) </p>
+<div class="image">
+<img src="img/boxdim.png"  alt="Illustration bboxRel"/>
+</div>
+ 
+</div>
+</div>
 <a class="anchor" id="a905479d79c2aa8410d2fc374bc75cc5b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +209,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>marginRel</b> [4]</t
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Le menu à dérouler au clique. Ce pointeur est égale à NULL si Item::type == ITEM </p>
+<p>Le menu à dérouler au clique. Ce pointeur est égale à NULL si </p>
 
 </div>
 </div>
@@ -195,7 +222,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>marginRel</b> [4]</t
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="struct_item.html">Item</a></li>
-    <li class="footer">Généré le Samedi 30 Mai 2015 17:23:00 pour 3DSolve par
+    <li class="footer">Généré le Mardi 9 Juin 2015 17:02:45 pour 3DSolve par
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

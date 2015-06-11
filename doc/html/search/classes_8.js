@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['object',['object',['../structobject.html',1,'']]]
+  ['player',['Player',['../struct_player.html',1,'']]]
 ];

@@ -1,4 +1,28 @@
 /**
+ * Projet application - 3DSolve
+ * Version : 1.0
+ *
+ * Programme pour la résolution et la manipulation virtuelle de
+ * casse-tête de type "Snake Cube"
+ *
+ * Auteurs :
+ * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
+ * 	- A.Chazot <alban.chazot@insa-cvl.fr>
+ * 	- K.Colas <korlan.colas@insa-cvl.fr>
+ * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
+ *
+ * Tuteur :
+ * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
+ *
+ * Date : 11 / 06 / 15
+ *
+ * INSA - Centre Val De Loire
+ * 2014-2015
+ * Promotion 2017
+ *
+ */
+
+/**
  * @file snake.h
  * @brief Structures et fonctions utilisées pour définir un snake
  * @authors Lisa Aubry <lisa.aubry@insa-cvl.fr>, Alban Chazot <alban.chazot@insa-cvl.fr>,
@@ -59,7 +83,7 @@ typedef enum
  * @var Unit::CORNER
  * Elément de type angle, impique un changement de direction
  */
-typedef enum
+typedef enum Unit
 {
 	EDGE,
 	STRAIGHT,
@@ -126,7 +150,7 @@ typedef enum
  * @brief Définit la forme que le snake possède dans son état résolu
  * @var Volume::max
  * Dimention (x*y*z) du volume
- * @var state
+ * @var Volume::state
  * Tableau 3D définisant le volume
  */
 typedef struct Volume
@@ -160,6 +184,8 @@ typedef struct Volume
  * Liste des solutions
  * @var Snake::volume
  * Volume que le snake doit remplir pour être solutionné
+ * @var Snake::symetries
+ * Indique les différents axes de symétrie relatifs au snake
  */
 typedef struct Snake
 {
@@ -169,13 +195,13 @@ typedef struct Snake
 	int currentUnit;
 	ListSolution* solutions;
 	Volume volume;
-	int symetries[4]; // Indique les différents axes de symétrie relatifs au snake
+	int symetries[4];
 } Snake;
 
 /**
  * @ingroup Snake
  * @brief Initialise un snake en lisant les donnée depuis
- * le fichier spécifier par <templatePath>
+ * le fichier spécifier par \a templatePath
  * @param  templatePath Chemin absolu ou relatif à l'exécutable du fichier
  * à charger
  * @return              Le snake chargé, ou NULL si une erreur est survenue
@@ -184,7 +210,7 @@ Snake* snakeInit(char* templatePath);
 
 /**
  * @ingroup Snake
- * @breif Copie un snake.
+ * @brief Copie un snake.
  *
  * @param destination Destination de la Copie
  * @param source      Source de la copie

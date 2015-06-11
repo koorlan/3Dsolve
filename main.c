@@ -1,4 +1,28 @@
 /**
+ * Projet application - 3DSolve
+ * Version : 1.0
+ *
+ * Programme pour la résolution et la manipulation virtuelle de
+ * casse-tête de type "Snake Cube"
+ *
+ * Auteurs :
+ * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
+ * 	- A.Chazot <alban.chazot@insa-cvl.fr>
+ * 	- K.Colas <korlan.colas@insa-cvl.fr>
+ * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
+ *
+ * Tuteur :
+ * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
+ *
+ * Date : 11 / 06 / 15
+ *
+ * INSA - Centre Val De Loire
+ * 2014-2015
+ * Promotion 2017
+ *
+ */
+
+/**
  * @mainpage
  *
  * Ce programme résoud, de manière calculatoire, des "Snake Cube". La méthode
@@ -62,11 +86,10 @@
 #include "menu.h"
 #include "application.h"
 
-char* help = "SolidSnake\n\tUtilise par défault le snake \"Snakes/snake.snake\" et 1 thread de calcul.\n\n"\
+char* help = "SolidSnake\n\tUtilise par défault le snake \"Snakes/snake.snake\"\n\n"\
 "Options disponibles :\n --help\n\t Affiche l'aide\n --snake [path]\n\t Permet de choisir un autre snake"\
 " que celui par défaut en indiquant son chemin\n --threadNb [nombre]\n\t Permet de choisir le nombre de thread de"\
-" calcul à utiliser.\n --noGraphics\n\t Permet de ne pas démarrer le context de rendu 3D (utilisé à des fins de debug)"\
-". Note, si l'option --noGraphics est utilisé, l'application ne pourra pas calculer le temps de résolution.\n";
+" calcul à utiliser.\n";
 
 void checkArguments(int argc, char** argv, int* threadNb, char* snakeFile, int* noGraphics)
 {
@@ -98,7 +121,14 @@ void checkArguments(int argc, char** argv, int* threadNb, char* snakeFile, int* 
 			currentArgIndex++;
 			if(currentArgIndex < argc &&
 			sscanf(argv[currentArgIndex], "%d", &tmp) == 1)
+			{
 				*threadNb = tmp;
+				if(tmp <= 0)
+				{
+					printf("%s", help);
+					exit(EXIT_FAILURE);
+				}
+			}
 			else
 			{
 				printf("%s", help);
@@ -142,7 +172,7 @@ int main ( int argc, char ** argv )
 
 	if(app->snake == NULL)
 	{
-		logError("[MAIN.] Snake load failure");
+		logError("[MAIN.] Snake load failure\n");
 		return EXIT_FAILURE;
 	}
 	/// [2]
