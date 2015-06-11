@@ -1,25 +1,25 @@
-/**
- * Projet application - 3DSolve
- * Version : 1.0
- *
- * Programme pour la résolution et la manipulation virtuelle de
- * casse-tête de type "Snake Cube"
- *
- * Auteurs :
- * 	- L.Aubry <lisa.aubry@insa-cvl.fr>
- * 	- A.Chazot <alban.chazot@insa-cvl.fr>
- * 	- K.Colas <korlan.colas@insa-cvl.fr>
- * 	- A.Gourd <anthony.gourd@insa-cvl.fr>
- *
- * Tuteur :
- * 	- P.Clemente <patrice.clemente@insa-cvl.fr>
- *
- * Date : 11 / 06 / 15
- *
- * INSA - Centre Val De Loire
- * 2014-2015
- * Promotion 2017
- *
+/*
+  Projet application - 3DSolve
+  Version : 1.0
+
+  Programme pour la résolution et la manipulation virtuelle de
+  casse-tête de type "Snake Cube"
+
+  Auteurs :
+  	- L.Aubry <lisa.aubry@insa-cvl.fr>
+  	- A.Chazot <alban.chazot@insa-cvl.fr>
+  	- K.Colas <korlan.colas@insa-cvl.fr>
+  	- A.Gourd <anthony.gourd@insa-cvl.fr>
+
+  Tuteur :
+  	- P.Clemente <patrice.clemente@insa-cvl.fr>
+
+  Date : 11 / 06 / 15
+
+  INSA - Centre Val De Loire
+  2014-2015
+  Promotion 2017
+
  */
 
 #include "renderer.h"
@@ -427,7 +427,7 @@ void* renderer ( void *arg )
 				mat4x4_identity(WMat);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, context->rbutton_mesh->nb_faces);
 
 				#ifdef __APPLE__
@@ -441,7 +441,7 @@ void* renderer ( void *arg )
 				mat4x4_identity(WMat);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, context->lbutton_mesh->nb_faces);
 
 				glFlush();
