@@ -777,7 +777,7 @@ int getInput ( Context* context )
 		context->camera->target[1] = (0.5f * (cmax.y-cmin.y));
 		context->camera->target[2] = (0.5f * (cmax.z-cmin.z));
 
-		bhv_flags ^= BHV_WIN;
+		bhv_flags = 0;
 		context->winAlpha = 1.f;
 	}
 

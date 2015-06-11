@@ -427,7 +427,7 @@ void* renderer ( void *arg )
 				mat4x4_identity(WMat);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, context->rbutton_mesh->nb_faces);
 
 				#ifdef __APPLE__
@@ -441,7 +441,7 @@ void* renderer ( void *arg )
 				mat4x4_identity(WMat);
 				mat4x4_translate_in_place( WMat, xoffset, yoffset, 0);
 				mat4x4_scale_aniso(WMat, WMat, 1/context->ratio * 0.15f, 0.15f, 0.f);
-				glUniformMatrix4fv(wID, 1, GL_FALSE, &WMat[0][0]);
+				glUniformMatrix4fv(wID2, 1, GL_FALSE, &WMat[0][0]);
 				glDrawArrays(GL_TRIANGLES, 0, context->lbutton_mesh->nb_faces);
 
 				glFlush();
