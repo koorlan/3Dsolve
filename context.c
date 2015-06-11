@@ -725,6 +725,8 @@ int getInput ( Context* context )
 			if ( magnet > MAG_TRESHOLD || magnet < -MAG_TRESHOLD)
 			{
 				playerRotate(gplayer, gplayer->selected, app->snake, magnet);
+				if (playerCheckSolution(gplayer, app->snake->volume, app->snake->length)==1)
+					bhv_flags |= BHV_WIN;
 
 				magnet = 0;
 			}
