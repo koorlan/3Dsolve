@@ -51,7 +51,7 @@ typedef enum MenuType {ROW, COLUMN} MenuType;
  * @var Action::TEST
  * [UNUSED] Utile pour tester des actions
  * @var Action::BACKAPP
- * [UNUSED] Action pour retourner au menu principal
+ * Action pour retourner au menu principal
  * @var Action::EXIT
  * Quitter l'application
  * @var Action::HELP

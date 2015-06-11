@@ -260,6 +260,7 @@ int playerFindMinMax (Coord *min, Coord *max, int length, Player * player, Volum
 	if(max->x-min->x > volume.max.x || max->y-min->y > volume.max.y || max->z-min->z > volume.max.z)
 	{
 		//printf("\033[31;01mPlayer didn't find the solution - sort de la structure \033[00m\n");
+		//printf("maxx:%d maxy:%d maxz:%d\n",max->x,max->y,max->z);
 		return -1;
 	}
 	min->x = -(min->x);
