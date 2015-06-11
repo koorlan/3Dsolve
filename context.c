@@ -86,6 +86,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				case GLFW_KEY_ESCAPE:
 					glfwSetWindowShouldClose(window, GL_TRUE);
 					break;
+				case GLFW_KEY_F8:
+					bhv_flags |= BHV_NOCUBE;
+					break;
 				case GLFW_KEY_F9:
 					bhv_flags |= BHV_DRAWPICK;
 					break;
@@ -115,6 +118,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		case GLFW_RELEASE:
 			switch(key)
 			{
+				case GLFW_KEY_F8:
+					if ((bhv_flags&BHV_NOCUBE)==BHV_NOCUBE) bhv_flags ^= BHV_NOCUBE;
 				case GLFW_KEY_F9:
 					if ((bhv_flags&BHV_DRAWPICK)==BHV_DRAWPICK) bhv_flags ^= BHV_DRAWPICK;
 				default:
@@ -570,6 +575,11 @@ int getInput ( Context* context )
 			switch (currentMenu->item[currentMenu->selected]->descriptor.action){
 				char* snakeName;
 				char* snakePath;
+				case BACKAPP:
+					currentMenu->state = CLOSE;
+					app->menuDepth --;
+					app->state = AS_HOME;
+					break;
 				case RESET:
 					break;
 				case EXIT:
@@ -754,6 +764,19 @@ int getInput ( Context* context )
 
 	if ((bhv_flags&BHV_WIN)==BHV_WIN)
 	{
+		Coord cmin;
+		Coord cmax;
+		cmin.x = 100;
+		cmin.y = 100;
+		cmin.z = 100;
+		cmax.x = -100;
+		cmax.y = -100;
+		cmax.z = -100;
+		playerFindMinMax (&cmin, &cmax, app->snake->length, gplayer, app->snake->volume);
+		context->camera->target[0] = (0.5f * (cmax.x-cmin.x));
+		context->camera->target[1] = (0.5f * (cmax.y-cmin.y));
+		context->camera->target[2] = (0.5f * (cmax.z-cmin.z));
+
 		bhv_flags ^= BHV_WIN;
 		context->winAlpha = 1.f;
 	}

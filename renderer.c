@@ -567,7 +567,8 @@ void* renderer ( void *arg )
 						glBindVertexArray (context->cube_mesh->vao_id);
 					#endif
 
-					glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
+					if ((bhv_flags&BHV_NOCUBE)!=BHV_NOCUBE)
+						glDrawArrays(GL_TRIANGLES, 0, context->cube_mesh->nb_faces);
 				}
 			}
 			glEnable (GL_DEPTH_TEST);
@@ -705,6 +706,13 @@ void* renderer ( void *arg )
 				glTranslatef ( -115.f, 0.f, 0.f );
 				glColor4f ( 0.f, 1.f, 0.f, context->winAlpha );
 				context->winAlpha -= 0.0035f;
+				static float baseAngle=0;
+				if (context->winAlpha>0.5f)
+				{
+					baseAngle = (baseAngle == 0?context->camera->angle[0]:baseAngle);
+					context->camera->angle[0]=baseAngle+cos(((context->winAlpha-0.5f)*2.f)*M_PI)*4;
+					scoef = 0.5f + 0.5f * abs(cos(glfwGetTime()));
+				} else baseAngle = 0;
 				ftglRenderFont( pressFont, "Casse-tête résolu !", FTGL_RENDER_ALL);
 			}
 
