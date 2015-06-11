@@ -773,9 +773,9 @@ int getInput ( Context* context )
 		cmax.y = -100;
 		cmax.z = -100;
 		playerFindMinMax (&cmin, &cmax, app->snake->length, gplayer, app->snake->volume);
-		context->camera->target[0] = 0.5f * (cmax.x+cmin.x);
-		context->camera->target[1] = 0.5f * (cmax.y+cmin.y);
-		context->camera->target[2] = 0.5f * (cmax.z+cmin.z);
+		context->camera->target[0] = (0.5f * (cmax.x-cmin.x));
+		context->camera->target[1] = (0.5f * (cmax.y-cmin.y));
+		context->camera->target[2] = (0.5f * (cmax.z-cmin.z));
 
 		bhv_flags ^= BHV_WIN;
 		context->winAlpha = 1.f;
