@@ -25,26 +25,25 @@ Cet algorithme permet de créer à la volée et de parcourir en profondeur une b
 \begin{algo}[noframe, numbered]
  \PROC{RésoudreNoeud}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}
  \VAR
- \DECLVAR{noeud}{Noeud}
- \DECLVAR{s}{Serpent}
+ \DECLVAR{nœud}{Noeud}
  \ENDVAR
  \BEGIN
- \STATE{noeud \recoit{} racine}
- \WHILE{noeud$\not=$racine OU racine->aJoué = 0}
- \IF{noeud->aJoué = 0}
- \STATE{resultatConstruction \recoit{} ConstruireFils(noeud, s)}
+ \STATE{nœud \recoit{} racine}
+ \WHILE{nœud$\not=$racine OU racine->aJoué = 0}
+ \IF{nœud->aJoué = 0}
+ \STATE{resultatConstruction \recoit{} ConstruireFils(nœud, s)}
  \IF{resultatConstruction = 1}
- \STATE{noeud \recoit{} noeud->enfantCourant}
+ \STATE{nœud \recoit{} nœud->enfantCourant}
  \ELSEIF{resultatConstruction = 2}
- \STATE{sauvegardeSolution}
+ \STATE{sauvegardeSolution(s)}
  \ENDIF
  \ELSE
- \STATE{serpent->volume.état[noeud->étape.coord.x]
- [noeud->étape.coord.y][noeud->étape.coord.z]\recoit{} LIBRE}
- \IF{noeud->frère$\not=$NILL}
- \STATE{noeud \recoit{} noeud->frère}
+ \STATE{s->volume.état[nœud->étape.coord.x]
+ [nœud->étape.coord.y][nœud->étape.coord.z]\recoit{} LIBRE}
+ \IF{nœud->frère$\not=$NIL}
+ \STATE{nœud \recoit{} nœud->frère}
  \ELSE
- \STATE{noeud \recoit{} noeud->père}
+ \STATE{nœud \recoit{} nœud->père}
  \STATE{remonterSerpent(s)}
  \ENDIF
  \ENDIF
@@ -66,7 +65,7 @@ Lorsque le nœud courant reprend pour valeur celle de la racine et que la racine
 \section{Création des fils}
 
 \begin{algo}[noframe, numbered]
- \FUNCTION{ConstruireFils}{\pfarg{racine}{Noeud}; \pfarg{s}{Serpent}}{entier}
+ \FUNCTION{ConstruireFils}{\pfarg{nœud}{Nœud}; \pfarg{s}{Serpent}}{entier}
  \VAR
  \DECLVAR{nCoord}{Coordonnée}
  \DECLVAR{fils}{Noeud}
@@ -74,29 +73,29 @@ Lorsque le nœud courant reprend pour valeur celle de la racine et que la racine
  \DECLVAR{i}{entier}
  \ENDVAR
  \BEGIN
-  \STATE{nCoord \recoit{} CalculCoordonnée(noeud->étape, noeud->étape.dir)}
-  \IF{CoordonnéValide(nCoord) ET serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Libre}
-  \STATE{SerpentAjouterEtape(s, @(noeud->étape))}
-  \STATE{serpent->volume.état[nCoord.x][nCoord.y][nCoord.z] = Occupé}
-  \STATE{noeud->aJoué = 1}
+  \STATE{nCoord \recoit{} CalculCoordonnée(nœud->étape, nœud->étape.dir)}
+  \IF{CoordonnéValide(nCoord) ET s->volume.état[nCoord.x][nCoord.y][nCoord.z] = Libre}
+  \STATE{SerpentAjouterEtape(s, @(nœud->étape))}
+  \STATE{s->volume.état[nCoord.x][nCoord.y][nCoord.z] = Occupé}
+  \STATE{nœud->aJoué = 1}
   \STATE{prochaineUnité = SerpentProchaineUnité(s)}
   \IF{prochaineUnité = Extrémité}
   \STATE{fils \recoit{} Nouveau(Noeud)}
-  \STATE{fils->étape.dir \recoit{} noeud->étape.dir}
+  \STATE{fils->étape.dir \recoit{} nœud->étape.dir}
   \STATE{fils->étape.coord \recoit{} nCoord}
-  \STATE{NoeudAjouterFils(noeud, fils)}
+  \STATE{NoeudAjouterFils(nœud, fils)}
   \RETURN{2}
   \ELSEIF{prochianeUnité = Droit}
-  \STATE{fils->étape.dir \recoit{} noeud->étape.dir}
+  \STATE{fils->étape.dir \recoit{} nœud->étape.dir}
   \STATE{fils->étape.coord \recoit{} nCoord}
-  \STATE{NoeudAjouterFils(noeud, fils)}
+  \STATE{NoeudAjouterFils(nœud, fils)}
   \ELSE
   \FORSTEP{i}{0}{6}{1}
-  \IF{TableVéritéAngle[noeud->étape.dir][i] = 1}
+  \IF{TableVéritéAngle[nœud->étape.dir][i] = 1}
   \STATE{fils \recoit{} Nouveau(Noeud)}
   \STATE{fils->étape.dir \recoit{} i}
   \STATE{fils->étape.coord \recoit{} nCoord}
-  \STATE{NoeudAjouterFils(noeud, fils)}
+  \STATE{NoeudAjouterFils(nœud, fils)}
   \ENDIF
   \ENDFOR
   \ENDIF
